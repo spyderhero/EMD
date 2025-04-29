@@ -1,0 +1,8 @@
+Cactus Code Thorn GibbonsMaeda_TwoPunctures
+Author(s)    : Ryoto Tomie
+Maintainer(s): 
+Licence      : LGPLv2+
+--------------------------------------------------------------------------
+
+1. Purpose
+We compute zero scalar field momentum, magnetic field and constant scalar field initial data for TwoPunctures.

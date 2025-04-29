@@ -1,0 +1,19 @@
+# Schedule definitions
+
+if (CCTK_Equals(initial_data, "GM_simpleID"))
+{
+  SCHEDULE GibbonsMaeda IN ADMBase_InitialData
+  {
+    LANG: C
+    OPTIONS: Local
+  } "simple analytic initial data when using GibbonsMaeda theory"
+}
+
+if (CCTK_Equals(initial_data, "GM_GHS"))
+{
+  SCHEDULE GM_GHS IN ADMBase_InitialData
+  {
+    LANG: C
+    OPTIONS: Local
+  } "GM-GHS solution initial data"
+}

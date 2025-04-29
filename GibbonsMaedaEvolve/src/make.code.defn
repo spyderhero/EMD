@@ -1,0 +1,14 @@
+# Main make.code.defn file for thorn GibbonsMaedaEvolve
+
+# Source files in this directory
+SRCS = GibbonsMaeda_RegisterVars.c     \
+       GibbonsMaeda_calc_rhs.F90       \
+       GibbonsMaeda_Boundaries.F90     \
+       GibbonsMaeda_calc_Tmunu.F90     \
+       GibbonsMaeda_InitSymBound.F90   \
+       GibbonsMaeda_adm_vs_bssn.F90    \
+       GibbonsMaeda_zero_rhs.F90       \
+       GibbonsMaeda_utils.F90          \
+
+# Subdirectories containing source files
+SUBDIRS =

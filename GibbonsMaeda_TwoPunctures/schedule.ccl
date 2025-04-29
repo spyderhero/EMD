@@ -1,0 +1,52 @@
+# Schedule definitions for thorn GibbonsMaeda_TwoPunctures
+
+if (CCTK_Equals(initial_data, "GibbonsMaeda_twopunctures"))
+{
+  STORAGE: energy, angular_momentum, puncture_adm_mass, bare_mass
+
+  if (keep_u_around) {
+    STORAGE: puncture_u
+  }
+
+  SCHEDULE GibbonsMaeda_TwoPunctures_ParamCheck AT PARAMCHECK
+  {
+    LANG: C
+  } "Check parameters and thorn needs"
+
+  if (schedule_in_ADMBase_InitialData)
+  {
+      SCHEDULE GROUP GibbonsMaeda_TwoPunctures_Group IN ADMBase_InitialData
+      {
+      } "TwoPunctures initial data group"
+  }
+  else
+  {
+      SCHEDULE GROUP GibbonsMaeda_TwoPunctures_Group AT Initial AFTER ADMBase_InitialData BEFORE ADMBase_PostInitial AFTER HydroBase_Initial before SetTmunu before HydroBase_Prim2ConInitial
+      {
+      } "TwoPunctures initial data group"
+  }
+
+  SCHEDULE GibbonsMaeda_TwoPunctures IN GibbonsMaeda_TwoPunctures_Group
+  {
+    LANG: C
+    STORAGE: puncture_u
+    READS: Grid::coordinates(Everywhere)
+    WRITES: GibbonsMaeda_Twopunctures::mp(Everywhere), GibbonsMaeda_Twopunctures::mm(Everywhere),
+            GibbonsMaeda_Twopunctures::mp_adm(Everywhere), GibbonsMaeda_Twopunctures::mm_adm(Everywhere),
+            GibbonsMaeda_Twopunctures::E(Everywhere), GibbonsMaeda_Twopunctures::J1(Everywhere),
+            GibbonsMaeda_Twopunctures::J2(Everywhere), GibbonsMaeda_Twopunctures::J3(Everywhere),
+            GibbonsMaeda_Twopunctures::puncture_u(Everywhere)
+    WRITES: StaticConformal::conformal_state(Everywhere),
+            StaticConformal::confac_2derivs(Everywhere),
+            StaticConformal::confac_1derivs(Everywhere),
+            StaticConformal::confac(Everywhere)
+    WRITES: AdmBase::alp(Everywhere), AdmBase::metric(Everywhere), AdmBase::curv(Everywhere)
+    # SYNC: ADMBase::metric ADMBase::curv ADMBase::lapse
+  } "Create puncture black hole initial data"
+
+  SCHEDULE GibbonsMaeda_TwoPunctures_Metadata IN GibbonsMaeda_TwoPunctures_Group after GibbonsMaeda_TwoPunctures
+  {
+    LANG: C
+    OPTIONS: global
+  } "Output TwoPunctures metadata"
+}
