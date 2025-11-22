@@ -1,0 +1,4 @@
+# Configuration definition for thorn EMD_Init
+
+REQUIRES Boundary CartGrid3D SpaceMask
+
