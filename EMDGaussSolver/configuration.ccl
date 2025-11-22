@@ -1,4 +1,0 @@
-# Configuration definition for thorn EMDGaussSolver
-
-REQUIRES Boundary CartGrid3D SpaceMask
-
