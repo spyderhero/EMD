@@ -1,8 +1,0 @@
-# Main make.code.defn file for thorn EMD_Init
-
-# Source files in this directory
-SRCS = emd_init.c
-
-# Subdirectories containing source files
-SUBDIRS = 
-
