@@ -62,9 +62,9 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
       dS = dS * sqrtgamma
 
       ! Electric field at this point
-      calc_Ex = qlm_ex(i,j,hn)
-      calc_Ey = qlm_ey(i,j,hn)
-      calc_Ez = qlm_ez(i,j,hn)
+      calc_Ex = qlm_ex(i,j)
+      calc_Ey = qlm_ey(i,j)
+      calc_Ez = qlm_ez(i,j)
 
       ! Flux contribution
       charge_local = charge_local + (calc_Ex*dS(1) + calc_Ey*dS(2) + calc_Ez*dS(3))
