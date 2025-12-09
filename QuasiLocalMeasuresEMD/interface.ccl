@@ -183,6 +183,7 @@ REAL qlm_scalars[num_surfaces] TYPE=scalar
   qlm_w_energy
   qlm_w_momentum_x qlm_w_momentum_y qlm_w_momentum_z
   qlm_w_angular_momentum_x qlm_w_angular_momentum_y qlm_w_angular_momentum_z
+  qlm_electric_charge
 } "Scalar quantities on the surface"
 
 REAL qlm_scalars_p[num_surfaces] TYPE=scalar

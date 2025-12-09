@@ -6,6 +6,7 @@
 
 subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
   use cctk
+  use constants
   use qlm_derivs
   use qlm_variables
   implicit none
@@ -20,6 +21,8 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
   CCTK_REAL :: sqrtgamma, gamma_det
 
   CCTK_REAL charge_local
+
+  character :: msg*1000
 
   charge_local = 0.0
 
@@ -73,9 +76,9 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
   end do
 
   ! Divide by 4π
-  qlm_charge(hn) = charge_local / (4.0*pi)
+  qlm_electric_charge(hn) = charge_local / (4.0*pi)
 
   call CCTK_INFO (msg)
-  write (msg, '("   Electric Charge Qe:            ",g14.6)') qlm_charge(hn)
+  write (msg, '("   Electric Charge Qe:            ",g14.6)') qlm_electric_charge(hn)
 
 end subroutine qlm_compute_charge
