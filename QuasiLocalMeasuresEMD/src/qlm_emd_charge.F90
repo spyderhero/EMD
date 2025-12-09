@@ -6,6 +6,9 @@
 
 subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
   implicit none
+  DECLARE_CCTK_ARGUMENTS
+  DECLARE_CCTK_FUNCTIONS
+  DECLARE_CCTK_PARAMETERS
   integer :: hn
   integer :: i, j
   CCTK_REAL :: Ex, Ey, Ez
