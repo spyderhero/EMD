@@ -5,6 +5,9 @@
 
 
 subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
+  use cctk
+  use qlm_derivs
+  use qlm_variables
   implicit none
   DECLARE_CCTK_ARGUMENTS
   DECLARE_CCTK_FUNCTIONS
