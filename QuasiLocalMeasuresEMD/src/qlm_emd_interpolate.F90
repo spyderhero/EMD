@@ -63,11 +63,11 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
   
   integer      :: coord_type
   CCTK_POINTER :: coords(3)
-  CCTK_INT     :: inputs(26)
-  CCTK_INT     :: output_types(98)
-  CCTK_POINTER :: outputs(98)
-  CCTK_INT     :: operand_indices(98)
-  CCTK_INT     :: operation_codes(98)
+  CCTK_INT     :: inputs(29)
+  CCTK_INT     :: output_types(101)
+  CCTK_POINTER :: outputs(101)
+  CCTK_INT     :: operand_indices(101)
+  CCTK_INT     :: operation_codes(101)
   integer      :: npoints
   
   character    :: msg*1000
