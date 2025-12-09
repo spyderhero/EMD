@@ -11,7 +11,8 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
   DECLARE_CCTK_PARAMETERS
   integer :: hn
   integer :: i, j
-  CCTK_REAL :: Ex, Ey, Ez
+  CCTK_REAL :: gg(3,3)
+  CCTK_REAL :: calc_Ex, calc_Ey, calc_Ez
   CCTK_REAL :: dX_dtheta(3), dX_dphi(3), dS(3)
   CCTK_REAL :: sqrtgamma, gamma_det
 
@@ -37,11 +38,20 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
       dS(3) = dX_dtheta(1)*dX_dphi(2) - dX_dtheta(2)*dX_dphi(1)
 
       ! Compute sqrt(gamma) from qlm_gxx etc.
-      gamma_det = qlm_gxx(i,j,hn)*qlm_gyy(i,j,hn)*qlm_gzz(i,j,hn) &
-                  + 2.0*qlm_gxy(i,j,hn)*qlm_gyz(i,j,hn)*qlm_gxz(i,j,hn) &
-                  - qlm_gxx(i,j,hn)*qlm_gyz(i,j,hn)**2 &
-                  - qlm_gyy(i,j,hn)*qlm_gxz(i,j,hn)**2 &
-                  - qlm_gzz(i,j,hn)*qlm_gxy(i,j,hn)**2
+      gg(1,1) = qlm_gxx(i,j)
+      gg(1,2) = qlm_gxy(i,j)
+      gg(1,3) = qlm_gxz(i,j)
+      gg(2,2) = qlm_gyy(i,j)
+      gg(2,3) = qlm_gyz(i,j)
+      gg(3,3) = qlm_gzz(i,j)
+      gg(2,1) = gg(1,2)
+      gg(3,1) = gg(1,3)
+      gg(3,2) = gg(2,3)
+      gamma_det = gg(1,1)*gg(2,2)*gg(3,3) &
+                  + 2.0*gg(1,2)*gg(2,3)*gg(1,3) &
+                  - gg(1,1)*gg(2,3)**2 &
+                  - gg(2,2)*gg(1,3)**2 &
+                  - gg(3,3)*gg(1,2)**2
 
       sqrtgamma = sqrt(gamma_det)
 
@@ -49,12 +59,12 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
       dS = dS * sqrtgamma
 
       ! Electric field at this point
-      Ex = qlm_ex(i,j,hn)
-      Ey = qlm_ey(i,j,hn)
-      Ez = qlm_ez(i,j,hn)
+      calc_Ex = qlm_ex(i,j,hn)
+      calc_Ey = qlm_ey(i,j,hn)
+      calc_Ez = qlm_ez(i,j,hn)
 
       ! Flux contribution
-      charge_local = charge_local + (Ex*dS(1) + Ey*dS(2) + Ez*dS(3))
+      charge_local = charge_local + (calc_Ex*dS(1) + calc_Ey*dS(2) + calc_Ez*dS(3))
 
     end do
   end do
