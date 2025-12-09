@@ -4,11 +4,11 @@
 #include "cctk_Parameters.h"
 
 
-subroutine qlm_compute_charge (CCTK_ARGUMENTS)
+subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
   implicit none
-  integer, intent(in) :: hn
+  integer :: hn
   integer :: i, j
-  real(kind=CCTK_REAL) :: ex, ey, ez
+  real(kind=CCTK_REAL) :: Ex, Ey, Ez
   real(kind=CCTK_REAL) :: dX_dtheta(3), dX_dphi(3), dS(3)
   real(kind=CCTK_REAL) :: sqrtgamma, gamma_det
 
@@ -44,12 +44,12 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS)
       dS = dS * sqrtgamma
 
       ! Electric field at this point
-      ex = Ex(qlm_x(i,j,hn),qlm_y(i,j,hn),qlm_z(i,j,hn))
-      ey = Ey(qlm_x(i,j,hn),qlm_y(i,j,hn),qlm_z(i,j,hn))
-      ez = Ez(qlm_x(i,j,hn),qlm_y(i,j,hn),qlm_z(i,j,hn))
+      Ex = qlm_ex(i,j,hn)
+      Ey = qlm_ey(i,j,hn)
+      Ez = qlm_ez(i,j,hn)
 
       ! Flux contribution
-      charge_local = charge_local + (ex*dS(1) + ey*dS(2) + ez*dS(3))
+      charge_local = charge_local + (Ex*dS(1) + Ey*dS(2) + Ez*dS(3))
 
     end do
   end do

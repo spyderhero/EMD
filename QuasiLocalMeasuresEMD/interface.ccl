@@ -2,7 +2,7 @@
 
 IMPLEMENTS: QuasiLocalMeasuresEMD
 
-INHERITS: ADMBase SphericalSurface TmunuBase
+INHERITS: ADMBase SphericalSurface TmunuBase ProcaBase
 
 
 

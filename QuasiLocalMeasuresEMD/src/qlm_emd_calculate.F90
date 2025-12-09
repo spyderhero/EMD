@@ -112,6 +112,7 @@ subroutine qlm_calculate (CCTK_ARGUMENTS)
            call qlm_multipoles (CCTK_PASS_FTOF, hn)
            call qlm_multipoles_normalise (CCTK_PASS_FTOF, hn)
         end if
+        call qlm_compute_charge (CCTK_PASS_FTOF, hn)
 
         if (output_vtk_every /= 0) then
            if (mod (cctk_iteration, output_vtk_every) == 0) then

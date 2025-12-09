@@ -83,6 +83,10 @@ INT output_vtk_every "Output a VTK file with the main 2D" STEERABLE=always
   1:* :: "output every so many iterations"
 } 0
 
+BOOLEAN calc_charge "calculation electric and magnetic charge" STEERABLE=always
+{
+} "no"
+
 
 SHARES: ADMBase
 

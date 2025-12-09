@@ -59,6 +59,7 @@ subroutine qlm_interpolate (CCTK_ARGUMENTS, hn)
   integer      :: ind_ttt
   integer      :: ind_ttx, ind_tty, ind_ttz
   integer      :: ind_txx, ind_txy, ind_txz, ind_tyy, ind_tyz, ind_tzz
+  integer      :: ind_ex, ind_ey, ind_ez
   
   integer      :: coord_type
   CCTK_POINTER :: coords(3)
@@ -185,6 +186,15 @@ subroutine qlm_interpolate (CCTK_ARGUMENTS, hn)
      ind_tyz = -1
      ind_tzz = -1
   end if
+  if (calc_charge /= 0) then
+     call CCTK_VarIndex (ind_ex  , "ProcaBase::Ex")
+     call CCTK_VarIndex (ind_ey  , "ProcaBase::Ey")
+     call CCTK_VarIndex (ind_ez  , "ProcaBase::Ez")
+  else
+     ind_ex = -1
+     ind_ey = -1
+     ind_ez = -1
+  end if
   
   
   
@@ -205,7 +215,8 @@ subroutine qlm_interpolate (CCTK_ARGUMENTS, hn)
        ind_betax, ind_betay, ind_betaz, &
        ind_ttt, &
        ind_ttx, ind_tty, ind_ttz, &
-       ind_txx, ind_txy, ind_txz, ind_tyy, ind_tyz, ind_tzz /)
+       ind_txx, ind_txy, ind_txz, ind_tyy, ind_tyz, ind_tzz, &
+       ind_ex, ind_ey, ind_ez /)
   
   call CCTK_NumVars (nvars)
   if (nvars < 0) call CCTK_WARN (0, "internal error")
@@ -228,11 +239,12 @@ subroutine qlm_interpolate (CCTK_ARGUMENTS, hn)
        06, 07, 08, 09, 10, 11, & ! K_ij,k
        06, 07, 08, 09, 10, 11, &
        06, 07, 08, 09, 10, 11, &
-       12, &                    ! alp
-       13, 14, 15, &            ! beta^i
-       16, &                    ! T_tt
-       17, 18, 19, &            ! T_ti
-       20, 21, 22, 23, 24, 25 /) ! T_ij
+       12, &                     ! alp
+       13, 14, 15, &             ! beta^i
+       16, &                     ! T_tt
+       17, 18, 19, &             ! T_ti
+       20, 21, 22, 23, 24, 25, & ! T_ij
+       26, 27, 28 /)             ! E^i
   
   operation_codes = (/ &
        0, 0, 0, 0, 0, 0, &      ! g_ij
@@ -253,8 +265,9 @@ subroutine qlm_interpolate (CCTK_ARGUMENTS, hn)
        0, 0, 0, &               ! beta^i
        0, &                     ! T_tt
        0, 0, 0, &               ! T_ti
-       0, 0, 0, 0, 0, 0 /)      ! T_ij
-  
+       0, 0, 0, 0, 0, 0, &      ! T_ij
+       0, 0, 0 /)               ! E^i
+
   output_types(:) = CCTK_VARIABLE_REAL
   if (hn > 0) then
      outputs = (/ &
@@ -276,7 +289,8 @@ subroutine qlm_interpolate (CCTK_ARGUMENTS, hn)
           P(qlm_betax), P(qlm_betay), P(qlm_betaz), &
           P(qlm_ttt), &
           P(qlm_ttx), P(qlm_tty), P(qlm_ttz), &
-          P(qlm_txx), P(qlm_txy), P(qlm_txz), P(qlm_tyy), P(qlm_tyz), P(qlm_tzz) /)
+          P(qlm_txx), P(qlm_txy), P(qlm_txz), P(qlm_tyy), P(qlm_tyz), P(qlm_tzz), &
+          P(qlm_ex), P(qlm_ey), P(qlm_ez) /)
   else
      outputs(:) = CCTK_NullPointer()
   end if
@@ -388,6 +402,9 @@ subroutine qlm_interpolate (CCTK_ARGUMENTS, hn)
   call poison (qlm_tyy    )
   call poison (qlm_tyz    )
   call poison (qlm_tzz    )
+  call poison (qlm_ex     )
+  call poison (qlm_ey     )
+  call poison (qlm_ez     )
 #endif
   
   
@@ -533,6 +550,15 @@ subroutine qlm_interpolate (CCTK_ARGUMENTS, hn)
         qlm_tyz = 0
         qlm_tzz = 0
      end if
+     if (calc_charge /= 0) then
+        call unpack (qlm_ex    , ni, nj)
+        call unpack (qlm_ey    , ni, nj)
+        call unpack (qlm_ez    , ni, nj)
+     else
+        qlm_ex = 0
+        qlm_ey = 0
+        qlm_ez = 0
+     end if
      
      
      
@@ -636,6 +662,9 @@ subroutine qlm_interpolate (CCTK_ARGUMENTS, hn)
      call poison_check (qlm_tyy    , "qlm_tyy    ")
      call poison_check (qlm_tyz    , "qlm_tyz    ")
      call poison_check (qlm_tzz    , "qlm_tzz    ")
+     call poison_check (qlm_ex     , "qlm_ex     ")
+     call poison_check (qlm_ey     , "qlm_ey     ")
+     call poison_check (qlm_ez     , "qlm_ez     ")
 #endif
      
   end if
