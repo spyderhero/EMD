@@ -12,7 +12,9 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
   CCTK_REAL :: dX_dtheta(3), dX_dphi(3), dS(3)
   CCTK_REAL :: sqrtgamma, gamma_det
 
-  CCTK_REAL charge_local = 0.0
+  CCTK_REAL charge_local
+
+  charge_local = 0.0
 
   do j = 1, qlm_nphi(hn)-1
     do i = 1, qlm_ntheta(hn)-1
