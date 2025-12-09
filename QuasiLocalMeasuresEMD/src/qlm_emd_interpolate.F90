@@ -187,6 +187,7 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
      ind_tzz = -1
   end if
   if (calc_charge /= 0) then
+     call CCTK_INFO ("interpolating electric field")
      call CCTK_VarIndex (ind_ex  , "ProcaBase::Ex")
      call CCTK_VarIndex (ind_ey  , "ProcaBase::Ey")
      call CCTK_VarIndex (ind_ez  , "ProcaBase::Ez")
