@@ -12,7 +12,7 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
   CCTK_REAL :: dX_dtheta(3), dX_dphi(3), dS(3)
   CCTK_REAL :: sqrtgamma, gamma_det
 
-  charge_local = 0.0_CCTK_REAL
+  CCTK_REAL charge_local = 0.0
 
   do j = 1, qlm_nphi(hn)-1
     do i = 1, qlm_ntheta(hn)-1
@@ -33,7 +33,7 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
 
       ! Compute sqrt(gamma) from qlm_gxx etc.
       gamma_det = qlm_gxx(i,j,hn)*qlm_gyy(i,j,hn)*qlm_gzz(i,j,hn) &
-                  + 2.0_CCTK_REAL*qlm_gxy(i,j,hn)*qlm_gyz(i,j,hn)*qlm_gxz(i,j,hn) &
+                  + 2.0*qlm_gxy(i,j,hn)*qlm_gyz(i,j,hn)*qlm_gxz(i,j,hn) &
                   - qlm_gxx(i,j,hn)*qlm_gyz(i,j,hn)**2 &
                   - qlm_gyy(i,j,hn)*qlm_gxz(i,j,hn)**2 &
                   - qlm_gzz(i,j,hn)*qlm_gxy(i,j,hn)**2
@@ -55,6 +55,6 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
   end do
 
   ! Divide by 4π
-  qlm_charge(hn) = charge_local / (4.0_CCTK_REAL*acos(-1.0_CCTK_REAL))
+  qlm_charge(hn) = charge_local / (4.0*acos(-1.0))
 
 end subroutine qlm_compute_charge
