@@ -73,6 +73,9 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
   end do
 
   ! Divide by 4π
-  qlm_charge(hn) = charge_local / (4.0*acos(-1.0))
+  qlm_charge(hn) = charge_local / (4.0*pi)
+
+  call CCTK_INFO (msg)
+  write (msg, '("   Electric Charge Qe:            ",g14.6)') qlm_charge(hn)
 
 end subroutine qlm_compute_charge
