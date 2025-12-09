@@ -6,6 +6,7 @@ SRCS =  qlm_emd_3determinant.F90			\
         qlm_emd_boundary.F90			\
         qlm_emd_broadcast.c				\
         qlm_emd_calculate.F90			\
+        qlm_emd_charge.F90                      \
         qlm_emd_coordinates.F90			\
         qlm_emd_derivs.F90				\
         qlm_emd_gram_schmidt.F90			\
