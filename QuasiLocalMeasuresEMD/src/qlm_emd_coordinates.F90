@@ -110,7 +110,7 @@ subroutine qlm_emd_calc_coordinates (CCTK_ARGUMENTS, hn)
   qlm_emd_inv_z(:,:,hn) = qlm_emd_inv_z(:,:,hn) - integral_z / area
   
   ! boundary conditions
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_inv_z(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_inv_z(:,:,hn), +1)
   
   
   

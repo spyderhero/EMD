@@ -107,6 +107,6 @@ SUBROUTINE qlm_emd_calc_3determinant (CCTK_ARGUMENTS, hn)
      END DO
   END DO
 
-  CALL set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_3det(:,:,hn), +1)
+  CALL emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_3det(:,:,hn), +1)
 
 END SUBROUTINE qlm_emd_calc_3determinant

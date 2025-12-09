@@ -77,8 +77,8 @@ subroutine qlm_emd_killing_test (CCTK_ARGUMENTS, hn)
      end do
   end do
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_lqtt(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_lqtp(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_lqpp(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_lqtt(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_lqtp(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_lqpp(:,:,hn), +1)
   
 end subroutine qlm_emd_killing_test

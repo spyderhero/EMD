@@ -15,19 +15,19 @@ subroutine qlm_emd_calc_tetrad (CCTK_ARGUMENTS, hn)
 
   call qlm_emd_calc_tetrad1 (CCTK_PASS_FTOF, hn)
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_l0(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_l1(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_l2(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_l3(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_l0(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_l1(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_l2(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_l3(:,:,hn), +1)
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_n0(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_n1(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_n2(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_n3(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_n0(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_n1(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_n2(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_n3(:,:,hn), +1)
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_m0(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_m1(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_m2(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_m3(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_m0(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_m1(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_m2(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_m3(:,:,hn), +1)
   
 end subroutine qlm_emd_calc_tetrad

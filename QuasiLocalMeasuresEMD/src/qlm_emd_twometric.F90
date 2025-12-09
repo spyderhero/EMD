@@ -126,15 +126,15 @@ subroutine qlm_emd_calc_twometric (CCTK_ARGUMENTS, hn)
      end do
   end do
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_qtt(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_qtp(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_qpp(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_qtt(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_qtp(:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_qpp(:,:,hn), +1)
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqttt(:,:), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqtpt(:,:), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqppt(:,:), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqttp(:,:), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqtpp(:,:), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqppp(:,:), -1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqttt(:,:), -1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqtpt(:,:), -1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqppt(:,:), -1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqttp(:,:), -1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqtpp(:,:), -1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqppp(:,:), -1)
   
 end subroutine qlm_emd_calc_twometric

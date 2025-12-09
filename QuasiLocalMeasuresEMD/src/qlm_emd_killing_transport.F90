@@ -125,9 +125,9 @@ subroutine qlm_emd_killing_transport (CCTK_ARGUMENTS, hn)
   call transport_along_equator (CCTK_PASS_FTOF, hn, i0, xi(:,n), chi(n))
   call transport_along_meridians (CCTK_PASS_FTOF, hn, i0)
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_t(:,:,hn), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_p(:,:,hn), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_chi (:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_t(:,:,hn), -1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_p(:,:,hn), -1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_chi (:,:,hn), +1)
   
 9999 continue
 end subroutine qlm_emd_killing_transport

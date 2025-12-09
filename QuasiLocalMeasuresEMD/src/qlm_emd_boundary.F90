@@ -11,16 +11,16 @@ module qlm_emd_boundary
   DECLARE_CCTK_FUNCTIONS
   DECLARE_CCTK_PARAMETERS
   private
-  public set_boundary
+  public emd_set_boundary
   
-  interface set_boundary
-     module procedure set_boundary_real
-     module procedure set_boundary_complex
+  interface emd_set_boundary
+     module procedure emd_set_boundary_real
+     module procedure emd_set_boundary_complex
   end interface
   
 contains
   
-  subroutine set_boundary_real (CCTK_ARGUMENTS, hn, f, parity)
+  subroutine emd_set_boundary_real (CCTK_ARGUMENTS, hn, f, parity)
     DECLARE_CCTK_ARGUMENTS
     integer, intent(in) :: hn
     CCTK_REAL           :: f(:,:)
@@ -119,11 +119,11 @@ contains
     f(ni+1:, :nj) = 0
     f(:, nj+1:) = 0
     
-  end subroutine set_boundary_real
+  end subroutine emd_set_boundary_real
   
   
   
-  subroutine set_boundary_complex (CCTK_ARGUMENTS, hn, f, parity)
+  subroutine emd_set_boundary_complex (CCTK_ARGUMENTS, hn, f, parity)
     DECLARE_CCTK_ARGUMENTS
     integer, intent(in) :: hn
     CCTK_COMPLEX        :: f(:,:)
@@ -146,9 +146,9 @@ contains
     
     fre = real(f)
     fim = aimag(f)
-    call set_boundary_real (CCTK_PASS_FTOF, hn, fre, parity)
-    call set_boundary_real (CCTK_PASS_FTOF, hn, fim, parity)
+    call emd_set_boundary_real (CCTK_PASS_FTOF, hn, fre, parity)
+    call emd_set_boundary_real (CCTK_PASS_FTOF, hn, fim, parity)
     f = cmplx(fre, fim, kind(f))
-  end subroutine set_boundary_complex
+  end subroutine emd_set_boundary_complex
   
 end module qlm_emd_boundary

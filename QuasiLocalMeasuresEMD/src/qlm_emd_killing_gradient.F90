@@ -109,8 +109,8 @@ subroutine qlm_emd_killing_gradient (CCTK_ARGUMENTS, hn)
      end do
   end do
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_t(:,:,hn), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_p(:,:,hn), -1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_t(:,:,hn), -1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_p(:,:,hn), -1)
   
   
   
@@ -131,8 +131,8 @@ subroutine qlm_emd_killing_gradient (CCTK_ARGUMENTS, hn)
      end do
   end do
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_t(:,:,hn), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_p(:,:,hn), -1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_t(:,:,hn), -1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_p(:,:,hn), -1)
   
   
   
@@ -164,6 +164,6 @@ subroutine qlm_emd_killing_gradient (CCTK_ARGUMENTS, hn)
      end do
   end do
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_chi (:,:,hn), +1)
+  call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_chi (:,:,hn), +1)
   
 end subroutine qlm_emd_killing_gradient
