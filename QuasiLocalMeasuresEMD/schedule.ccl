@@ -1,19 +1,19 @@
 # Schedule definitions for thorn QuasiLocalMeasuresEMD
 
-STORAGE: qlm_state qlm_scalars
-STORAGE: qlm_state_p qlm_scalars_p
-STORAGE: qlm_grid_int qlm_grid_real qlm_grid_real_p
-STORAGE: qlm_shapes qlm_tetrad_l qlm_tetrad_n qlm_tetrad_m
-STORAGE: qlm_shapes_p
-STORAGE: qlm_killing_vector
+STORAGE: qlm_emd_state qlm_emd_scalars
+STORAGE: qlm_emd_state_p qlm_emd_scalars_p
+STORAGE: qlm_emd_grid_int qlm_emd_grid_real qlm_emd_grid_real_p
+STORAGE: qlm_emd_shapes qlm_emd_tetrad_l qlm_emd_tetrad_n qlm_emd_tetrad_m
+STORAGE: qlm_emd_shapes_p
+STORAGE: qlm_emd_killing_vector
 
 
 
 # These variables need storage so that they can be output
-STORAGE: qlm_coordinates qlm_coordinates_p
-STORAGE: qlm_newman_penrose qlm_weyl_scalars
-STORAGE: qlm_ricci_scalars qlm_twometric qlm_killed_twometric
-STORAGE: qlm_invariant_coordinates qlm_multipole_moments qlm_3determinant
+STORAGE: qlm_emd_coordinates qlm_emd_coordinates_p
+STORAGE: qlm_emd_newman_penrose qlm_emd_weyl_scalars
+STORAGE: qlm_emd_ricci_scalars qlm_emd_twometric qlm_emd_killed_twometric
+STORAGE: qlm_emd_invariant_coordinates qlm_emd_multipole_moments qlm_emd_3determinant
 
 
 
@@ -33,16 +33,16 @@ SCHEDULE qlm_emd_calculate AT analysis AFTER (SphericalSurface_HasBeenSet SetTmu
 {
   OPTIONS: global
   LANG: Fortran
-  STORAGE: qlm_coordinates qlm_coordinates_p
-  STORAGE: qlm_newman_penrose qlm_weyl_scalars
-  STORAGE: qlm_ricci_scalars qlm_twometric qlm_killed_twometric 
-  STORAGE: qlm_invariant_coordinates qlm_multipole_moments qlm_3determinant
-  TRIGGERS: qlm_state
-  TRIGGERS: qlm_grid_int qlm_grid_real
-  TRIGGERS: qlm_shapes qlm_tetrad_l qlm_tetrad_n qlm_tetrad_m
-  TRIGGERS: qlm_coordinates
-  TRIGGERS: qlm_newman_penrose qlm_weyl_scalars
-  TRIGGERS: qlm_ricci_scalars qlm_twometric qlm_killing_vector qlm_killed_twometric
-  TRIGGERS: qlm_invariant_coordinates qlm_multipole_moments qlm_3determinant
-  TRIGGERS: qlm_scalars
+  STORAGE: qlm_emd_coordinates qlm_emd_coordinates_p
+  STORAGE: qlm_emd_newman_penrose qlm_emd_weyl_scalars
+  STORAGE: qlm_emd_ricci_scalars qlm_emd_twometric qlm_emd_killed_twometric 
+  STORAGE: qlm_emd_invariant_coordinates qlm_emd_multipole_moments qlm_emd_3determinant
+  TRIGGERS: qlm_emd_state
+  TRIGGERS: qlm_emd_grid_int qlm_emd_grid_real
+  TRIGGERS: qlm_emd_shapes qlm_emd_tetrad_l qlm_emd_tetrad_n qlm_emd_tetrad_m
+  TRIGGERS: qlm_emd_coordinates
+  TRIGGERS: qlm_emd_newman_penrose qlm_emd_weyl_scalars
+  TRIGGERS: qlm_emd_ricci_scalars qlm_emd_twometric qlm_emd_killing_vector qlm_emd_killed_twometric
+  TRIGGERS: qlm_emd_invariant_coordinates qlm_emd_multipole_moments qlm_emd_3determinant
+  TRIGGERS: qlm_emd_scalars
 } "Calculate quasi-local quantities"

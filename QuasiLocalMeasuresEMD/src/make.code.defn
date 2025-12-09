@@ -1,4 +1,4 @@
-# Main make.code.defn file for thorn QuasiLocalMeasures   -*-Makefile-*-
+# Main make.code.defn file for thorn QuasiLocalMeasuresEMD   -*-Makefile-*-
 
 # Source files in this directory
 SRCS =  qlm_emd_3determinant.F90			\

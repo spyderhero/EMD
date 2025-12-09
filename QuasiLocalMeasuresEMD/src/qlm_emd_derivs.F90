@@ -1,7 +1,7 @@
 #include "cctk.h"
 #include "cctk_Parameters.h"
 
-module qlm_derivs
+module qlm_emd_derivs
   use classify
   implicit none
   private
@@ -162,8 +162,8 @@ contains
     CCTK_REAL :: dt1, dt2
     CCTK_REAL :: fdot1, fdot2
     
-!!$    dt1 = qlm_time(hn) - qlm_time_p(hn)
-!!$    dt2 = qlm_time(hn) - qlm_time_p_p(hn)
+!!$    dt1 = qlm_emd_time(hn) - qlm_emd_time_p(hn)
+!!$    dt2 = qlm_emd_time(hn) - qlm_emd_time_p_p(hn)
     dt1 = t0 - t1
     dt2 = t0 - t2
     
@@ -182,4 +182,4 @@ contains
     end if
   end function rtimederiv
   
-end module qlm_derivs
+end module qlm_emd_derivs

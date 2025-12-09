@@ -5,9 +5,9 @@
 
 
 
-subroutine qlm_killing_normalise (CCTK_ARGUMENTS, hn)
+subroutine qlm_emd_killing_normalise (CCTK_ARGUMENTS, hn)
   use cctk
-  use qlm_killing_normalisation
+  use qlm_emd_killing_normalisation
   implicit none
   DECLARE_CCTK_ARGUMENTS
   DECLARE_CCTK_FUNCTIONS
@@ -35,21 +35,21 @@ subroutine qlm_killing_normalise (CCTK_ARGUMENTS, hn)
   
   
   ! Starting meridian
-  j = 1+qlm_nghostsphi(hn)
+  j = 1+qlm_emd_nghostsphi(hn)
   
   
   
   if (veryverbose/=0) call CCTK_INFO ("Calculating normalisation factor:")
   
   do ii=1,ngeodesics
-     i = 1 + qlm_nghoststheta(hn) &
-          + ii * (qlm_ntheta(hn) - 2*qlm_nghoststheta(hn) - 1) / (ngeodesics+1)
-     if (qlm_xi_p(i,j,hn) < 0) then
-        qlm_xi_t(:,:,hn) = -qlm_xi_t(:,:,hn)
-        qlm_xi_p(:,:,hn) = -qlm_xi_p(:,:,hn)
-        qlm_chi (:,:,hn) = -qlm_chi (:,:,hn)
+     i = 1 + qlm_emd_nghoststheta(hn) &
+          + ii * (qlm_emd_ntheta(hn) - 2*qlm_emd_nghoststheta(hn) - 1) / (ngeodesics+1)
+     if (qlm_emd_xi_p(i,j,hn) < 0) then
+        qlm_emd_xi_t(:,:,hn) = -qlm_emd_xi_t(:,:,hn)
+        qlm_emd_xi_p(:,:,hn) = -qlm_emd_xi_p(:,:,hn)
+        qlm_emd_chi (:,:,hn) = -qlm_emd_chi (:,:,hn)
      end if
-     theta = qlm_origin_theta(hn) + (i-1) * qlm_delta_theta(hn)
+     theta = qlm_emd_origin_theta(hn) + (i-1) * qlm_emd_delta_theta(hn)
      call killing_factor (CCTK_PASS_FTOF, hn, theta, factors(ii), nsteps)
      found(ii) = nsteps>0
   end do
@@ -81,8 +81,8 @@ subroutine qlm_killing_normalise (CCTK_ARGUMENTS, hn)
      factor = product(factors, found) ** (one / count(found))
   else
      call CCTK_WARN (1, "Did not manage to integrate along a Killing vector field line loop")
-     ! qlm_calc_error(hn) = 1
-     qlm_have_killing_vector(hn) = 0
+     ! qlm_emd_calc_error(hn) = 1
+     qlm_emd_have_killing_vector(hn) = 0
      factor = 1
      goto 9999
   end if
@@ -93,24 +93,24 @@ subroutine qlm_killing_normalise (CCTK_ARGUMENTS, hn)
      write (msg, '("Normalising xi with the factor ",g16.6)') factor
      call CCTK_INFO (msg)
   end if
-  qlm_xi_t(:,:,hn) = qlm_xi_t(:,:,hn) * factor
-  qlm_xi_p(:,:,hn) = qlm_xi_p(:,:,hn) * factor
-  qlm_chi (:,:,hn) = qlm_chi (:,:,hn) * factor
+  qlm_emd_xi_t(:,:,hn) = qlm_emd_xi_t(:,:,hn) * factor
+  qlm_emd_xi_p(:,:,hn) = qlm_emd_xi_p(:,:,hn) * factor
+  qlm_emd_chi (:,:,hn) = qlm_emd_chi (:,:,hn) * factor
   
   
   
   if (veryverbose/=0) then
      call CCTK_INFO ("Checking normalisation factors for various Killing vector field line loops:")
      do ii=1,ngeodesics
-        i = 1 + qlm_nghoststheta(hn) &
-             + ii * (qlm_ntheta(hn) - 2*qlm_nghoststheta(hn) - 1) / (ngeodesics+1)
-        theta = qlm_origin_theta(hn) + (i-1) * qlm_delta_theta(hn)
+        i = 1 + qlm_emd_nghoststheta(hn) &
+             + ii * (qlm_emd_ntheta(hn) - 2*qlm_emd_nghoststheta(hn) - 1) / (ngeodesics+1)
+        theta = qlm_emd_origin_theta(hn) + (i-1) * qlm_emd_delta_theta(hn)
         call killing_factor (CCTK_PASS_FTOF, hn, theta, factor, nsteps)
      end do
   end if
   
-  ! qlm_have_killing_vector(hn) = 1
+  ! qlm_emd_have_killing_vector(hn) = 1
   
 9999 continue
   
-end subroutine qlm_killing_normalise
+end subroutine qlm_emd_killing_normalise

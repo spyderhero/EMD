@@ -5,12 +5,12 @@
 
 
 
-subroutine qlm_killing_transport (CCTK_ARGUMENTS, hn)
+subroutine qlm_emd_killing_transport (CCTK_ARGUMENTS, hn)
   use cctk
   use constants
   use lapack
-  use qlm_boundary
-  use qlm_killing_transportation
+  use qlm_emd_boundary
+  use qlm_emd_killing_transportation
   implicit none
   DECLARE_CCTK_ARGUMENTS
   DECLARE_CCTK_FUNCTIONS
@@ -46,9 +46,9 @@ subroutine qlm_killing_transport (CCTK_ARGUMENTS, hn)
   
   
   ! latitude of "equator"
-  i0 = (qlm_ntheta(hn)+1)/2
+  i0 = (qlm_emd_ntheta(hn)+1)/2
   ! longitude of zero meridian
-  j0 = 1+qlm_nghostsphi(hn)
+  j0 = 1+qlm_emd_nghostsphi(hn)
   
   vec = delta3
   
@@ -83,8 +83,8 @@ subroutine qlm_killing_transport (CCTK_ARGUMENTS, hn)
   end if
   
   if (TAT_isnan(sum(vec)) /= 0) then
-     ! qlm_calc_error(hn) = 1
-     qlm_have_killing_vector(hn) = 0
+     ! qlm_emd_calc_error(hn) = 1
+     qlm_emd_have_killing_vector(hn) = 0
      call CCTK_WARN (3, "There are nans in the final vectors")
      goto 9999
   end if
@@ -92,8 +92,8 @@ subroutine qlm_killing_transport (CCTK_ARGUMENTS, hn)
   call geev ('n', 'v', 3_lik, vec, 3_lik, wr, wi, vl, 3_lik, vr, 3_lik, &
        work, lwork, info)
   if (info/=0) then
-     ! qlm_calc_error(hn) = 1
-     qlm_have_killing_vector(hn) = 0
+     ! qlm_emd_calc_error(hn) = 1
+     qlm_emd_have_killing_vector(hn) = 0
      write (msg, '("Error in call to GEEV, info=",i2)') info
      call CCTK_WARN (3, msg)
      goto 9999
@@ -117,17 +117,17 @@ subroutine qlm_killing_transport (CCTK_ARGUMENTS, hn)
   ! This transport scheme is not ideal.
   ! It leads to large fluctuations in the phi direction.
   n=3
-  qlm_killing_eigenvalue_re(hn) = wr(n)
-  qlm_killing_eigenvalue_im(hn) = wi(n)
+  qlm_emd_killing_eigenvalue_re(hn) = wr(n)
+  qlm_emd_killing_eigenvalue_im(hn) = wi(n)
   if (abs(cmplx(wr(n),wi(n),kind(wr)) - (1,0)) > 1.0d-4) then
      call CCTK_WARN (3, "Did not manage to find an eigenvector with the eigenvalue 1")
   end if
   call transport_along_equator (CCTK_PASS_FTOF, hn, i0, xi(:,n), chi(n))
   call transport_along_meridians (CCTK_PASS_FTOF, hn, i0)
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_xi_t(:,:,hn), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_xi_p(:,:,hn), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_chi (:,:,hn), +1)
+  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_t(:,:,hn), -1)
+  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_p(:,:,hn), -1)
+  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_chi (:,:,hn), +1)
   
 9999 continue
-end subroutine qlm_killing_transport
+end subroutine qlm_emd_killing_transport

@@ -122,10 +122,10 @@ bcast (cGH const * restrict const cctkGH,
 
 
 void CCTK_FCALL
-CCTK_FNAME(qlm_broadcast) (CCTK_POINTER_TO_CONST * restrict cctkGH_);
+CCTK_FNAME(qlm_emd_broadcast) (CCTK_POINTER_TO_CONST * restrict cctkGH_);
 
 void CCTK_FCALL
-CCTK_FNAME(qlm_broadcast) (CCTK_POINTER_TO_CONST * restrict const cctkGH_)
+CCTK_FNAME(qlm_emd_broadcast) (CCTK_POINTER_TO_CONST * restrict const cctkGH_)
 {
   cGH const * restrict const cctkGH = * (cGH const * const *) cctkGH_;
   DECLARE_CCTK_ARGUMENTS;
@@ -142,32 +142,32 @@ CCTK_FNAME(qlm_broadcast) (CCTK_POINTER_TO_CONST * restrict const cctkGH_)
   {
     int const root = hn % num_procs;
     
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_state"      , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_state_p"    , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_grid_int"   , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_grid_real"  , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_grid_real_p", hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_state"      , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_state_p"    , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_grid_int"   , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_grid_real"  , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_grid_real_p", hn, root);
     
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_shapes"               , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_shapes_p"             , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_coordinates"          , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_tetrad_l"             , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_tetrad_n"             , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_tetrad_m"             , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_newman_penrose"       , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_weyl_scalars"         , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_ricci_scalars"        , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_twometric"            , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_killing_vector"       , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_killed_twometric"     , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_invariant_coordinates", hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_shapes"               , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_shapes_p"             , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_coordinates"          , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_tetrad_l"             , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_tetrad_n"             , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_tetrad_m"             , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_newman_penrose"       , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_weyl_scalars"         , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_ricci_scalars"        , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_twometric"            , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_killing_vector"       , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_killed_twometric"     , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_invariant_coordinates", hn, root);
     
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_multipole_moments", hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_multipole_moments", hn, root);
     
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_3determinant", hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_3determinant", hn, root);
     
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_scalars"  , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_scalars_p", hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_scalars"  , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_scalars_p", hn, root);
     
   } /* for hn */
 }

@@ -5,7 +5,7 @@
 
 
 
-subroutine qlm_paramcheck (CCTK_ARGUMENTS)
+subroutine qlm_emd_paramcheck (CCTK_ARGUMENTS)
   use cctk
   implicit none
   DECLARE_CCTK_ARGUMENTS
@@ -37,10 +37,10 @@ subroutine qlm_paramcheck (CCTK_ARGUMENTS)
      sn = sf_IdFromName(surface_index(hn), surface_name(hn)) + 1
      
      ! Import surface description
-     qlm_nghoststheta(hn) = nghoststheta(sn)
-     qlm_nghostsphi  (hn) = nghostsphi(sn)
-     qlm_ntheta      (hn) = ntheta(sn)
-     qlm_nphi        (hn) = nphi(sn)
+     qlm_emd_nghoststheta(hn) = nghoststheta(sn)
+     qlm_emd_nghostsphi  (hn) = nghostsphi(sn)
+     qlm_emd_ntheta      (hn) = ntheta(sn)
+     qlm_emd_nphi        (hn) = nphi(sn)
      
      ! Symmetries
      if (symmetric_x(sn) /= 0 .or. &
@@ -49,29 +49,29 @@ subroutine qlm_paramcheck (CCTK_ARGUMENTS)
         call CCTK_WARN (CCTK_WARN_ABORT, "SphericalSurface symmetries are not supported")
      end if
      
-     if (auto_res(sn) /= 1 .and. (qlm_ntheta(hn) > maxntheta .or. qlm_nphi(hn) > maxnphi)) then
-        write (msg, '("Surface ",i4," is too large: shape is (",2i6,"), maximum is (",2i6,")")') hn-1, qlm_ntheta(hn), qlm_nphi(hn), maxntheta, maxnphi
+     if (auto_res(sn) /= 1 .and. (qlm_emd_ntheta(hn) > maxntheta .or. qlm_emd_nphi(hn) > maxnphi)) then
+        write (msg, '("Surface ",i4," is too large: shape is (",2i6,"), maximum is (",2i6,")")') hn-1, qlm_emd_ntheta(hn), qlm_emd_nphi(hn), maxntheta, maxnphi
         call CCTK_PARAMWARN (msg)
      end if
      
-     if (qlm_nghoststheta(hn)<1 .or. qlm_nghostsphi(hn)<1) then
-        write (msg, '("Not enough ghost zones for surface ",i4,": nghosts=",2i4,", minimum is ",2i4)') hn-1, qlm_nghoststheta(hn), qlm_nghostsphi(hn), 1, 1
+     if (qlm_emd_nghoststheta(hn)<1 .or. qlm_emd_nghostsphi(hn)<1) then
+        write (msg, '("Not enough ghost zones for surface ",i4,": nghosts=",2i4,", minimum is ",2i4)') hn-1, qlm_emd_nghoststheta(hn), qlm_emd_nghostsphi(hn), 1, 1
         call CCTK_PARAMWARN (msg)
      end if
      
-     if (auto_res(sn) /= 1 .and. (mod(int(qlm_ntheta(hn) - 2*qlm_nghoststheta(hn)),2) /= 1)) then
+     if (auto_res(sn) /= 1 .and. (mod(int(qlm_emd_ntheta(hn) - 2*qlm_emd_nghoststheta(hn)),2) /= 1)) then
         ! We need a grid point on the equator
-        write (msg, '("The number of interior grid points in the theta direction of surface ",i4," must be odd after the symmetries have been removed, but it is ",i6)') hn-1, qlm_ntheta(hn) - 2*qlm_nghoststheta(hn)
+        write (msg, '("The number of interior grid points in the theta direction of surface ",i4," must be odd after the symmetries have been removed, but it is ",i6)') hn-1, qlm_emd_ntheta(hn) - 2*qlm_emd_nghoststheta(hn)
         call CCTK_PARAMWARN (msg)
      end if
      
-     if (auto_res(sn) /= 1 .and. (mod(int(qlm_nphi(hn) - 2*qlm_nghostsphi(hn)),4) /= 0)) then
+     if (auto_res(sn) /= 1 .and. (mod(int(qlm_emd_nphi(hn) - 2*qlm_emd_nghostsphi(hn)),4) /= 0)) then
         ! We need grid points on the four major meridians
-        write (msg, '("The number of interior grid points in the phi direction of surface ",i4," must be a multiple of four after the symmetries have been removed, but it is ",i6)') hn-1, qlm_nphi(hn) - 2*qlm_nghostsphi(hn)
+        write (msg, '("The number of interior grid points in the phi direction of surface ",i4," must be a multiple of four after the symmetries have been removed, but it is ",i6)') hn-1, qlm_emd_nphi(hn) - 2*qlm_emd_nghostsphi(hn)
         call CCTK_PARAMWARN (msg)
      end if
      
 9999 continue
   end do
   
-end subroutine qlm_paramcheck
+end subroutine qlm_emd_paramcheck

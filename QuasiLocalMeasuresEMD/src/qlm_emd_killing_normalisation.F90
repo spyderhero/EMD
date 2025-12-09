@@ -5,7 +5,7 @@
 
 
 
-module qlm_killing_normalisation
+module qlm_emd_killing_normalisation
   use cctk
   use constants
   implicit none
@@ -69,19 +69,19 @@ contains
     
     integer   :: ierr1, ierr2
     
-    org_theta = qlm_origin_theta(hn)
-    org_phi   = qlm_origin_phi(hn)
-    del_theta = qlm_delta_theta(hn)
-    del_phi   = qlm_delta_phi(hn)
+    org_theta = qlm_emd_origin_theta(hn)
+    org_phi   = qlm_emd_origin_phi(hn)
+    del_theta = qlm_emd_delta_theta(hn)
+    del_phi   = qlm_emd_delta_phi(hn)
     
     nsteps = 0
     lambda = lambda0
     theta  = theta0
     phi    = phi0
     
-    dtheta = killing_interp (qlm_xi_t(:,:,hn), &
+    dtheta = killing_interp (qlm_emd_xi_t(:,:,hn), &
          org_theta, org_phi, del_theta, del_phi, theta, phi, ierr1)
-    dphi   = killing_interp (qlm_xi_p(:,:,hn), &
+    dphi   = killing_interp (qlm_emd_xi_p(:,:,hn), &
          org_theta, org_phi, del_theta, del_phi, theta, phi, ierr2)
     
     if (ierr1/=0 .or. ierr2/=0) then
@@ -100,13 +100,13 @@ contains
        return
     end if
     
-    dlambda = (qlm_delta_phi(hn) / dphi) / 2
+    dlambda = (qlm_emd_delta_phi(hn) / dphi) / 2
     
     do
        
-       dtheta = killing_interp (qlm_xi_t(:,:,hn), &
+       dtheta = killing_interp (qlm_emd_xi_t(:,:,hn), &
             org_theta, org_phi, del_theta, del_phi, theta, phi, ierr1)
-       dphi   = killing_interp (qlm_xi_p(:,:,hn), &
+       dphi   = killing_interp (qlm_emd_xi_p(:,:,hn), &
             org_theta, org_phi, del_theta, del_phi, theta, phi, ierr2)
        
        if (ierr1/=0 .or. ierr2/=0) then
@@ -120,9 +120,9 @@ contains
        theta2 = theta + dlambda * dtheta / 2
        phi2   = phi   + dlambda * dphi   / 2
        
-       dtheta = killing_interp (qlm_xi_t(:,:,hn), &
+       dtheta = killing_interp (qlm_emd_xi_t(:,:,hn), &
             org_theta, org_phi, del_theta, del_phi, theta2, phi2, ierr1)
-       dphi   = killing_interp (qlm_xi_p(:,:,hn), &
+       dphi   = killing_interp (qlm_emd_xi_p(:,:,hn), &
             org_theta, org_phi, del_theta, del_phi, theta2, phi2, ierr2)
        
        if (ierr1/=0 .or. ierr2/=0) then
@@ -223,4 +223,4 @@ contains
     ierr = 0
   end function killing_interp
   
-end module qlm_killing_normalisation
+end module qlm_emd_killing_normalisation

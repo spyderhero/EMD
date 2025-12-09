@@ -54,7 +54,7 @@ INT spatial_order "Order of spatial differencing"
 
 
 
-REAL begin_qlm_calculations_after[100] "when should we start calculations?" STEERABLE=always
+REAL begin_qlm_emd_calculations_after[100] "when should we start calculations?" STEERABLE=always
 {
   *:* :: "at/after this time (inclusively)"
 } 0.0
@@ -62,7 +62,7 @@ REAL begin_qlm_calculations_after[100] "when should we start calculations?" STEE
 
 
 # this method requires the spin to be roughly aligned with the z-axes and
-# computes qlm_spin use qlm_coordspinx, qlm_coordspiny, qlm_coordspinz
+# computes qlm_emd_spin use qlm_emd_coordspinx, qlm_emd_coordspiny, qlm_emd_coordspinz
 # otherwise
 KEYWORD killing_vector_method "Method for finding the Killing vector field" STEERABLE=always
 {

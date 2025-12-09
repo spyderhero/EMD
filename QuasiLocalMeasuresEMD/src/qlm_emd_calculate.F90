@@ -5,9 +5,9 @@
 
 
 
-subroutine qlm_calculate (CCTK_ARGUMENTS)
+subroutine qlm_emd_calculate (CCTK_ARGUMENTS)
   use cctk
-  use qlm_variables
+  use qlm_emd_variables
   implicit none
   DECLARE_CCTK_ARGUMENTS
   DECLARE_CCTK_FUNCTIONS
@@ -42,7 +42,7 @@ subroutine qlm_calculate (CCTK_ARGUMENTS)
     
      ! start calculations already? 
      if (hn > 0) then
-        if (cctk_time < begin_qlm_calculations_after(hn)) hn = 0
+        if (cctk_time < begin_qlm_emd_calculations_after(hn)) hn = 0
      end if
      
      if (verbose/=0 .or. veryverbose/=0) then
@@ -56,20 +56,20 @@ subroutine qlm_calculate (CCTK_ARGUMENTS)
      
      if (hn > 0) then
         if (surface_index(hn) == -1 .and. CCTK_EQUALS(surface_name(hn), "")) then
-           qlm_calc_error(hn) = 1
-           qlm_have_valid_data(hn) = 0
-           qlm_have_killing_vector(hn) = 0
+           qlm_emd_calc_error(hn) = 1
+           qlm_emd_have_valid_data(hn) = 0
+           qlm_emd_have_killing_vector(hn) = 0
            hn = 0
         end if
      end if
      
      if (hn > 0) then
-        call qlm_import_surface (CCTK_PASS_FTOF, hn)
-        if (qlm_calc_error(hn) /= 0) hn = 0
+        call qlm_emd_import_surface (CCTK_PASS_FTOF, hn)
+        if (qlm_emd_calc_error(hn) /= 0) hn = 0
      endif
      
      if (hn > 0) then
-        call qlm_set_coordinates (CCTK_PASS_FTOF, hn)
+        call qlm_emd_set_coordinates (CCTK_PASS_FTOF, hn)
      end if
      
      if (hn > 0) then
@@ -80,46 +80,46 @@ subroutine qlm_calculate (CCTK_ARGUMENTS)
         end if
      end if
      
-     call qlm_interpolate (CCTK_PASS_FTOF, hn)
+     call qlm_emd_interpolate (CCTK_PASS_FTOF, hn)
      
      if (hn > 0) then
-        if (qlm_calc_error(hn) /= 0) goto 9999
+        if (qlm_emd_calc_error(hn) /= 0) goto 9999
         
-        call qlm_calc_tetrad (CCTK_PASS_FTOF, hn)
-        call qlm_calc_newman_penrose (CCTK_PASS_FTOF, hn)
-        call qlm_calc_weyl_scalars (CCTK_PASS_FTOF, hn)
-        call qlm_calc_twometric (CCTK_PASS_FTOF, hn)
+        call qlm_emd_calc_tetrad (CCTK_PASS_FTOF, hn)
+        call qlm_emd_calc_newman_penrose (CCTK_PASS_FTOF, hn)
+        call qlm_emd_calc_weyl_scalars (CCTK_PASS_FTOF, hn)
+        call qlm_emd_calc_twometric (CCTK_PASS_FTOF, hn)
         if (CCTK_EQUALS(killing_vector_method, "axial")) then
-           call qlm_killing_axial (CCTK_PASS_FTOF, hn)
+           call qlm_emd_killing_axial (CCTK_PASS_FTOF, hn)
         else if (CCTK_EQUALS(killing_vector_method, "eigenvector")) then
-           call qlm_killing_transport (CCTK_PASS_FTOF, hn)
-           if (qlm_calc_error(hn) /= 0) goto 9999
-           call qlm_killing_normalise (CCTK_PASS_FTOF, hn)
+           call qlm_emd_killing_transport (CCTK_PASS_FTOF, hn)
+           if (qlm_emd_calc_error(hn) /= 0) goto 9999
+           call qlm_emd_killing_normalise (CCTK_PASS_FTOF, hn)
         else if (CCTK_EQUALS(killing_vector_method, "gradient")) then
-           call qlm_killing_gradient (CCTK_PASS_FTOF, hn)
-           call qlm_killing_normalise (CCTK_PASS_FTOF, hn)
+           call qlm_emd_killing_gradient (CCTK_PASS_FTOF, hn)
+           call qlm_emd_killing_normalise (CCTK_PASS_FTOF, hn)
         else
            call CCTK_WARN (0, "internal error")
         end if
-        if (qlm_calc_error(hn) /= 0) goto 9999
-        if (qlm_have_killing_vector(hn) /= 0) then
-           call qlm_killing_test (CCTK_PASS_FTOF, hn)
-           call qlm_calc_coordinates (CCTK_PASS_FTOF, hn)
+        if (qlm_emd_calc_error(hn) /= 0) goto 9999
+        if (qlm_emd_have_killing_vector(hn) /= 0) then
+           call qlm_emd_killing_test (CCTK_PASS_FTOF, hn)
+           call qlm_emd_calc_coordinates (CCTK_PASS_FTOF, hn)
         end if
-        call qlm_calc_3determinant (CCTK_PASS_FTOF, hn)
-        call qlm_analyse (CCTK_PASS_FTOF, hn)
-        if (qlm_have_killing_vector(hn) /= 0) then
-           call qlm_multipoles (CCTK_PASS_FTOF, hn)
-           call qlm_multipoles_normalise (CCTK_PASS_FTOF, hn)
+        call qlm_emd_calc_3determinant (CCTK_PASS_FTOF, hn)
+        call qlm_emd_analyse (CCTK_PASS_FTOF, hn)
+        if (qlm_emd_have_killing_vector(hn) /= 0) then
+           call qlm_emd_multipoles (CCTK_PASS_FTOF, hn)
+           call qlm_emd_multipoles_normalise (CCTK_PASS_FTOF, hn)
         end if
-        call qlm_compute_charge (CCTK_PASS_FTOF, hn)
+        call qlm_emd_compute_charge (CCTK_PASS_FTOF, hn)
 
         if (output_vtk_every /= 0) then
            if (mod (cctk_iteration, output_vtk_every) == 0) then
               write (slabel, '(I2.2)') hn
               write (ilabel, '(I8.8)') cctk_iteration
               call CCTK_ParameterValString (nchars, "out_dir", "IOUtil", odir) 
-              call qlm_output_vtk (CCTK_PASS_FTOF, hn, &
+              call qlm_emd_output_vtk (CCTK_PASS_FTOF, hn, &
                    odir(1:nchars) // '/surface' // slabel // '_' // ilabel // &
                    '.vtk')
            end if
@@ -127,7 +127,7 @@ subroutine qlm_calculate (CCTK_ARGUMENTS)
         
 9999    continue
         
-        if (qlm_timederiv_order(hn) < 2) then
+        if (qlm_emd_timederiv_order(hn) < 2) then
            call CCTK_WARN (2, "There were not enough past time levels available for accurate calculations")
         end if
      end if
@@ -139,10 +139,10 @@ subroutine qlm_calculate (CCTK_ARGUMENTS)
      call deallocate_variables
   end if
  
-  call qlm_broadcast (cctkGH)
+  call qlm_emd_broadcast (cctkGH)
 
   if (veryverbose/=0) then
      call CCTK_INFO ("Done.")
   end if
   
-end subroutine qlm_calculate
+end subroutine qlm_emd_calculate

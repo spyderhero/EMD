@@ -5,7 +5,7 @@
 
 
 
-subroutine qlm_init (CCTK_ARGUMENTS)
+subroutine qlm_emd_init (CCTK_ARGUMENTS)
   use cctk
   implicit none
   DECLARE_CCTK_ARGUMENTS
@@ -20,15 +20,15 @@ subroutine qlm_init (CCTK_ARGUMENTS)
   
   do hn = 1, num_surfaces
      
-     qlm_calc_error(hn) = 1
-     qlm_have_valid_data(hn) = 0
-     qlm_have_valid_data_p(hn) = 0
-     qlm_have_valid_data_p_p(hn) = 0
-     qlm_have_killing_vector(hn) = 0
-     qlm_have_killing_vector_p(hn) = 0
-     qlm_have_killing_vector_p_p(hn) = 0
-     qlm_iteration(hn) = -1
+     qlm_emd_calc_error(hn) = 1
+     qlm_emd_have_valid_data(hn) = 0
+     qlm_emd_have_valid_data_p(hn) = 0
+     qlm_emd_have_valid_data_p_p(hn) = 0
+     qlm_emd_have_killing_vector(hn) = 0
+     qlm_emd_have_killing_vector_p(hn) = 0
+     qlm_emd_have_killing_vector_p_p(hn) = 0
+     qlm_emd_iteration(hn) = -1
      
   end do
   
-end subroutine qlm_init
+end subroutine qlm_emd_init

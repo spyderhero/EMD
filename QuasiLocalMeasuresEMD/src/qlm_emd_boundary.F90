@@ -5,7 +5,7 @@
 
 
 
-module qlm_boundary
+module qlm_emd_boundary
   use cctk
   implicit none
   DECLARE_CCTK_FUNCTIONS
@@ -38,10 +38,10 @@ contains
     
     
     
-    ni = qlm_ntheta(hn)
-    nj = qlm_nphi(hn)
-    gi = qlm_nghoststheta(hn)
-    gj = qlm_nghostsphi(hn)
+    ni = qlm_emd_ntheta(hn)
+    nj = qlm_emd_nphi(hn)
+    gi = qlm_emd_nghoststheta(hn)
+    gj = qlm_emd_nghostsphi(hn)
     
     
     
@@ -134,10 +134,10 @@ contains
     
     integer :: ni, nj, gi, gj
     
-    ni = qlm_ntheta(hn)
-    nj = qlm_nphi(hn)
-    gi = qlm_nghoststheta(hn)
-    gj = qlm_nghostsphi(hn)
+    ni = qlm_emd_ntheta(hn)
+    nj = qlm_emd_nphi(hn)
+    gi = qlm_emd_nghoststheta(hn)
+    gj = qlm_emd_nghostsphi(hn)
     
     f(       :gi, :nj) = 0
     f(ni-gi+1:ni, :nj) = 0
@@ -151,4 +151,4 @@ contains
     f = cmplx(fre, fim, kind(f))
   end subroutine set_boundary_complex
   
-end module qlm_boundary
+end module qlm_emd_boundary

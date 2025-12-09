@@ -5,12 +5,12 @@
 
 
 
-subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
+subroutine qlm_emd_analyse (CCTK_ARGUMENTS, hn)
   use adm_metric_simple
   use cctk
   use constants
-  use qlm_derivs
-  use qlm_variables
+  use qlm_emd_derivs
+  use qlm_emd_variables
   use tensor
   use tensor2
   implicit none
@@ -62,61 +62,61 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
      call CCTK_INFO ("Calculating spin")
   end if
   
-  delta_space(:) = (/ qlm_delta_theta(hn), qlm_delta_phi(hn) /)
+  delta_space(:) = (/ qlm_emd_delta_theta(hn), qlm_emd_delta_phi(hn) /)
   
   ! Equatorial circumference
-  i_eq = (qlm_ntheta(hn) + 1) / 2
+  i_eq = (qlm_emd_ntheta(hn) + 1) / 2
   
   ! Polar circumference at phi=0
-  j_p0 = 1+qlm_nghostsphi(hn)
+  j_p0 = 1+qlm_emd_nghostsphi(hn)
   
   ! Polar circumference at phi=pi/2
-  j_p2 = 1+qlm_nghostsphi(hn) + (qlm_nphi(hn) - 2*qlm_nghostsphi(hn) - 1) / 4
+  j_p2 = 1+qlm_emd_nghostsphi(hn) + (qlm_emd_nphi(hn) - 2*qlm_emd_nghostsphi(hn) - 1) / 4
   
   
   
   ! Initial values
-  qlm_equatorial_circumference(hn) = 0
-  qlm_polar_circumference_0(hn) = 0
-  qlm_polar_circumference_pi_2(hn) = 0
-  qlm_area(hn) = 0
-  qlm_spin(hn) = 0
-  qlm_cvspin(hn) = 0
-  qlm_npspin(hn) = 0
-  qlm_wsspin(hn) = 0
-  qlm_coordspinx(hn) = 0
-  qlm_coordspiny(hn) = 0
-  qlm_coordspinz(hn) = 0
+  qlm_emd_equatorial_circumference(hn) = 0
+  qlm_emd_polar_circumference_0(hn) = 0
+  qlm_emd_polar_circumference_pi_2(hn) = 0
+  qlm_emd_area(hn) = 0
+  qlm_emd_spin(hn) = 0
+  qlm_emd_cvspin(hn) = 0
+  qlm_emd_npspin(hn) = 0
+  qlm_emd_wsspin(hn) = 0
+  qlm_emd_coordspinx(hn) = 0
+  qlm_emd_coordspiny(hn) = 0
+  qlm_emd_coordspinz(hn) = 0
   
-  qlm_adm_energy(hn) = 0
-  qlm_adm_momentum_x(hn) = 0
-  qlm_adm_momentum_y(hn) = 0
-  qlm_adm_momentum_z(hn) = 0
-  qlm_adm_angular_momentum_x(hn) = 0
-  qlm_adm_angular_momentum_y(hn) = 0
-  qlm_adm_angular_momentum_z(hn) = 0
+  qlm_emd_adm_energy(hn) = 0
+  qlm_emd_adm_momentum_x(hn) = 0
+  qlm_emd_adm_momentum_y(hn) = 0
+  qlm_emd_adm_momentum_z(hn) = 0
+  qlm_emd_adm_angular_momentum_x(hn) = 0
+  qlm_emd_adm_angular_momentum_y(hn) = 0
+  qlm_emd_adm_angular_momentum_z(hn) = 0
 
-  qlm_w_energy(hn) = 0
-  qlm_w_momentum_x(hn) = 0
-  qlm_w_momentum_y(hn) = 0
-  qlm_w_momentum_z(hn) = 0
-  qlm_w_angular_momentum_x(hn) = 0
-  qlm_w_angular_momentum_y(hn) = 0
-  qlm_w_angular_momentum_z(hn) = 0
+  qlm_emd_w_energy(hn) = 0
+  qlm_emd_w_momentum_x(hn) = 0
+  qlm_emd_w_momentum_y(hn) = 0
+  qlm_emd_w_momentum_z(hn) = 0
+  qlm_emd_w_angular_momentum_x(hn) = 0
+  qlm_emd_w_angular_momentum_y(hn) = 0
+  qlm_emd_w_angular_momentum_z(hn) = 0
 
   ! Compute weights for spherical integration (see Driscoll and Healy).
   ! These are the correct weights in a Gauss-Legendre-Senc.
-  ! Also compare qlm_area with AHFinderDirect's area, they are in much
+  ! Also compare qlm_emd_area with AHFinderDirect's area, they are in much
   ! better agreement than with the previous method using
   ! delta_theta*delta_phi.
   
-  ntheta_inner = qlm_ntheta(hn) - 2*qlm_nghoststheta(hn)
-  nphi_inner   = qlm_nphi(hn) - 2*qlm_nghostsphi(hn)
+  ntheta_inner = qlm_emd_ntheta(hn) - 2*qlm_emd_nghoststheta(hn)
+  nphi_inner   = qlm_emd_nphi(hn) - 2*qlm_emd_nghostsphi(hn)
   
-  allocate (weights(1+qlm_nghoststheta(hn) : qlm_ntheta(hn)-qlm_nghoststheta(hn)))
+  allocate (weights(1+qlm_emd_nghoststheta(hn) : qlm_emd_ntheta(hn)-qlm_emd_nghoststheta(hn)))
   
-  do i = 1+qlm_nghoststheta(hn), qlm_ntheta(hn)-qlm_nghoststheta(hn)
-     theta = qlm_origin_theta(hn) + (i-1)*qlm_delta_theta(hn)
+  do i = 1+qlm_emd_nghoststheta(hn), qlm_emd_ntheta(hn)-qlm_emd_nghoststheta(hn)
+     theta = qlm_emd_origin_theta(hn) + (i-1)*qlm_emd_delta_theta(hn)
      sum1 = 0
      do l = 0, (ntheta_inner-1)/2
         sum1 = sum1 + sin((2*l+1)*theta)/(2*l+1)
@@ -124,84 +124,84 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
      weights(i) = 8*pi * sum1 / (nphi_inner * ntheta_inner)
   end do
   
-  do j = 1+qlm_nghostsphi(hn), qlm_nphi(hn)-qlm_nghostsphi(hn)
-     do i = 1+qlm_nghoststheta(hn), qlm_ntheta(hn)-qlm_nghoststheta(hn)
+  do j = 1+qlm_emd_nghostsphi(hn), qlm_emd_nphi(hn)-qlm_emd_nghostsphi(hn)
+     do i = 1+qlm_emd_nghoststheta(hn), qlm_emd_ntheta(hn)-qlm_emd_nghoststheta(hn)
         
-        theta = qlm_origin_theta(hn) + (i-1)*qlm_delta_theta(hn)
-        phi   = qlm_origin_phi(hn)   + (j-1)*qlm_delta_phi(hn)
+        theta = qlm_emd_origin_theta(hn) + (i-1)*qlm_emd_delta_theta(hn)
+        phi   = qlm_emd_origin_phi(hn)   + (j-1)*qlm_emd_delta_phi(hn)
         
         ! 2-metric on the horizon
-        qq(1,1) = qlm_qtt(i,j,hn)
-        qq(1,2) = qlm_qtp(i,j,hn)
-        qq(2,2) = qlm_qpp(i,j,hn)
+        qq(1,1) = qlm_emd_qtt(i,j,hn)
+        qq(1,2) = qlm_emd_qtp(i,j,hn)
+        qq(2,2) = qlm_emd_qpp(i,j,hn)
         qq(2,1) = qq(1,2)
         call calc_2det (qq, dtq)
         
-        ll(0) = qlm_l0(i,j,hn)
-        ll(1) = qlm_l1(i,j,hn)
-        ll(2) = qlm_l2(i,j,hn)
-        ll(3) = qlm_l3(i,j,hn)
+        ll(0) = qlm_emd_l0(i,j,hn)
+        ll(1) = qlm_emd_l1(i,j,hn)
+        ll(2) = qlm_emd_l2(i,j,hn)
+        ll(3) = qlm_emd_l3(i,j,hn)
         
-        nn(0) = qlm_n0(i,j,hn)
-        nn(1) = qlm_n1(i,j,hn)
-        nn(2) = qlm_n2(i,j,hn)
-        nn(3) = qlm_n3(i,j,hn)
+        nn(0) = qlm_emd_n0(i,j,hn)
+        nn(1) = qlm_emd_n1(i,j,hn)
+        nn(2) = qlm_emd_n2(i,j,hn)
+        nn(3) = qlm_emd_n3(i,j,hn)
         
-        mm(0) = qlm_m0(i,j,hn)
-        mm(1) = qlm_m1(i,j,hn)
-        mm(2) = qlm_m2(i,j,hn)
-        mm(3) = qlm_m3(i,j,hn)
+        mm(0) = qlm_emd_m0(i,j,hn)
+        mm(1) = qlm_emd_m1(i,j,hn)
+        mm(2) = qlm_emd_m2(i,j,hn)
+        mm(3) = qlm_emd_m3(i,j,hn)
         
         tt = (ll + nn) / sqrt(two)
         ss = (ll - nn) / sqrt(two)
         
-        npalpha = qlm_npalpha(i,j,hn)
-        npbeta  = qlm_npbeta(i,j,hn)
+        npalpha = qlm_emd_npalpha(i,j,hn)
+        npbeta  = qlm_emd_npbeta(i,j,hn)
         
-        gg(1,1) = qlm_gxx(i,j)
-        gg(1,2) = qlm_gxy(i,j)
-        gg(1,3) = qlm_gxz(i,j)
-        gg(2,2) = qlm_gyy(i,j)
-        gg(2,3) = qlm_gyz(i,j)
-        gg(3,3) = qlm_gzz(i,j)
+        gg(1,1) = qlm_emd_gxx(i,j)
+        gg(1,2) = qlm_emd_gxy(i,j)
+        gg(1,3) = qlm_emd_gxz(i,j)
+        gg(2,2) = qlm_emd_gyy(i,j)
+        gg(2,3) = qlm_emd_gyz(i,j)
+        gg(3,3) = qlm_emd_gzz(i,j)
         gg(2,1) = gg(1,2)
         gg(3,1) = gg(1,3)
         gg(3,2) = gg(2,3)
         
-        dgg(1,1,1) = qlm_dgxxx(i,j)
-        dgg(1,2,1) = qlm_dgxyx(i,j)
-        dgg(1,3,1) = qlm_dgxzx(i,j)
-        dgg(2,2,1) = qlm_dgyyx(i,j)
-        dgg(2,3,1) = qlm_dgyzx(i,j)
-        dgg(3,3,1) = qlm_dgzzx(i,j)
+        dgg(1,1,1) = qlm_emd_dgxxx(i,j)
+        dgg(1,2,1) = qlm_emd_dgxyx(i,j)
+        dgg(1,3,1) = qlm_emd_dgxzx(i,j)
+        dgg(2,2,1) = qlm_emd_dgyyx(i,j)
+        dgg(2,3,1) = qlm_emd_dgyzx(i,j)
+        dgg(3,3,1) = qlm_emd_dgzzx(i,j)
         dgg(2,1,1) = dgg(1,2,1)
         dgg(3,1,1) = dgg(1,3,1)
         dgg(3,2,1) = dgg(2,3,1)
-        dgg(1,1,2) = qlm_dgxxy(i,j)
-        dgg(1,2,2) = qlm_dgxyy(i,j)
-        dgg(1,3,2) = qlm_dgxzy(i,j)
-        dgg(2,2,2) = qlm_dgyyy(i,j)
-        dgg(2,3,2) = qlm_dgyzy(i,j)
-        dgg(3,3,2) = qlm_dgzzy(i,j)
+        dgg(1,1,2) = qlm_emd_dgxxy(i,j)
+        dgg(1,2,2) = qlm_emd_dgxyy(i,j)
+        dgg(1,3,2) = qlm_emd_dgxzy(i,j)
+        dgg(2,2,2) = qlm_emd_dgyyy(i,j)
+        dgg(2,3,2) = qlm_emd_dgyzy(i,j)
+        dgg(3,3,2) = qlm_emd_dgzzy(i,j)
         dgg(2,1,2) = dgg(1,2,2)
         dgg(3,1,2) = dgg(1,3,2)
         dgg(3,2,2) = dgg(2,3,2)
-        dgg(1,1,3) = qlm_dgxxz(i,j)
-        dgg(1,2,3) = qlm_dgxyz(i,j)
-        dgg(1,3,3) = qlm_dgxzz(i,j)
-        dgg(2,2,3) = qlm_dgyyz(i,j)
-        dgg(2,3,3) = qlm_dgyzz(i,j)
-        dgg(3,3,3) = qlm_dgzzz(i,j)
+        dgg(1,1,3) = qlm_emd_dgxxz(i,j)
+        dgg(1,2,3) = qlm_emd_dgxyz(i,j)
+        dgg(1,3,3) = qlm_emd_dgxzz(i,j)
+        dgg(2,2,3) = qlm_emd_dgyyz(i,j)
+        dgg(2,3,3) = qlm_emd_dgyzz(i,j)
+        dgg(3,3,3) = qlm_emd_dgzzz(i,j)
         dgg(2,1,3) = dgg(1,2,3)
         dgg(3,1,3) = dgg(1,3,3)
         dgg(3,2,3) = dgg(2,3,3)
         
-        kk(1,1) = qlm_kxx(i,j)
-        kk(1,2) = qlm_kxy(i,j)
-        kk(1,3) = qlm_kxz(i,j)
-        kk(2,2) = qlm_kyy(i,j)
-        kk(2,3) = qlm_kyz(i,j)
-        kk(3,3) = qlm_kzz(i,j)
+        kk(1,1) = qlm_emd_kxx(i,j)
+        kk(1,2) = qlm_emd_kxy(i,j)
+        kk(1,3) = qlm_emd_kxz(i,j)
+        kk(2,2) = qlm_emd_kyy(i,j)
+        kk(2,3) = qlm_emd_kyz(i,j)
+        kk(3,3) = qlm_emd_kzz(i,j)
         kk(2,1) = kk(1,2)
         kk(3,1) = kk(1,3)
         kk(3,2) = kk(2,3)
@@ -225,33 +225,33 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
         h4 = g4 - eta4
         dh4 = dg4
         
-        xx(1) = qlm_x(i,j,hn)
-        xx(2) = qlm_y(i,j,hn)
-        xx(3) = qlm_z(i,j,hn)
+        xx(1) = qlm_emd_x(i,j,hn)
+        xx(2) = qlm_emd_y(i,j,hn)
+        xx(3) = qlm_emd_z(i,j,hn)
         
-        ee(1,1:2) = deriv (qlm_x(:,:,hn), i, j, delta_space)
-        ee(2,1:2) = deriv (qlm_y(:,:,hn), i, j, delta_space)
-        ee(3,1:2) = deriv (qlm_z(:,:,hn), i, j, delta_space)
+        ee(1,1:2) = deriv (qlm_emd_x(:,:,hn), i, j, delta_space)
+        ee(2,1:2) = deriv (qlm_emd_y(:,:,hn), i, j, delta_space)
+        ee(3,1:2) = deriv (qlm_emd_z(:,:,hn), i, j, delta_space)
         
-        xi(1) = qlm_xi_t(i,j,hn)
-        xi(2) = qlm_xi_p(i,j,hn)
+        xi(1) = qlm_emd_xi_t(i,j,hn)
+        xi(2) = qlm_emd_xi_p(i,j,hn)
         
         if (i == i_eq) then
-           qlm_equatorial_circumference(hn) = qlm_equatorial_circumference(hn) &
-                + sqrt(qq(2,2)) * qlm_delta_phi(hn)
+           qlm_emd_equatorial_circumference(hn) = qlm_emd_equatorial_circumference(hn) &
+                + sqrt(qq(2,2)) * qlm_emd_delta_phi(hn)
         end if
         
         if (j == j_p0) then
-           qlm_polar_circumference_0(hn) = qlm_polar_circumference_0(hn) &
-                + sqrt(qq(1,1)) * qlm_delta_theta(hn)
+           qlm_emd_polar_circumference_0(hn) = qlm_emd_polar_circumference_0(hn) &
+                + sqrt(qq(1,1)) * qlm_emd_delta_theta(hn)
         end if
         
         if (j == j_p2) then
-           qlm_polar_circumference_pi_2(hn) = qlm_polar_circumference_pi_2(hn) &
-                + sqrt(qq(1,1)) * qlm_delta_theta(hn)
+           qlm_emd_polar_circumference_pi_2(hn) = qlm_emd_polar_circumference_pi_2(hn) &
+                + sqrt(qq(1,1)) * qlm_emd_delta_theta(hn)
         end if
         
-        qlm_area(hn) = qlm_area(hn) &
+        qlm_emd_area(hn) = qlm_emd_area(hn) &
              + sqrt(dtq) * weights(i)
         
         ! s^i: outward spacelike normal
@@ -273,7 +273,7 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
               spin = spin + xi1(a) * ss(b) * kk(a,b)
            end do
         end do
-        qlm_spin_density(i,j) = spin
+        qlm_emd_spin_density(i,j) = spin
         
         ! phi^i omega_i = (alpha + ~beta) phi^i m_i + complex conjugate
         npspin = 0
@@ -285,7 +285,7 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
         
         ! phi^i omega_i = 1/2 f Im Psi_2
         ! (or is it   phi^i omega_i = - f Im Psi_2   ?)
-        wsspin = - qlm_inv_z(i,j,hn) * aimag(qlm_psi2(i,j,hn))
+        wsspin = - qlm_emd_inv_z(i,j,hn) * aimag(qlm_emd_psi2(i,j,hn))
         
         ! x = sin theta cos phi
         ! y = sin theta sin phi
@@ -293,9 +293,9 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
         ! xi_x = (0,-z,y)
         ! xi_y = (z,0,-x)
         ! xi_z = (-y,x,0)
-        tx = qlm_x(i,j,hn) - qlm_origin_x(hn)
-        ty = qlm_y(i,j,hn) - qlm_origin_y(hn)
-        tz = qlm_z(i,j,hn) - qlm_origin_z(hn)
+        tx = qlm_emd_x(i,j,hn) - qlm_emd_origin_x(hn)
+        ty = qlm_emd_y(i,j,hn) - qlm_emd_origin_y(hn)
+        tz = qlm_emd_z(i,j,hn) - qlm_emd_origin_z(hn)
         xi1_x(:) = (/ zero, -tz, ty /)
         xi1_y(:) = (/ tz, zero, -tx /)
         xi1_z(:) = (/ -ty, tx, zero /)
@@ -314,20 +314,20 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
         xi1_y(:) = (/ 0, 1, 0 /)
         xi1_z(:) = (/ 0, 0, 1 /)
         
-        qlm_spin(hn) = qlm_spin(hn) &
+        qlm_emd_spin(hn) = qlm_emd_spin(hn) &
              + spin * sqrt(dtq) * weights(i)
 
-        qlm_npspin(hn) = qlm_npspin(hn) &
+        qlm_emd_npspin(hn) = qlm_emd_npspin(hn) &
              + npspin * sqrt(dtq) * weights(i)
         
-        qlm_wsspin(hn) = qlm_wsspin(hn) &
+        qlm_emd_wsspin(hn) = qlm_emd_wsspin(hn) &
              + wsspin * sqrt(dtq) * weights(i)
         
-        qlm_coordspinx(hn) = qlm_coordspinx(hn) &
+        qlm_emd_coordspinx(hn) = qlm_emd_coordspinx(hn) &
              + coordspinx * sqrt(dtq) * weights(i)
-        qlm_coordspiny(hn) = qlm_coordspiny(hn) &
+        qlm_emd_coordspiny(hn) = qlm_emd_coordspiny(hn) &
              + coordspiny * sqrt(dtq) * weights(i)
-        qlm_coordspinz(hn) = qlm_coordspinz(hn) &
+        qlm_emd_coordspinz(hn) = qlm_emd_coordspinz(hn) &
              + coordspinz * sqrt(dtq) * weights(i)
         
         ! ADM quantities
@@ -344,9 +344,9 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
               end do
            end do
         end do
-        qlm_adm_energy(hn) = qlm_adm_energy(hn) &
+        qlm_emd_adm_energy(hn) = qlm_emd_adm_energy(hn) &
              & + adm_energy / (16*pi) &
-             &   * sqrt(dtq) * qlm_delta_theta(hn) * qlm_delta_phi(hn)
+             &   * sqrt(dtq) * qlm_emd_delta_theta(hn) * qlm_emd_delta_phi(hn)
         
         ! ADM momentum
         ! P_adm^i = (1/8 pi) int_S(r) [K^i_j - K delta^i_j] n^j r^2 dOmega
@@ -361,15 +361,15 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
                    + delta3(a,b) * trk * ss(b) 
            end do
         end do
-        qlm_adm_momentum_x(hn) = qlm_adm_momentum_x(hn) &
+        qlm_emd_adm_momentum_x(hn) = qlm_emd_adm_momentum_x(hn) &
              & + adm_mom(1) / (8*pi) &
-             &   * sqrt(dtq) * qlm_delta_theta(hn) * qlm_delta_phi(hn)
-        qlm_adm_momentum_y(hn) = qlm_adm_momentum_y(hn) &
+             &   * sqrt(dtq) * qlm_emd_delta_theta(hn) * qlm_emd_delta_phi(hn)
+        qlm_emd_adm_momentum_y(hn) = qlm_emd_adm_momentum_y(hn) &
              & + adm_mom(2) / (8*pi) &
-             &   * sqrt(dtq) * qlm_delta_theta(hn) * qlm_delta_phi(hn)
-        qlm_adm_momentum_z(hn) = qlm_adm_momentum_z(hn) &
+             &   * sqrt(dtq) * qlm_emd_delta_theta(hn) * qlm_emd_delta_phi(hn)
+        qlm_emd_adm_momentum_z(hn) = qlm_emd_adm_momentum_z(hn) &
              & + adm_mom(3) / (8*pi) &
-             &   * sqrt(dtq) * qlm_delta_theta(hn) * qlm_delta_phi(hn)
+             &   * sqrt(dtq) * qlm_emd_delta_theta(hn) * qlm_emd_delta_phi(hn)
         
         ! ADM angular momentum
         ! J_adm^i = (1/8 pi) int_S(r)
@@ -389,15 +389,15 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
               end do
            end do
         end do
-        qlm_adm_angular_momentum_x(hn) = qlm_adm_angular_momentum_x(hn) &
+        qlm_emd_adm_angular_momentum_x(hn) = qlm_emd_adm_angular_momentum_x(hn) &
              & + adm_amom(1) / (8*pi) &
-             &   * sqrt(dtq) * qlm_delta_theta(hn) * qlm_delta_phi(hn)
-        qlm_adm_angular_momentum_y(hn) = qlm_adm_angular_momentum_y(hn) &
+             &   * sqrt(dtq) * qlm_emd_delta_theta(hn) * qlm_emd_delta_phi(hn)
+        qlm_emd_adm_angular_momentum_y(hn) = qlm_emd_adm_angular_momentum_y(hn) &
              & + adm_amom(2) / (8*pi) &
-             &   * sqrt(dtq) * qlm_delta_theta(hn) * qlm_delta_phi(hn)
-        qlm_adm_angular_momentum_z(hn) = qlm_adm_angular_momentum_z(hn) &
+             &   * sqrt(dtq) * qlm_emd_delta_theta(hn) * qlm_emd_delta_phi(hn)
+        qlm_emd_adm_angular_momentum_z(hn) = qlm_emd_adm_angular_momentum_z(hn) &
              & + adm_amom(3) / (8*pi) &
-             &   * sqrt(dtq) * qlm_delta_theta(hn) * qlm_delta_phi(hn)
+             &   * sqrt(dtq) * qlm_emd_delta_theta(hn) * qlm_emd_delta_phi(hn)
 
         ! Weinberg pseudotensor quantities
         ! Weinberg, chapter 7.6, pp. 165 ff, eqns. (7.6.22) - (7.6.24):
@@ -410,7 +410,7 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
               w_energy = w_energy + (dh4(b,b,a) - dh4(a,b,b)) * ss(a)
            end do
         end do
-        qlm_w_energy(hn) = qlm_w_energy(hn) &
+        qlm_emd_w_energy(hn) = qlm_emd_w_energy(hn) &
              & + w_energy / (-16*pi) &
              &   * sqrt(dtq) * weights(i)
         
@@ -428,13 +428,13 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
                    + (- dh4(a,0,b) + dh4(b,a,0)) * ss(b)
            end do
         end do
-        qlm_w_momentum_x(hn) = qlm_w_momentum_x(hn) &
+        qlm_emd_w_momentum_x(hn) = qlm_emd_w_momentum_x(hn) &
              & + w_mom(1) / (-16*pi) &
              &   * sqrt(dtq) * weights(i)
-        qlm_w_momentum_y(hn) = qlm_w_momentum_y(hn) &
+        qlm_emd_w_momentum_y(hn) = qlm_emd_w_momentum_y(hn) &
              & + w_mom(2) / (-16*pi) &
              &   * sqrt(dtq) * weights(i)
-        qlm_w_momentum_z(hn) = qlm_w_momentum_z(hn) &
+        qlm_emd_w_momentum_z(hn) = qlm_emd_w_momentum_z(hn) &
              & + w_mom(3) / (-16*pi) &
              &   * sqrt(dtq) * weights(i)
         
@@ -454,13 +454,13 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
               end do
            end do
         end do
-        qlm_w_angular_momentum_x(hn) = qlm_w_angular_momentum_x(hn) &
+        qlm_emd_w_angular_momentum_x(hn) = qlm_emd_w_angular_momentum_x(hn) &
              & + w_amom(2,3) / (-16*pi) &
              &   * sqrt(dtq) * weights(i)
-        qlm_w_angular_momentum_y(hn) = qlm_w_angular_momentum_y(hn) &
+        qlm_emd_w_angular_momentum_y(hn) = qlm_emd_w_angular_momentum_y(hn) &
              & + w_amom(3,1) / (-16*pi) &
              &   * sqrt(dtq) * weights(i)
-        qlm_w_angular_momentum_z(hn) = qlm_w_angular_momentum_z(hn) &
+        qlm_emd_w_angular_momentum_z(hn) = qlm_emd_w_angular_momentum_z(hn) &
              & + w_amom(1,2) / (-16*pi) &
              &   * sqrt(dtq) * weights(i)
         
@@ -469,28 +469,28 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
   
   deallocate(weights)
   
-  qlm_polar_circumference_0(hn) = qlm_polar_circumference_0(hn) * 2
-  qlm_polar_circumference_pi_2(hn) = qlm_polar_circumference_pi_2(hn) * 2
+  qlm_emd_polar_circumference_0(hn) = qlm_emd_polar_circumference_0(hn) * 2
+  qlm_emd_polar_circumference_pi_2(hn) = qlm_emd_polar_circumference_pi_2(hn) * 2
   
   ! A = 4 pi R^2
   ! R = 2 M
-  qlm_radius(hn) = sqrt(qlm_area(hn) / (4*pi))
-  qlm_irreducible_mass(hn) = qlm_radius(hn) / 2
+  qlm_emd_radius(hn) = sqrt(qlm_emd_area(hn) / (4*pi))
+  qlm_emd_irreducible_mass(hn) = qlm_emd_radius(hn) / 2
   
-  qlm_spin(hn) = qlm_spin(hn) / (8*pi)
-  qlm_mass(hn) = 1/(2*qlm_radius(hn)) * sqrt(qlm_radius(hn)**4 + 4*qlm_spin(hn)**2)
-  qlm_cvspin(hn) = qlm_cvspin(hn) / (8*pi)
-  qlm_npspin(hn) = qlm_npspin(hn) / (-8*pi)
-  qlm_wsspin(hn) = qlm_wsspin(hn) / (-4*pi)
-  qlm_coordspinx(hn) = qlm_coordspinx(hn) / (8*pi)
-  qlm_coordspiny(hn) = qlm_coordspiny(hn) / (8*pi)
-  qlm_coordspinz(hn) = qlm_coordspinz(hn) / (8*pi)
+  qlm_emd_spin(hn) = qlm_emd_spin(hn) / (8*pi)
+  qlm_emd_mass(hn) = 1/(2*qlm_emd_radius(hn)) * sqrt(qlm_emd_radius(hn)**4 + 4*qlm_emd_spin(hn)**2)
+  qlm_emd_cvspin(hn) = qlm_emd_cvspin(hn) / (8*pi)
+  qlm_emd_npspin(hn) = qlm_emd_npspin(hn) / (-8*pi)
+  qlm_emd_wsspin(hn) = qlm_emd_wsspin(hn) / (-4*pi)
+  qlm_emd_coordspinx(hn) = qlm_emd_coordspinx(hn) / (8*pi)
+  qlm_emd_coordspiny(hn) = qlm_emd_coordspiny(hn) / (8*pi)
+  qlm_emd_coordspinz(hn) = qlm_emd_coordspinz(hn) / (8*pi)
   
   ! The event horizon is at r = M + sqrt (M^2 - a^2)
   ! with x^2 + y^2 + z^2 = rho^2 = r^2 + a^2 (1 - z^2 / r^2)
   
   call guess_mass_spin &
-       (qlm_area(hn), qlm_equatorial_circumference(hn), qlm_mass_guess(hn), qlm_spin_guess(hn))
+       (qlm_emd_area(hn), qlm_emd_equatorial_circumference(hn), qlm_emd_mass_guess(hn), qlm_emd_spin_guess(hn))
   
   
   
@@ -498,86 +498,86 @@ subroutine qlm_analyse (CCTK_ARGUMENTS, hn)
      
      write (msg, '("Geometric quantities for surface ",i4,":")') hn-1
      call CCTK_INFO (msg)
-     write (msg, '("   Area A:                       ",g16.6)') qlm_area(hn)
+     write (msg, '("   Area A:                       ",g16.6)') qlm_emd_area(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Irreducible mass M = R/2:     ",g16.6)') qlm_irreducible_mass(hn)
+     write (msg, '("   Irreducible mass M = R/2:     ",g16.6)') qlm_emd_irreducible_mass(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Areal radius R = sqrt(A/4pi): ",g16.6)') qlm_radius(hn)
+     write (msg, '("   Areal radius R = sqrt(A/4pi): ",g16.6)') qlm_emd_radius(hn)
      call CCTK_INFO (msg)
      
      write (msg, '("Coordinate-dependent quantities for surface ",i4,":")') hn-1
      call CCTK_INFO (msg)
      write (msg, '("   Equatorial circumference:        ",g16.6)') &
-          qlm_equatorial_circumference(hn)
+          qlm_emd_equatorial_circumference(hn)
      call CCTK_INFO (msg)
      write (msg, '("   Polar circumference at phi=0:    ",g16.6)') &
-          qlm_polar_circumference_0(hn)
+          qlm_emd_polar_circumference_0(hn)
      call CCTK_INFO (msg)
      write (msg, '("   Polar circumference at phi=pi/2: ",g16.6)') &
-          qlm_polar_circumference_pi_2(hn)
+          qlm_emd_polar_circumference_pi_2(hn)
      call CCTK_INFO (msg)
-     if (qlm_spin_guess(hn) >= 0) then
+     if (qlm_emd_spin_guess(hn) >= 0) then
         write (msg, '("   Spin guess J from distortion:    ",g16.6)') &
-             qlm_spin_guess(hn)
+             qlm_emd_spin_guess(hn)
         call CCTK_INFO (msg)
      else
         call CCTK_INFO ("   No valid spin guess from distortion.")
         call CCTK_INFO ("   (Spin guess is imaginary.)")
         write (msg, '("   Magnitude of invalid spin guess: ",g16.6)') &
-             abs(qlm_spin_guess(hn))
+             abs(qlm_emd_spin_guess(hn))
         call CCTK_INFO (msg)
      end if
      write (msg, '("   Mass guess M from distortion:    ",g16.6)') &
-          qlm_mass_guess(hn)
+          qlm_emd_mass_guess(hn)
      call CCTK_INFO (msg)
      
      write (msg, '("Isolated Horizon quantities for surface ",i4,":")') hn-1
      call CCTK_INFO (msg)
-     ev = cmplx(qlm_killing_eigenvalue_re(hn), qlm_killing_eigenvalue_im(hn),rk)
+     ev = cmplx(qlm_emd_killing_eigenvalue_re(hn), qlm_emd_killing_eigenvalue_im(hn),rk)
      write (msg, '("   Killing vector field eigenvalue norm:   ",g14.6)') abs(ev)
      call CCTK_INFO (msg)
-     write (msg, '("   Spin J:                                 ",g14.6)') qlm_spin(hn)
+     write (msg, '("   Spin J:                                 ",g14.6)') qlm_emd_spin(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Kerr spin parameter a = J/M:            ",g14.6)') qlm_spin(hn) / qlm_mass(hn)
+     write (msg, '("   Kerr spin parameter a = J/M:            ",g14.6)') qlm_emd_spin(hn) / qlm_emd_mass(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Dimensionless spin parameter a = J/M^2: ",g14.6)') qlm_spin(hn) / qlm_mass(hn)**2
+     write (msg, '("   Dimensionless spin parameter a = J/M^2: ",g14.6)') qlm_emd_spin(hn) / qlm_emd_mass(hn)**2
      call CCTK_INFO (msg)
-     write (msg, '("   Spin J from NP:                         ",g14.6)') qlm_npspin(hn)
+     write (msg, '("   Spin J from NP:                         ",g14.6)') qlm_emd_npspin(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Spin J from phi-coordinate-vector:      ",g14.6)') qlm_cvspin(hn)
+     write (msg, '("   Spin J from phi-coordinate-vector:      ",g14.6)') qlm_emd_cvspin(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Mass M:                                 ",g14.6)') qlm_mass(hn)
+     write (msg, '("   Mass M:                                 ",g14.6)') qlm_emd_mass(hn)
      call CCTK_INFO (msg)
      
      write (msg, '("Global quantities for surface ",i4,":")') hn-1
      call CCTK_INFO (msg)
-     write (msg, '("   ADM energy:             ",g16.6)') qlm_adm_energy(hn)
+     write (msg, '("   ADM energy:             ",g16.6)') qlm_emd_adm_energy(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   ADM momentum x:         ",g16.6)') qlm_adm_momentum_x(hn)
+     write (msg, '("   ADM momentum x:         ",g16.6)') qlm_emd_adm_momentum_x(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   ADM momentum y:         ",g16.6)') qlm_adm_momentum_y(hn)
+     write (msg, '("   ADM momentum y:         ",g16.6)') qlm_emd_adm_momentum_y(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   ADM momentum z:         ",g16.6)') qlm_adm_momentum_z(hn)
+     write (msg, '("   ADM momentum z:         ",g16.6)') qlm_emd_adm_momentum_z(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   ADM angular momentum x: ",g16.6)') qlm_adm_angular_momentum_x(hn)
+     write (msg, '("   ADM angular momentum x: ",g16.6)') qlm_emd_adm_angular_momentum_x(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   ADM angular momentum y: ",g16.6)') qlm_adm_angular_momentum_y(hn)
+     write (msg, '("   ADM angular momentum y: ",g16.6)') qlm_emd_adm_angular_momentum_y(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   ADM angular momentum z: ",g16.6)') qlm_adm_angular_momentum_z(hn)
+     write (msg, '("   ADM angular momentum z: ",g16.6)') qlm_emd_adm_angular_momentum_z(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Weinberg energy:             ",g16.6)') qlm_w_energy(hn)
+     write (msg, '("   Weinberg energy:             ",g16.6)') qlm_emd_w_energy(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Weinberg momentum x:         ",g16.6)') qlm_w_momentum_x(hn)
+     write (msg, '("   Weinberg momentum x:         ",g16.6)') qlm_emd_w_momentum_x(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Weinberg momentum y:         ",g16.6)') qlm_w_momentum_y(hn)
+     write (msg, '("   Weinberg momentum y:         ",g16.6)') qlm_emd_w_momentum_y(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Weinberg momentum z:         ",g16.6)') qlm_w_momentum_z(hn)
+     write (msg, '("   Weinberg momentum z:         ",g16.6)') qlm_emd_w_momentum_z(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Weinberg angular momentum x: ",g16.6)') qlm_w_angular_momentum_x(hn)
+     write (msg, '("   Weinberg angular momentum x: ",g16.6)') qlm_emd_w_angular_momentum_x(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Weinberg angular momentum y: ",g16.6)') qlm_w_angular_momentum_y(hn)
+     write (msg, '("   Weinberg angular momentum y: ",g16.6)') qlm_emd_w_angular_momentum_y(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Weinberg angular momentum z: ",g16.6)') qlm_w_angular_momentum_z(hn)
+     write (msg, '("   Weinberg angular momentum z: ",g16.6)') qlm_emd_w_angular_momentum_z(hn)
      call CCTK_INFO (msg)
      
   end if
@@ -618,4 +618,4 @@ contains
     
   end subroutine guess_mass_spin
   
-end subroutine qlm_analyse
+end subroutine qlm_emd_analyse

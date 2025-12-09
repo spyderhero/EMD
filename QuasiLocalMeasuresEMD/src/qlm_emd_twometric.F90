@@ -5,12 +5,12 @@
 
 
 
-subroutine qlm_calc_twometric (CCTK_ARGUMENTS, hn)
+subroutine qlm_emd_calc_twometric (CCTK_ARGUMENTS, hn)
   use adm_metric
   use cctk
-  use qlm_boundary
-  use qlm_derivs
-  use qlm_variables
+  use qlm_emd_boundary
+  use qlm_emd_derivs
+  use qlm_emd_variables
   use ricci
   use ricci2
   use tensor
@@ -36,51 +36,51 @@ subroutine qlm_calc_twometric (CCTK_ARGUMENTS, hn)
      call CCTK_INFO ("Calculating two-metric")
   end if
   
-  delta_space(:) = (/ qlm_delta_theta(hn), qlm_delta_phi(hn) /)
+  delta_space(:) = (/ qlm_emd_delta_theta(hn), qlm_emd_delta_phi(hn) /)
   
   ! Calculate the two-metric
-  do j = 1+qlm_nghostsphi(hn), qlm_nphi(hn)-qlm_nghostsphi(hn)
-     do i = 1+qlm_nghoststheta(hn), qlm_ntheta(hn)-qlm_nghoststheta(hn)
+  do j = 1+qlm_emd_nghostsphi(hn), qlm_emd_nphi(hn)-qlm_emd_nghostsphi(hn)
+     do i = 1+qlm_emd_nghoststheta(hn), qlm_emd_ntheta(hn)-qlm_emd_nghoststheta(hn)
         
-        gg(1,1) = qlm_gxx(i,j)
-        gg(1,2) = qlm_gxy(i,j)
-        gg(1,3) = qlm_gxz(i,j)
-        gg(2,2) = qlm_gyy(i,j)
-        gg(2,3) = qlm_gyz(i,j)
-        gg(3,3) = qlm_gzz(i,j)
+        gg(1,1) = qlm_emd_gxx(i,j)
+        gg(1,2) = qlm_emd_gxy(i,j)
+        gg(1,3) = qlm_emd_gxz(i,j)
+        gg(2,2) = qlm_emd_gyy(i,j)
+        gg(2,3) = qlm_emd_gyz(i,j)
+        gg(3,3) = qlm_emd_gzz(i,j)
         gg(2,1) = gg(1,2)
         gg(3,1) = gg(1,3)
         gg(3,2) = gg(2,3)
         
-        dgg(1,1,1) = qlm_dgxxx(i,j)
-        dgg(1,2,1) = qlm_dgxyx(i,j)
-        dgg(1,3,1) = qlm_dgxzx(i,j)
-        dgg(2,2,1) = qlm_dgyyx(i,j)
-        dgg(2,3,1) = qlm_dgyzx(i,j)
-        dgg(3,3,1) = qlm_dgzzx(i,j)
-        dgg(1,1,2) = qlm_dgxxy(i,j)
-        dgg(1,2,2) = qlm_dgxyy(i,j)
-        dgg(1,3,2) = qlm_dgxzy(i,j)
-        dgg(2,2,2) = qlm_dgyyy(i,j)
-        dgg(2,3,2) = qlm_dgyzy(i,j)
-        dgg(3,3,2) = qlm_dgzzy(i,j)
-        dgg(1,1,3) = qlm_dgxxz(i,j)
-        dgg(1,2,3) = qlm_dgxyz(i,j)
-        dgg(1,3,3) = qlm_dgxzz(i,j)
-        dgg(2,2,3) = qlm_dgyyz(i,j)
-        dgg(2,3,3) = qlm_dgyzz(i,j)
-        dgg(3,3,3) = qlm_dgzzz(i,j)
+        dgg(1,1,1) = qlm_emd_dgxxx(i,j)
+        dgg(1,2,1) = qlm_emd_dgxyx(i,j)
+        dgg(1,3,1) = qlm_emd_dgxzx(i,j)
+        dgg(2,2,1) = qlm_emd_dgyyx(i,j)
+        dgg(2,3,1) = qlm_emd_dgyzx(i,j)
+        dgg(3,3,1) = qlm_emd_dgzzx(i,j)
+        dgg(1,1,2) = qlm_emd_dgxxy(i,j)
+        dgg(1,2,2) = qlm_emd_dgxyy(i,j)
+        dgg(1,3,2) = qlm_emd_dgxzy(i,j)
+        dgg(2,2,2) = qlm_emd_dgyyy(i,j)
+        dgg(2,3,2) = qlm_emd_dgyzy(i,j)
+        dgg(3,3,2) = qlm_emd_dgzzy(i,j)
+        dgg(1,1,3) = qlm_emd_dgxxz(i,j)
+        dgg(1,2,3) = qlm_emd_dgxyz(i,j)
+        dgg(1,3,3) = qlm_emd_dgxzz(i,j)
+        dgg(2,2,3) = qlm_emd_dgyyz(i,j)
+        dgg(2,3,3) = qlm_emd_dgyzz(i,j)
+        dgg(3,3,3) = qlm_emd_dgzzz(i,j)
         dgg(2,1,:) = dgg(1,2,:)
         dgg(3,1,:) = dgg(1,3,:)
         dgg(3,2,:) = dgg(2,3,:)
         
-        ee(1,1:2) = deriv (qlm_x(:,:,hn), i, j, delta_space)
-        ee(2,1:2) = deriv (qlm_y(:,:,hn), i, j, delta_space)
-        ee(3,1:2) = deriv (qlm_z(:,:,hn), i, j, delta_space)
+        ee(1,1:2) = deriv (qlm_emd_x(:,:,hn), i, j, delta_space)
+        ee(2,1:2) = deriv (qlm_emd_y(:,:,hn), i, j, delta_space)
+        ee(3,1:2) = deriv (qlm_emd_z(:,:,hn), i, j, delta_space)
         
-        dee(1,1:2,1:2) = deriv2 (qlm_x(:,:,hn), i, j, delta_space)
-        dee(2,1:2,1:2) = deriv2 (qlm_y(:,:,hn), i, j, delta_space)
-        dee(3,1:2,1:2) = deriv2 (qlm_z(:,:,hn), i, j, delta_space)
+        dee(1,1:2,1:2) = deriv2 (qlm_emd_x(:,:,hn), i, j, delta_space)
+        dee(2,1:2,1:2) = deriv2 (qlm_emd_y(:,:,hn), i, j, delta_space)
+        dee(3,1:2,1:2) = deriv2 (qlm_emd_z(:,:,hn), i, j, delta_space)
         
         do a=1,2
            do b=1,2
@@ -112,29 +112,29 @@ subroutine qlm_calc_twometric (CCTK_ARGUMENTS, hn)
         
         ! Could also calculate this as:
         !    q^ab = m^a mbar^b + mbar^a m^b
-        qlm_qtt(i,j,hn) = qq(1,1)
-        qlm_qtp(i,j,hn) = qq(1,2)
-        qlm_qpp(i,j,hn) = qq(2,2)
+        qlm_emd_qtt(i,j,hn) = qq(1,1)
+        qlm_emd_qtp(i,j,hn) = qq(1,2)
+        qlm_emd_qpp(i,j,hn) = qq(2,2)
         
-        qlm_dqttt(i,j) = dqq(1,1,1)
-        qlm_dqtpt(i,j) = dqq(1,2,1)
-        qlm_dqppt(i,j) = dqq(2,2,1)
-        qlm_dqttp(i,j) = dqq(1,1,2)
-        qlm_dqtpp(i,j) = dqq(1,2,2)
-        qlm_dqppp(i,j) = dqq(2,2,2)
+        qlm_emd_dqttt(i,j) = dqq(1,1,1)
+        qlm_emd_dqtpt(i,j) = dqq(1,2,1)
+        qlm_emd_dqppt(i,j) = dqq(2,2,1)
+        qlm_emd_dqttp(i,j) = dqq(1,1,2)
+        qlm_emd_dqtpp(i,j) = dqq(1,2,2)
+        qlm_emd_dqppp(i,j) = dqq(2,2,2)
         
      end do
   end do
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_qtt(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_qtp(:,:,hn), +1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_qpp(:,:,hn), +1)
+  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_qtt(:,:,hn), +1)
+  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_qtp(:,:,hn), +1)
+  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_qpp(:,:,hn), +1)
   
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_dqttt(:,:), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_dqtpt(:,:), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_dqppt(:,:), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_dqttp(:,:), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_dqtpp(:,:), -1)
-  call set_boundary (CCTK_PASS_FTOF, hn, qlm_dqppp(:,:), -1)
+  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqttt(:,:), -1)
+  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqtpt(:,:), -1)
+  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqppt(:,:), -1)
+  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqttp(:,:), -1)
+  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqtpp(:,:), -1)
+  call set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_dqppp(:,:), -1)
   
-end subroutine qlm_calc_twometric
+end subroutine qlm_emd_calc_twometric

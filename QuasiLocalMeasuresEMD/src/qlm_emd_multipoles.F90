@@ -5,12 +5,12 @@
 
 
 
-subroutine qlm_multipoles (CCTK_ARGUMENTS, hn)
+subroutine qlm_emd_multipoles (CCTK_ARGUMENTS, hn)
   use cctk
   use constants
-  use qlm_boundary
-  use qlm_derivs
-  use qlm_variables
+  use qlm_emd_boundary
+  use qlm_emd_derivs
+  use qlm_emd_variables
   use ricci2
   use tensor2
   implicit none
@@ -37,68 +37,68 @@ subroutine qlm_multipoles (CCTK_ARGUMENTS, hn)
      call CCTK_INFO ("Calculating multipole moments")
   end if
   
-  delta_space(:) = (/ qlm_delta_theta(hn), qlm_delta_phi(hn) /)
+  delta_space(:) = (/ qlm_emd_delta_theta(hn), qlm_emd_delta_phi(hn) /)
   
-  qlm_mp_m0(hn) = 0
-  qlm_mp_m1(hn) = 0
-  qlm_mp_m2(hn) = 0
-  qlm_mp_m3(hn) = 0
-  qlm_mp_m4(hn) = 0
-  qlm_mp_m5(hn) = 0
-  qlm_mp_m6(hn) = 0
-  qlm_mp_m7(hn) = 0
-  qlm_mp_m8(hn) = 0
+  qlm_emd_mp_m0(hn) = 0
+  qlm_emd_mp_m1(hn) = 0
+  qlm_emd_mp_m2(hn) = 0
+  qlm_emd_mp_m3(hn) = 0
+  qlm_emd_mp_m4(hn) = 0
+  qlm_emd_mp_m5(hn) = 0
+  qlm_emd_mp_m6(hn) = 0
+  qlm_emd_mp_m7(hn) = 0
+  qlm_emd_mp_m8(hn) = 0
   
-  qlm_mp_j0(hn) = 0
-  qlm_mp_j1(hn) = 0
-  qlm_mp_j2(hn) = 0
-  qlm_mp_j3(hn) = 0
-  qlm_mp_j4(hn) = 0
-  qlm_mp_j5(hn) = 0
-  qlm_mp_j6(hn) = 0
-  qlm_mp_j7(hn) = 0
-  qlm_mp_j8(hn) = 0
+  qlm_emd_mp_j0(hn) = 0
+  qlm_emd_mp_j1(hn) = 0
+  qlm_emd_mp_j2(hn) = 0
+  qlm_emd_mp_j3(hn) = 0
+  qlm_emd_mp_j4(hn) = 0
+  qlm_emd_mp_j5(hn) = 0
+  qlm_emd_mp_j6(hn) = 0
+  qlm_emd_mp_j7(hn) = 0
+  qlm_emd_mp_j8(hn) = 0
   
-  do j = 1+qlm_nghostsphi(hn), qlm_nphi(hn)-qlm_nghostsphi(hn)
-     do i = 1+qlm_nghoststheta(hn), qlm_ntheta(hn)-qlm_nghoststheta(hn)
+  do j = 1+qlm_emd_nghostsphi(hn), qlm_emd_nphi(hn)-qlm_emd_nghostsphi(hn)
+     do i = 1+qlm_emd_nghoststheta(hn), qlm_emd_ntheta(hn)-qlm_emd_nghoststheta(hn)
         
         ! 2-metric on the horizon
-        qq(1,1) = qlm_qtt(i,j,hn)
-        qq(1,2) = qlm_qtp(i,j,hn)
-        qq(2,2) = qlm_qpp(i,j,hn)
+        qq(1,1) = qlm_emd_qtt(i,j,hn)
+        qq(1,2) = qlm_emd_qtp(i,j,hn)
+        qq(2,2) = qlm_emd_qpp(i,j,hn)
         qq(2,1) = qq(1,2)
         
         call calc_2det (qq, dtq)
         
-        rsc = qlm_rsc(i,j,hn)
+        rsc = qlm_emd_rsc(i,j,hn)
         
-        zz = qlm_inv_z(i,j,hn)
+        zz = qlm_emd_inv_z(i,j,hn)
         
-        area = sqrt(dtq) * qlm_delta_theta(hn) * qlm_delta_phi(hn)
+        area = sqrt(dtq) * qlm_emd_delta_theta(hn) * qlm_emd_delta_phi(hn)
         
         mass = fourth * rsc
         
-        qlm_mp_m0(hn) = qlm_mp_m0(hn) + mass * p0(zz) * area
-        qlm_mp_m1(hn) = qlm_mp_m1(hn) + mass * p1(zz) * area
-        qlm_mp_m2(hn) = qlm_mp_m2(hn) + mass * p2(zz) * area
-        qlm_mp_m3(hn) = qlm_mp_m3(hn) + mass * p3(zz) * area
-        qlm_mp_m4(hn) = qlm_mp_m4(hn) + mass * p4(zz) * area
-        qlm_mp_m5(hn) = qlm_mp_m5(hn) + mass * p5(zz) * area
-        qlm_mp_m6(hn) = qlm_mp_m6(hn) + mass * p6(zz) * area
-        qlm_mp_m7(hn) = qlm_mp_m7(hn) + mass * p7(zz) * area
-        qlm_mp_m8(hn) = qlm_mp_m8(hn) + mass * p8(zz) * area
+        qlm_emd_mp_m0(hn) = qlm_emd_mp_m0(hn) + mass * p0(zz) * area
+        qlm_emd_mp_m1(hn) = qlm_emd_mp_m1(hn) + mass * p1(zz) * area
+        qlm_emd_mp_m2(hn) = qlm_emd_mp_m2(hn) + mass * p2(zz) * area
+        qlm_emd_mp_m3(hn) = qlm_emd_mp_m3(hn) + mass * p3(zz) * area
+        qlm_emd_mp_m4(hn) = qlm_emd_mp_m4(hn) + mass * p4(zz) * area
+        qlm_emd_mp_m5(hn) = qlm_emd_mp_m5(hn) + mass * p5(zz) * area
+        qlm_emd_mp_m6(hn) = qlm_emd_mp_m6(hn) + mass * p6(zz) * area
+        qlm_emd_mp_m7(hn) = qlm_emd_mp_m7(hn) + mass * p7(zz) * area
+        qlm_emd_mp_m8(hn) = qlm_emd_mp_m8(hn) + mass * p8(zz) * area
         
-        spin = qlm_spin_density(i,j)
+        spin = qlm_emd_spin_density(i,j)
         
-        qlm_mp_j0(hn) = qlm_mp_j0(hn) + spin * dp0(zz) * area
-        qlm_mp_j1(hn) = qlm_mp_j1(hn) + spin * dp1(zz) * area
-        qlm_mp_j2(hn) = qlm_mp_j2(hn) + spin * dp2(zz) * area
-        qlm_mp_j3(hn) = qlm_mp_j3(hn) + spin * dp3(zz) * area
-        qlm_mp_j4(hn) = qlm_mp_j4(hn) + spin * dp4(zz) * area
-        qlm_mp_j5(hn) = qlm_mp_j5(hn) + spin * dp5(zz) * area
-        qlm_mp_j6(hn) = qlm_mp_j6(hn) + spin * dp6(zz) * area
-        qlm_mp_j7(hn) = qlm_mp_j7(hn) + spin * dp7(zz) * area
-        qlm_mp_j8(hn) = qlm_mp_j8(hn) + spin * dp8(zz) * area
+        qlm_emd_mp_j0(hn) = qlm_emd_mp_j0(hn) + spin * dp0(zz) * area
+        qlm_emd_mp_j1(hn) = qlm_emd_mp_j1(hn) + spin * dp1(zz) * area
+        qlm_emd_mp_j2(hn) = qlm_emd_mp_j2(hn) + spin * dp2(zz) * area
+        qlm_emd_mp_j3(hn) = qlm_emd_mp_j3(hn) + spin * dp3(zz) * area
+        qlm_emd_mp_j4(hn) = qlm_emd_mp_j4(hn) + spin * dp4(zz) * area
+        qlm_emd_mp_j5(hn) = qlm_emd_mp_j5(hn) + spin * dp5(zz) * area
+        qlm_emd_mp_j6(hn) = qlm_emd_mp_j6(hn) + spin * dp6(zz) * area
+        qlm_emd_mp_j7(hn) = qlm_emd_mp_j7(hn) + spin * dp7(zz) * area
+        qlm_emd_mp_j8(hn) = qlm_emd_mp_j8(hn) + spin * dp8(zz) * area
         
 !!$        spin = 0
 !!$        do a=1,2
@@ -111,15 +111,15 @@ subroutine qlm_multipoles (CCTK_ARGUMENTS, hn)
 !!$           end do
 !!$        end do
 !!$        
-!!$        qlm_mp_j0(hn) = qlm_mp_j0(hn) + spin * dp0(zz) * area
-!!$        qlm_mp_j1(hn) = qlm_mp_j1(hn) + spin * dp1(zz) * area
-!!$        qlm_mp_j2(hn) = qlm_mp_j2(hn) + spin * dp2(zz) * area
-!!$        qlm_mp_j3(hn) = qlm_mp_j3(hn) + spin * dp3(zz) * area
-!!$        qlm_mp_j4(hn) = qlm_mp_j4(hn) + spin * dp4(zz) * area
-!!$        qlm_mp_j5(hn) = qlm_mp_j5(hn) + spin * dp5(zz) * area
-!!$        qlm_mp_j6(hn) = qlm_mp_j6(hn) + spin * dp6(zz) * area
-!!$        qlm_mp_j7(hn) = qlm_mp_j7(hn) + spin * dp7(zz) * area
-!!$        qlm_mp_j8(hn) = qlm_mp_j8(hn) + spin * dp8(zz) * area
+!!$        qlm_emd_mp_j0(hn) = qlm_emd_mp_j0(hn) + spin * dp0(zz) * area
+!!$        qlm_emd_mp_j1(hn) = qlm_emd_mp_j1(hn) + spin * dp1(zz) * area
+!!$        qlm_emd_mp_j2(hn) = qlm_emd_mp_j2(hn) + spin * dp2(zz) * area
+!!$        qlm_emd_mp_j3(hn) = qlm_emd_mp_j3(hn) + spin * dp3(zz) * area
+!!$        qlm_emd_mp_j4(hn) = qlm_emd_mp_j4(hn) + spin * dp4(zz) * area
+!!$        qlm_emd_mp_j5(hn) = qlm_emd_mp_j5(hn) + spin * dp5(zz) * area
+!!$        qlm_emd_mp_j6(hn) = qlm_emd_mp_j6(hn) + spin * dp6(zz) * area
+!!$        qlm_emd_mp_j7(hn) = qlm_emd_mp_j7(hn) + spin * dp7(zz) * area
+!!$        qlm_emd_mp_j8(hn) = qlm_emd_mp_j8(hn) + spin * dp8(zz) * area
         
      end do
   end do
@@ -243,11 +243,11 @@ contains
          - 2520*o128 * z
   end function dp8
   
-end subroutine qlm_multipoles
+end subroutine qlm_emd_multipoles
 
 
 
-subroutine qlm_multipoles_normalise (CCTK_ARGUMENTS, hn)
+subroutine qlm_emd_multipoles_normalise (CCTK_ARGUMENTS, hn)
   use cctk
   use constants
   implicit none
@@ -263,45 +263,45 @@ subroutine qlm_multipoles_normalise (CCTK_ARGUMENTS, hn)
   ! Normalise
   
 !!$  ! This is the normalisation for I_n and L_n
-!!$  qlm_mp_m0(hn) = qlm_mp_m0(hn) / sqrt(4*pi/ 1)
-!!$  qlm_mp_m1(hn) = qlm_mp_m1(hn) / sqrt(4*pi/ 3)
-!!$  qlm_mp_m2(hn) = qlm_mp_m2(hn) / sqrt(4*pi/ 5)
-!!$  qlm_mp_m3(hn) = qlm_mp_m3(hn) / sqrt(4*pi/ 7)
-!!$  qlm_mp_m4(hn) = qlm_mp_m4(hn) / sqrt(4*pi/ 9)
-!!$  qlm_mp_m5(hn) = qlm_mp_m5(hn) / sqrt(4*pi/11)
-!!$  qlm_mp_m6(hn) = qlm_mp_m6(hn) / sqrt(4*pi/13)
-!!$  qlm_mp_m7(hn) = qlm_mp_m7(hn) / sqrt(4*pi/15)
-!!$  qlm_mp_m8(hn) = qlm_mp_m8(hn) / sqrt(4*pi/17)
+!!$  qlm_emd_mp_m0(hn) = qlm_emd_mp_m0(hn) / sqrt(4*pi/ 1)
+!!$  qlm_emd_mp_m1(hn) = qlm_emd_mp_m1(hn) / sqrt(4*pi/ 3)
+!!$  qlm_emd_mp_m2(hn) = qlm_emd_mp_m2(hn) / sqrt(4*pi/ 5)
+!!$  qlm_emd_mp_m3(hn) = qlm_emd_mp_m3(hn) / sqrt(4*pi/ 7)
+!!$  qlm_emd_mp_m4(hn) = qlm_emd_mp_m4(hn) / sqrt(4*pi/ 9)
+!!$  qlm_emd_mp_m5(hn) = qlm_emd_mp_m5(hn) / sqrt(4*pi/11)
+!!$  qlm_emd_mp_m6(hn) = qlm_emd_mp_m6(hn) / sqrt(4*pi/13)
+!!$  qlm_emd_mp_m7(hn) = qlm_emd_mp_m7(hn) / sqrt(4*pi/15)
+!!$  qlm_emd_mp_m8(hn) = qlm_emd_mp_m8(hn) / sqrt(4*pi/17)
 !!$  
-!!$  qlm_mp_j0(hn) = qlm_mp_j0(hn) / sqrt(4*pi/ 1)
-!!$  qlm_mp_j1(hn) = qlm_mp_j1(hn) / sqrt(4*pi/ 3)
-!!$  qlm_mp_j2(hn) = qlm_mp_j2(hn) / sqrt(4*pi/ 5)
-!!$  qlm_mp_j3(hn) = qlm_mp_j3(hn) / sqrt(4*pi/ 7)
-!!$  qlm_mp_j4(hn) = qlm_mp_j4(hn) / sqrt(4*pi/ 9)
-!!$  qlm_mp_j5(hn) = qlm_mp_j5(hn) / sqrt(4*pi/11)
-!!$  qlm_mp_j6(hn) = qlm_mp_j6(hn) / sqrt(4*pi/13)
-!!$  qlm_mp_j7(hn) = qlm_mp_j7(hn) / sqrt(4*pi/15)
-!!$  qlm_mp_j8(hn) = qlm_mp_j8(hn) / sqrt(4*pi/17)
+!!$  qlm_emd_mp_j0(hn) = qlm_emd_mp_j0(hn) / sqrt(4*pi/ 1)
+!!$  qlm_emd_mp_j1(hn) = qlm_emd_mp_j1(hn) / sqrt(4*pi/ 3)
+!!$  qlm_emd_mp_j2(hn) = qlm_emd_mp_j2(hn) / sqrt(4*pi/ 5)
+!!$  qlm_emd_mp_j3(hn) = qlm_emd_mp_j3(hn) / sqrt(4*pi/ 7)
+!!$  qlm_emd_mp_j4(hn) = qlm_emd_mp_j4(hn) / sqrt(4*pi/ 9)
+!!$  qlm_emd_mp_j5(hn) = qlm_emd_mp_j5(hn) / sqrt(4*pi/11)
+!!$  qlm_emd_mp_j6(hn) = qlm_emd_mp_j6(hn) / sqrt(4*pi/13)
+!!$  qlm_emd_mp_j7(hn) = qlm_emd_mp_j7(hn) / sqrt(4*pi/15)
+!!$  qlm_emd_mp_j8(hn) = qlm_emd_mp_j8(hn) / sqrt(4*pi/17)
   
   ! This is the normalisation for M_n and J_n
-  qlm_mp_m0(hn) = qlm_mp_m0(hn) * qlm_mass(hn) * qlm_radius(hn)**0 / (2*pi)
-  qlm_mp_m1(hn) = qlm_mp_m1(hn) * qlm_mass(hn) * qlm_radius(hn)**1 / (2*pi)
-  qlm_mp_m2(hn) = qlm_mp_m2(hn) * qlm_mass(hn) * qlm_radius(hn)**2 / (2*pi)
-  qlm_mp_m3(hn) = qlm_mp_m3(hn) * qlm_mass(hn) * qlm_radius(hn)**3 / (2*pi)
-  qlm_mp_m4(hn) = qlm_mp_m4(hn) * qlm_mass(hn) * qlm_radius(hn)**4 / (2*pi)
-  qlm_mp_m5(hn) = qlm_mp_m5(hn) * qlm_mass(hn) * qlm_radius(hn)**5 / (2*pi)
-  qlm_mp_m6(hn) = qlm_mp_m6(hn) * qlm_mass(hn) * qlm_radius(hn)**6 / (2*pi)
-  qlm_mp_m7(hn) = qlm_mp_m7(hn) * qlm_mass(hn) * qlm_radius(hn)**7 / (2*pi)
-  qlm_mp_m8(hn) = qlm_mp_m8(hn) * qlm_mass(hn) * qlm_radius(hn)**8 / (2*pi)
+  qlm_emd_mp_m0(hn) = qlm_emd_mp_m0(hn) * qlm_emd_mass(hn) * qlm_emd_radius(hn)**0 / (2*pi)
+  qlm_emd_mp_m1(hn) = qlm_emd_mp_m1(hn) * qlm_emd_mass(hn) * qlm_emd_radius(hn)**1 / (2*pi)
+  qlm_emd_mp_m2(hn) = qlm_emd_mp_m2(hn) * qlm_emd_mass(hn) * qlm_emd_radius(hn)**2 / (2*pi)
+  qlm_emd_mp_m3(hn) = qlm_emd_mp_m3(hn) * qlm_emd_mass(hn) * qlm_emd_radius(hn)**3 / (2*pi)
+  qlm_emd_mp_m4(hn) = qlm_emd_mp_m4(hn) * qlm_emd_mass(hn) * qlm_emd_radius(hn)**4 / (2*pi)
+  qlm_emd_mp_m5(hn) = qlm_emd_mp_m5(hn) * qlm_emd_mass(hn) * qlm_emd_radius(hn)**5 / (2*pi)
+  qlm_emd_mp_m6(hn) = qlm_emd_mp_m6(hn) * qlm_emd_mass(hn) * qlm_emd_radius(hn)**6 / (2*pi)
+  qlm_emd_mp_m7(hn) = qlm_emd_mp_m7(hn) * qlm_emd_mass(hn) * qlm_emd_radius(hn)**7 / (2*pi)
+  qlm_emd_mp_m8(hn) = qlm_emd_mp_m8(hn) * qlm_emd_mass(hn) * qlm_emd_radius(hn)**8 / (2*pi)
   
-  qlm_mp_j0(hn) = qlm_mp_j0(hn) * qlm_radius(hn)**(-1) / (8*pi)
-  qlm_mp_j1(hn) = qlm_mp_j1(hn) * qlm_radius(hn)**0 / (8*pi)
-  qlm_mp_j2(hn) = qlm_mp_j2(hn) * qlm_radius(hn)**1 / (8*pi)
-  qlm_mp_j3(hn) = qlm_mp_j3(hn) * qlm_radius(hn)**2 / (8*pi)
-  qlm_mp_j4(hn) = qlm_mp_j4(hn) * qlm_radius(hn)**3 / (8*pi)
-  qlm_mp_j5(hn) = qlm_mp_j5(hn) * qlm_radius(hn)**4 / (8*pi)
-  qlm_mp_j6(hn) = qlm_mp_j6(hn) * qlm_radius(hn)**5 / (8*pi)
-  qlm_mp_j7(hn) = qlm_mp_j7(hn) * qlm_radius(hn)**6 / (8*pi)
-  qlm_mp_j8(hn) = qlm_mp_j8(hn) * qlm_radius(hn)**7 / (8*pi)
+  qlm_emd_mp_j0(hn) = qlm_emd_mp_j0(hn) * qlm_emd_radius(hn)**(-1) / (8*pi)
+  qlm_emd_mp_j1(hn) = qlm_emd_mp_j1(hn) * qlm_emd_radius(hn)**0 / (8*pi)
+  qlm_emd_mp_j2(hn) = qlm_emd_mp_j2(hn) * qlm_emd_radius(hn)**1 / (8*pi)
+  qlm_emd_mp_j3(hn) = qlm_emd_mp_j3(hn) * qlm_emd_radius(hn)**2 / (8*pi)
+  qlm_emd_mp_j4(hn) = qlm_emd_mp_j4(hn) * qlm_emd_radius(hn)**3 / (8*pi)
+  qlm_emd_mp_j5(hn) = qlm_emd_mp_j5(hn) * qlm_emd_radius(hn)**4 / (8*pi)
+  qlm_emd_mp_j6(hn) = qlm_emd_mp_j6(hn) * qlm_emd_radius(hn)**5 / (8*pi)
+  qlm_emd_mp_j7(hn) = qlm_emd_mp_j7(hn) * qlm_emd_radius(hn)**6 / (8*pi)
+  qlm_emd_mp_j8(hn) = qlm_emd_mp_j8(hn) * qlm_emd_radius(hn)**7 / (8*pi)
   
-end subroutine qlm_multipoles_normalise
+end subroutine qlm_emd_multipoles_normalise

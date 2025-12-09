@@ -1,6 +1,6 @@
 #include "cctk.h"
 
-module qlm_gram_schmidt
+module qlm_emd_gram_schmidt
   implicit none
   private
   public gram_schmidt_project
@@ -88,4 +88,4 @@ contains
     dx = dz
   end subroutine gram_schmidt_normalise
   
-end module qlm_gram_schmidt
+end module qlm_emd_gram_schmidt
