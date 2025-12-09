@@ -8,9 +8,9 @@ subroutine qlm_compute_charge (CCTK_ARGUMENTS, hn)
   implicit none
   integer :: hn
   integer :: i, j
-  real(kind=CCTK_REAL) :: Ex, Ey, Ez
-  real(kind=CCTK_REAL) :: dX_dtheta(3), dX_dphi(3), dS(3)
-  real(kind=CCTK_REAL) :: sqrtgamma, gamma_det
+  CCTK_REAL :: Ex, Ey, Ez
+  CCTK_REAL :: dX_dtheta(3), dX_dphi(3), dS(3)
+  CCTK_REAL :: sqrtgamma, gamma_det
 
   charge_local = 0.0_CCTK_REAL
 
