@@ -24,7 +24,8 @@ module qlm_variables
        qlm_betax, qlm_betay, qlm_betaz, &
        qlm_ttt, &
        qlm_ttx, qlm_tty, qlm_ttz, &
-       qlm_txx, qlm_txy, qlm_txz, qlm_tyy, qlm_tyz, qlm_tzz
+       qlm_txx, qlm_txy, qlm_txz, qlm_tyy, qlm_tyz, qlm_tzz, &
+       qlm_ex, qlm_ey, qlm_ez
   CCTK_REAL, allocatable, dimension(:,:) :: &
        qlm_dqttt, qlm_dqtpt, qlm_dqppt, qlm_dqttp, qlm_dqtpp, qlm_dqppp
   
