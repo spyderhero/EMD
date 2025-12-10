@@ -300,6 +300,8 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
   ninputs = size(inputs)
   noutputs = size(outputs)
   
+  
+  
 #if 0
   ! Poison the output variables
   call poison (qlm_emd_gxx    )
@@ -405,7 +407,7 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
   call poison (qlm_emd_ez     )
 #endif
   
-call CCTK_INFO ("Finish poison")
+
   
   ! Call the interpolator
   call Util_TableSetIntArray &
@@ -416,22 +418,6 @@ call CCTK_INFO ("Finish poison")
        (ierr, options_table, noutputs, &
        operation_codes, "operation_codes")
   if (ierr /= 0) call CCTK_WARN (0, "internal error")
-  call CCTK_INFO ("Util_TableSetIntArray")
-
-  write (msg, '("   ninputs:         ",g16.6)') ninputs
-  call CCTK_INFO (msg)
-  write (msg, '("   noutputs:         ",g16.6)') noutputs
-  call CCTK_INFO (msg)
-  write (msg, '("   outputs first:         ",g16.6)') outputs(1)
-  call CCTK_INFO (msg)
-  write (msg, '("   outputs last-3:         ",g16.6)') outputs(noutputs-3)
-  call CCTK_INFO (msg)
-  write (msg, '("   outputs last-2:         ",g16.6)') outputs(noutputs-2)
-  call CCTK_INFO (msg)
-  write (msg, '("   outputs last-1:         ",g16.6)') outputs(noutputs-1)
-  call CCTK_INFO (msg)
-  write (msg, '("   outputs last:         ",g16.6)') outputs(noutputs)
-  call CCTK_INFO (msg)
   call CCTK_InterpGridArrays &
        (ierr, cctkGH, 3, &
        interp_handle, options_table, coord_handle, &
@@ -574,7 +560,7 @@ call CCTK_INFO ("Finish poison")
         qlm_emd_ez = 0
      end if
      
-   call CCTK_INFO ("Finish unpack")
+
      
      
 #if 0
@@ -684,7 +670,7 @@ call CCTK_INFO ("Finish poison")
      
   end if
   
-  call CCTK_INFO ("Finish poison_check")
+
   
   ! Free interpolator options
   call Util_TableDestroy (ierr, options_table)
@@ -701,7 +687,6 @@ call CCTK_INFO ("Finish poison")
      
   end if
 
-  call CCTK_INFO ("Finish interpolate")
   
   
 contains
