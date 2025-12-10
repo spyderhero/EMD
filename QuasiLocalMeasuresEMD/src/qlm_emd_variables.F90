@@ -25,7 +25,9 @@ module qlm_emd_variables
        qlm_emd_ttt, &
        qlm_emd_ttx, qlm_emd_tty, qlm_emd_ttz, &
        qlm_emd_txx, qlm_emd_txy, qlm_emd_txz, qlm_emd_tyy, qlm_emd_tyz, qlm_emd_tzz, &
-       qlm_emd_ex, qlm_emd_ey, qlm_emd_ez
+       qlm_emd_ex, qlm_emd_ey, qlm_emd_ez, qlm_emd_ax, qlm_emd_ay, qlm_emd_az, &
+       qlm_emd_daxx, qlm_emd_daxy, qlm_emd_daxz, qlm_emd_dayx, qlm_emd_dayy, qlm_emd_dayz, &
+       qlm_emd_dazx, qlm_emd_dazy, qlm_emd_dazz
   CCTK_REAL, allocatable, dimension(:,:) :: &
        qlm_emd_dqttt, qlm_emd_dqtpt, qlm_emd_dqppt, qlm_emd_dqttp, qlm_emd_dqtpp, qlm_emd_dqppp
   
@@ -149,6 +151,18 @@ contains
     allocate(qlm_emd_ex(ntheta,nphi))
     allocate(qlm_emd_ey(ntheta,nphi))
     allocate(qlm_emd_ez(ntheta,nphi))
+    allocate(qlm_emd_ax(ntheta,nphi))
+    allocate(qlm_emd_ay(ntheta,nphi))
+    allocate(qlm_emd_az(ntheta,nphi))
+    allocate(qlm_emd_daxx(ntheta,nphi))
+    allocate(qlm_emd_daxy(ntheta,nphi))
+    allocate(qlm_emd_daxz(ntheta,nphi))
+    allocate(qlm_emd_dayx(ntheta,nphi))
+    allocate(qlm_emd_dayy(ntheta,nphi))
+    allocate(qlm_emd_dayz(ntheta,nphi))
+    allocate(qlm_emd_dazx(ntheta,nphi))
+    allocate(qlm_emd_dazy(ntheta,nphi))
+    allocate(qlm_emd_dazz(ntheta,nphi))
     
     allocate(qlm_emd_dqttt(ntheta,nphi))
     allocate(qlm_emd_dqtpt(ntheta,nphi))
@@ -262,6 +276,18 @@ contains
     qlm_emd_ex = TAT_nan()
     qlm_emd_ey = TAT_nan()
     qlm_emd_ez = TAT_nan()
+    qlm_emd_ax = TAT_nan()
+    qlm_emd_ay = TAT_nan()
+    qlm_emd_az = TAT_nan()
+    qlm_emd_daxx = TAT_nan()
+    qlm_emd_daxy = TAT_nan()
+    qlm_emd_daxz = TAT_nan()
+    qlm_emd_dayx = TAT_nan()
+    qlm_emd_dayy = TAT_nan()
+    qlm_emd_dayz = TAT_nan()
+    qlm_emd_dazx = TAT_nan()
+    qlm_emd_dazy = TAT_nan()
+    qlm_emd_dazz = TAT_nan()
     
     qlm_emd_dqttt = TAT_nan()
     qlm_emd_dqtpt = TAT_nan()
@@ -380,6 +406,18 @@ contains
     deallocate(qlm_emd_ex)
     deallocate(qlm_emd_ey)
     deallocate(qlm_emd_ez)
+    deallocate(qlm_emd_ax)
+    deallocate(qlm_emd_ay)
+    deallocate(qlm_emd_az)
+    deallocate(qlm_emd_daxx)
+    deallocate(qlm_emd_daxy)
+    deallocate(qlm_emd_daxz)
+    deallocate(qlm_emd_dayx)
+    deallocate(qlm_emd_dayy)
+    deallocate(qlm_emd_dayz)
+    deallocate(qlm_emd_dazx)
+    deallocate(qlm_emd_dazy)
+    deallocate(qlm_emd_dazz)
     
     deallocate(qlm_emd_dqttt)
     deallocate(qlm_emd_dqtpt)

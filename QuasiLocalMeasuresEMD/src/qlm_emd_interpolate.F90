@@ -60,14 +60,15 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
   integer      :: ind_ttx, ind_tty, ind_ttz
   integer      :: ind_txx, ind_txy, ind_txz, ind_tyy, ind_tyz, ind_tzz
   integer      :: ind_ex, ind_ey, ind_ez
+  integer      :: ind_ax, ind_ay, ind_az
   
   integer      :: coord_type
   CCTK_POINTER :: coords(3)
-  CCTK_INT     :: inputs(29)
-  CCTK_INT     :: output_types(101)
-  CCTK_POINTER :: outputs(101)
-  CCTK_INT     :: operand_indices(101)
-  CCTK_INT     :: operation_codes(101)
+  CCTK_INT     :: inputs(32)
+  CCTK_INT     :: output_types(113)
+  CCTK_POINTER :: outputs(113)
+  CCTK_INT     :: operand_indices(113)
+  CCTK_INT     :: operation_codes(113)
   integer      :: npoints
   
   character    :: msg*1000
@@ -190,10 +191,16 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
      call CCTK_VarIndex (ind_ex  , "ProcaBase::Ex")
      call CCTK_VarIndex (ind_ey  , "ProcaBase::Ey")
      call CCTK_VarIndex (ind_ez  , "ProcaBase::Ez")
+     call CCTK_VarIndex (ind_ex  , "ProcaBase::Ax")
+     call CCTK_VarIndex (ind_ey  , "ProcaBase::Ay")
+     call CCTK_VarIndex (ind_ez  , "ProcaBase::Az")
   else
      ind_ex = -1
      ind_ey = -1
      ind_ez = -1
+     ind_ax = -1
+     ind_ay = -1
+     ind_az = -1
   end if
   
   
@@ -216,7 +223,8 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
        ind_ttt, &
        ind_ttx, ind_tty, ind_ttz, &
        ind_txx, ind_txy, ind_txz, ind_tyy, ind_tyz, ind_tzz, &
-       ind_ex, ind_ey, ind_ez /)
+       ind_ex, ind_ey, ind_ez, &
+       ind_ax, ind_ay, ind_az /)
   
   call CCTK_NumVars (nvars)
   if (nvars < 0) call CCTK_WARN (0, "internal error")
@@ -244,7 +252,11 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
        16, &                     ! T_tt
        17, 18, 19, &             ! T_ti
        20, 21, 22, 23, 24, 25, & ! T_ij
-       26, 27, 28 /)             ! E^i
+       26, 27, 28, &             ! E^i
+       29, 30, 31, &             ! A_i
+       29, 30, 31, &             ! A_i,J
+       29, 30, 31, &
+       29, 30, 31 /)
   
   operation_codes = (/ &
        0, 0, 0, 0, 0, 0, &      ! g_ij
@@ -266,7 +278,11 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
        0, &                     ! T_tt
        0, 0, 0, &               ! T_ti
        0, 0, 0, 0, 0, 0, &      ! T_ij
-       0, 0, 0 /)               ! E^i
+       0, 0, 0, &               ! E^i
+       0, 0, 0, &               ! A_i
+       1, 1, 1, &               ! A_i,j
+       2, 2, 2, &
+       3, 3, 3 /)
 
   output_types(:) = CCTK_VARIABLE_REAL
   if (hn > 0) then
@@ -290,7 +306,9 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
           P(qlm_emd_ttt), &
           P(qlm_emd_ttx), P(qlm_emd_tty), P(qlm_emd_ttz), &
           P(qlm_emd_txx), P(qlm_emd_txy), P(qlm_emd_txz), P(qlm_emd_tyy), P(qlm_emd_tyz), P(qlm_emd_tzz), &
-          P(qlm_emd_ex), P(qlm_emd_ey), P(qlm_emd_ez) /)
+          P(qlm_emd_ex), P(qlm_emd_ey), P(qlm_emd_ez), P(qlm_emd_ax), P(qlm_emd_ay), P(qlm_emd_az), &
+          P(qlm_emd_daxx), P(qlm_emd_daxy), P(qlm_emd_daxz), P(qlm_emd_dayx), P(qlm_emd_dayy), P(qlm_emd_dayz), &
+          P(qlm_emd_dazx), P(qlm_emd_dazy), P(qlm_emd_dazz) /)
   else
      outputs(:) = CCTK_NullPointer()
   end if
@@ -405,6 +423,18 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
   call poison (qlm_emd_ex     )
   call poison (qlm_emd_ey     )
   call poison (qlm_emd_ez     )
+  call poison (qlm_emd_ax     )
+  call poison (qlm_emd_ay     )
+  call poison (qlm_emd_az     )
+  call poison (qlm_emd_daxx   )
+  call poison (qlm_emd_daxy   )
+  call poison (qlm_emd_daxz   )
+  call poison (qlm_emd_dayx   )
+  call poison (qlm_emd_dayy   )
+  call poison (qlm_emd_dayz   )
+  call poison (qlm_emd_dazx   )
+  call poison (qlm_emd_dazy   )
+  call poison (qlm_emd_dazz   )
 #endif
   
 
@@ -554,10 +584,35 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
         call unpack (qlm_emd_ex    , ni, nj)
         call unpack (qlm_emd_ey    , ni, nj)
         call unpack (qlm_emd_ez    , ni, nj)
+        call unpack (qlm_emd_ax    , ni, nj)
+        call unpack (qlm_emd_ay    , ni, nj)
+        call unpack (qlm_emd_az    , ni, nj)
+        call unpack (qlm_emd_daxx  , ni, nj)
+        call unpack (qlm_emd_daxy  , ni, nj)
+        call unpack (qlm_emd_daxz  , ni, nj)
+        call unpack (qlm_emd_dayx  , ni, nj)
+        call unpack (qlm_emd_dayy  , ni, nj)
+        call unpack (qlm_emd_dayz  , ni, nj)
+        call unpack (qlm_emd_dazx  , ni, nj)
+        call unpack (qlm_emd_dazy  , ni, nj)
+        call unpack (qlm_emd_dazz  , ni, nj)
      else
         qlm_emd_ex = 0
         qlm_emd_ey = 0
         qlm_emd_ez = 0
+        qlm_emd_ax = 0
+        qlm_emd_ay = 0
+        qlm_emd_az = 0
+        qlm_emd_daxx = 0
+        qlm_emd_daxy = 0
+        qlm_emd_daxz = 0
+        qlm_emd_dayx = 0
+        qlm_emd_dayy = 0
+        qlm_emd_dayz = 0
+        qlm_emd_dazx = 0
+        qlm_emd_dazy = 0
+        qlm_emd_dazz = 0
+
      end if
      
 
@@ -666,6 +721,18 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
      call poison_check (qlm_emd_ex     , "qlm_emd_ex     ")
      call poison_check (qlm_emd_ey     , "qlm_emd_ey     ")
      call poison_check (qlm_emd_ez     , "qlm_emd_ez     ")
+     call poison_check (qlm_emd_ax     , "qlm_emd_ax     ")
+     call poison_check (qlm_emd_ay     , "qlm_emd_ay     ")
+     call poison_check (qlm_emd_az     , "qlm_emd_az     ")
+     call poison_check (qlm_emd_daxx   , "qlm_emd_daxx   ")
+     call poison_check (qlm_emd_daxy   , "qlm_emd_daxy   ")
+     call poison_check (qlm_emd_daxz   , "qlm_emd_daxz   ")
+     call poison_check (qlm_emd_dayx   , "qlm_emd_dayx   ")
+     call poison_check (qlm_emd_dayy   , "qlm_emd_dayy   ")
+     call poison_check (qlm_emd_dayz   , "qlm_emd_dayz   ")
+     call poison_check (qlm_emd_dazx   , "qlm_emd_dazx   ")
+     call poison_check (qlm_emd_dazy   , "qlm_emd_dazy   ")
+     call poison_check (qlm_emd_dazz   , "qlm_emd_dazz   ")
 #endif
      
   end if
