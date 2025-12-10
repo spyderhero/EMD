@@ -299,11 +299,6 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
   
   ninputs = size(inputs)
   noutputs = size(outputs)
-
-  write (msg, '("   ninputs:         ",g16.6)') ninputs
-  call CCTK_INFO (msg)
-  write (msg, '("   noutputs:         ",g16.6)') noutputs
-  call CCTK_INFO (msg)
   
 #if 0
   ! Poison the output variables
@@ -422,7 +417,13 @@ call CCTK_INFO ("Finish poison")
        operation_codes, "operation_codes")
   if (ierr /= 0) call CCTK_WARN (0, "internal error")
   call CCTK_INFO ("Util_TableSetIntArray")
-  
+
+  write (msg, '("   ninputs:         ",g16.6)') ninputs
+  call CCTK_INFO (msg)
+  write (msg, '("   noutputs:         ",g16.6)') noutputs
+  call CCTK_INFO (msg)
+  write (msg, '("   outputs:         ",g16.6)') outputs
+  call CCTK_INFO (msg)
   call CCTK_InterpGridArrays &
        (ierr, cctkGH, 3, &
        interp_handle, options_table, coord_handle, &
