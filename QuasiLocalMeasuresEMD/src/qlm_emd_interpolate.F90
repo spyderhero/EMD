@@ -302,7 +302,7 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
   ninputs = size(inputs)
   noutputs = size(outputs)
   
-  
+call CCTK_INFO ("Start poison")  
   
 #if 0
   ! Poison the output variables
@@ -409,7 +409,7 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
   call poison (qlm_emd_ez     )
 #endif
   
-  
+call CCTK_INFO ("Finish poison")
   
   ! Call the interpolator
   call Util_TableSetIntArray &
@@ -687,7 +687,8 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
      deallocate (zcoord)
      
   end if
-  
+
+  call CCTK_INFO ("Finish interpolate")
   
   
 contains
