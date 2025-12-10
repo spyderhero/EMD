@@ -26,6 +26,7 @@ subroutine qlm_emd_compute_charge (CCTK_ARGUMENTS, hn)
 
   charge_local = 0.0
 
+  call CCTK_INFO ("Start calc charege")
   do j = 1, qlm_emd_nphi(hn)-1
     do i = 1, qlm_emd_ntheta(hn)-1
 
@@ -75,10 +76,11 @@ subroutine qlm_emd_compute_charge (CCTK_ARGUMENTS, hn)
     end do
   end do
 
+  call CCTK_INFO ("finish calc local charege")
   ! Divide by 4π
   qlm_emd_electric_charge(hn) = charge_local / (4.0*pi)
 
-  call CCTK_INFO (msg)
   write (msg, '("   Electric Charge Qe:            ",g14.6)') qlm_emd_electric_charge(hn)
+  call CCTK_INFO (msg)
 
 end subroutine qlm_emd_compute_charge
