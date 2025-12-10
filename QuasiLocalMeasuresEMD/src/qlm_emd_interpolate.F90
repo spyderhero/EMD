@@ -300,6 +300,10 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
   ninputs = size(inputs)
   noutputs = size(outputs)
 
+  write (msg, '("   ninputs:         ",g16.6)') ninputs
+  call CCTK_INFO (msg)
+  write (msg, '("   noutputs:         ",g16.6)') noutputs
+  call CCTK_INFO (msg)
   
 #if 0
   ! Poison the output variables
