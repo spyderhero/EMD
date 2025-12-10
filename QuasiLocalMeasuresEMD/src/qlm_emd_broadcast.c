@@ -142,32 +142,35 @@ CCTK_FNAME(qlm_emd_broadcast) (CCTK_POINTER_TO_CONST * restrict const cctkGH_)
   {
     int const root = hn % num_procs;
     
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_state"      , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_state_p"    , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_grid_int"   , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_grid_real"  , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_grid_real_p", hn, root);
+    CCTK_INFO ("Broadcasting state");
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_state"      , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_state_p"    , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_grid_int"   , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_grid_real"  , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_grid_real_p", hn, root);
     
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_shapes"               , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_shapes_p"             , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_coordinates"          , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_tetrad_l"             , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_tetrad_n"             , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_tetrad_m"             , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_newman_penrose"       , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_weyl_scalars"         , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_ricci_scalars"        , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_twometric"            , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_killing_vector"       , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_killed_twometric"     , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_invariant_coordinates", hn, root);
+    CCTK_INFO ("Broadcasting shapes");
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_shapes"               , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_shapes_p"             , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_coordinates"          , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_tetrad_l"             , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_tetrad_n"             , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_tetrad_m"             , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_newman_penrose"       , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_weyl_scalars"         , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_ricci_scalars"        , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_twometric"            , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_killing_vector"       , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_killed_twometric"     , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_invariant_coordinates", hn, root);
     
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_multipole_moments", hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_multipole_moments", hn, root);
     
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_3determinant", hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_3determinant", hn, root);
     
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_scalars"  , hn, root);
-    bcast (cctkGH, "QuasiLocalMeasures::qlm_emd_scalars_p", hn, root);
+    CCTK_INFO ("Broadcasting scalars");
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_scalars"  , hn, root);
+    bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_scalars_p", hn, root);
     
   } /* for hn */
 }
