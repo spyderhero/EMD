@@ -142,14 +142,12 @@ CCTK_FNAME(qlm_emd_broadcast) (CCTK_POINTER_TO_CONST * restrict const cctkGH_)
   {
     int const root = hn % num_procs;
     
-    CCTK_INFO ("Broadcasting state");
     bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_state"      , hn, root);
     bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_state_p"    , hn, root);
     bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_grid_int"   , hn, root);
     bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_grid_real"  , hn, root);
     bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_grid_real_p", hn, root);
     
-    CCTK_INFO ("Broadcasting shapes");
     bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_shapes"               , hn, root);
     bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_shapes_p"             , hn, root);
     bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_coordinates"          , hn, root);
@@ -168,7 +166,6 @@ CCTK_FNAME(qlm_emd_broadcast) (CCTK_POINTER_TO_CONST * restrict const cctkGH_)
     
     bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_3determinant", hn, root);
     
-    CCTK_INFO ("Broadcasting scalars");
     bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_scalars"  , hn, root);
     bcast (cctkGH, "QuasiLocalMeasuresEMD::qlm_emd_scalars_p", hn, root);
     
