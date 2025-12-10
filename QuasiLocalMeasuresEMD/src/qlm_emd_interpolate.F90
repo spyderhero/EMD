@@ -422,7 +422,9 @@ call CCTK_INFO ("Finish poison")
   call CCTK_INFO (msg)
   write (msg, '("   noutputs:         ",g16.6)') noutputs
   call CCTK_INFO (msg)
-  write (msg, '("   outputs:         ",g16.6)') outputs
+  write (msg, '("   outputs first:         ",g16.6)') outputs(1)
+  call CCTK_INFO (msg)
+  write (msg, '("   outputs last:         ",g16.6)') outputs(noutput)
   call CCTK_INFO (msg)
   call CCTK_InterpGridArrays &
        (ierr, cctkGH, 3, &
