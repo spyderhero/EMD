@@ -146,6 +146,9 @@ contains
     allocate(qlm_emd_tyy(ntheta,nphi))
     allocate(qlm_emd_tyz(ntheta,nphi))
     allocate(qlm_emd_tzz(ntheta,nphi))
+    allocate(qlm_emd_ex(ntheta,nphi))
+    allocate(qlm_emd_ey(ntheta,nphi))
+    allocate(qlm_emd_ez(ntheta,nphi))
     
     allocate(qlm_emd_dqttt(ntheta,nphi))
     allocate(qlm_emd_dqtpt(ntheta,nphi))
@@ -256,6 +259,9 @@ contains
     qlm_emd_tyy = TAT_nan()
     qlm_emd_tyz = TAT_nan()
     qlm_emd_tzz = TAT_nan()
+    qlm_emd_ex = TAT_nan()
+    qlm_emd_ey = TAT_nan()
+    qlm_emd_ez = TAT_nan()
     
     qlm_emd_dqttt = TAT_nan()
     qlm_emd_dqtpt = TAT_nan()
@@ -371,6 +377,9 @@ contains
     deallocate(qlm_emd_tyy)
     deallocate(qlm_emd_tyz)
     deallocate(qlm_emd_tzz)
+    deallocate(qlm_emd_ex)
+    deallocate(qlm_emd_ey)
+    deallocate(qlm_emd_ez)
     
     deallocate(qlm_emd_dqttt)
     deallocate(qlm_emd_dqtpt)
