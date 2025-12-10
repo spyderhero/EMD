@@ -187,11 +187,9 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
      ind_tzz = -1
   end if
   if (calc_charge /= 0) then
-     call CCTK_INFO ("interpolating electric field")
      call CCTK_VarIndex (ind_ex  , "ProcaBase::Ex")
      call CCTK_VarIndex (ind_ey  , "ProcaBase::Ey")
      call CCTK_VarIndex (ind_ez  , "ProcaBase::Ez")
-     call CCTK_INFO ("End interpolating electric field")
   else
      ind_ex = -1
      ind_ey = -1
@@ -301,8 +299,7 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
   
   ninputs = size(inputs)
   noutputs = size(outputs)
-  
-call CCTK_INFO ("Start poison")  
+
   
 #if 0
   ! Poison the output variables
@@ -420,6 +417,7 @@ call CCTK_INFO ("Finish poison")
        (ierr, options_table, noutputs, &
        operation_codes, "operation_codes")
   if (ierr /= 0) call CCTK_WARN (0, "internal error")
+  call CCTK_INFO ("Util_TableSetIntArray")
   
   call CCTK_InterpGridArrays &
        (ierr, cctkGH, 3, &
@@ -427,6 +425,7 @@ call CCTK_INFO ("Finish poison")
        npoints, coord_type, coords, &
        ninputs, inputs, &
        noutputs, output_types, outputs)
+   call CCTK_INFO ("CCTK_InterpGridArrays")
   
   if (ierr /= 0) then
      if (hn > 0) then
@@ -562,6 +561,7 @@ call CCTK_INFO ("Finish poison")
         qlm_emd_ez = 0
      end if
      
+   call CCTK_INFO ("Finish unpack")
      
      
 #if 0
@@ -671,7 +671,7 @@ call CCTK_INFO ("Finish poison")
      
   end if
   
-  
+  call CCTK_INFO ("Finish poison_check")
   
   ! Free interpolator options
   call Util_TableDestroy (ierr, options_table)
