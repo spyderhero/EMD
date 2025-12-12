@@ -2,7 +2,16 @@
 
 if (CCTK_Equals(initial_data, "GM_simpleID"))
 {
-  SCHEDULE GibbonsMaeda IN ADMBase_InitialData
+  SCHEDULE RNS IN ADMBase_InitialData
+  {
+    LANG: C
+    OPTIONS: Local
+  } "simple analytic initial data when using RNS"
+}
+
+if (CCTK_Equals(initial_data, "Magnetic_Field"))
+{
+  SCHEDULE MagneticField IN ADMBase_InitialData
   {
     LANG: C
     OPTIONS: Local
@@ -11,7 +20,7 @@ if (CCTK_Equals(initial_data, "GM_simpleID"))
 
 if (CCTK_Equals(initial_data, "GM_GHS"))
 {
-  SCHEDULE GM_GHS IN ADMBase_InitialData
+  SCHEDULE GMGHS IN ADMBase_InitialData
   {
     LANG: C
     OPTIONS: Local

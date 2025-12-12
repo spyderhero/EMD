@@ -19,7 +19,7 @@ void swap (CCTK_REAL * restrict const a, CCTK_REAL * restrict const b)
 #define SWAP(a,b) (swap(&(a),&(b)))
 
 /* -------------------------------------------------------------------*/
-void GibbonsMaeda (CCTK_ARGUMENTS)
+void MagneticField (CCTK_ARGUMENTS)
 {
   DECLARE_CCTK_ARGUMENTS;
   DECLARE_CCTK_PARAMETERS;
@@ -67,8 +67,8 @@ void GibbonsMaeda (CCTK_ARGUMENTS)
         CCTK_REAL psi1 = sqrt( pow(1
                                    + 0.5 * par_m_plus / r_plus
                                    + 0.5 * par_m_minus/ r_minus , 2)
-                               - 0.25 * pow( par_q_plus/r_plus
-                                             + par_q_minus/r_minus, 2) ) ;
+                               - 0.25 * pow( par_qm_plus/r_plus
+                                             + par_qm_minus/r_minus, 2) ) ;
 
         gxx[ind] = pow (psi1, 4);
         gxy[ind] = 0;
@@ -97,23 +97,19 @@ void GibbonsMaeda (CCTK_ARGUMENTS)
 
         Zeta[ind]  = 0;
 
-        Ax[ind]    = 0;
-        Ay[ind]    = 0;
+        Ax[ind]    = par_qm_plus * z * y / r_plus / ((x - par_b)**2 + y**2) 
+                    + par_qm_minus * z * y / r_plus / ((x + par_b)**2 + y**2);
+
+        Ay[ind]    = par_qm_plus * z * x / r_plus / ((x - par_b)**2 + y**2) 
+                    + par_qm_minus * z * x / r_plus / ((x + par_b)**2 + y**2);
+                    
         Az[ind]    = 0;
 
         Aphi[ind]  = 0;
 
-        Ex[ind]    = (  par_q_plus * (x1-par_b)/(r_plus*r_plus*r_plus)
-                      + par_q_minus* (x1+par_b)/(r_minus*r_minus*r_minus) )
-                        / pow(psi1, 6) ;
-
-        Ey[ind]    = (  par_q_plus * y1/(r_plus*r_plus*r_plus)
-                      + par_q_minus* y1/(r_minus*r_minus*r_minus) )
-                        / pow(psi1, 6) ;
-
-        Ez[ind]    = (  par_q_plus * z1/(r_plus*r_plus*r_plus)
-                      + par_q_minus* z1/(r_minus*r_minus*r_minus) )
-                        / pow(psi1, 6) ;
+        Ex[ind]    = 0;
+        Ey[ind]    = 0;
+        Ez[ind]    = 0;
 
         // lapse
         if ( CCTK_EQUALS(initial_lapse, "psi^n") ) {
