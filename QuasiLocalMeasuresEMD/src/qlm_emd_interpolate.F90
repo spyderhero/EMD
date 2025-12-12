@@ -191,9 +191,9 @@ subroutine qlm_emd_interpolate (CCTK_ARGUMENTS, hn)
      call CCTK_VarIndex (ind_ex  , "ProcaBase::Ex")
      call CCTK_VarIndex (ind_ey  , "ProcaBase::Ey")
      call CCTK_VarIndex (ind_ez  , "ProcaBase::Ez")
-     call CCTK_VarIndex (ind_ex  , "ProcaBase::Ax")
-     call CCTK_VarIndex (ind_ey  , "ProcaBase::Ay")
-     call CCTK_VarIndex (ind_ez  , "ProcaBase::Az")
+     call CCTK_VarIndex (ind_ax  , "ProcaBase::Ax")
+     call CCTK_VarIndex (ind_ay  , "ProcaBase::Ay")
+     call CCTK_VarIndex (ind_az  , "ProcaBase::Az")
   else
      ind_ex = -1
      ind_ey = -1
