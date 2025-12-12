@@ -6,7 +6,8 @@ USES KEYWORD metric_type
 
 EXTENDS KEYWORD initial_data
 {
-  "GM_simpleID" :: "Initial data for GibbonsMaeda"
+  "GM_simpleID" :: "Initial data for RNS"
+  "Magnetic_Field" :: "Initial data for magnetic monopole"
   "GM_GHS" :: "GM-GHS solution Initial data"
 }
 
