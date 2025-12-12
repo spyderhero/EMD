@@ -84,6 +84,10 @@ void MagneticField (CCTK_ARGUMENTS)
         kyz[ind] = 0;
         kzz[ind] = 0;
 
+        // lapse
+        if ( CCTK_EQUALS(initial_lapse, "psi^n") ) {
+          alp[ind] = pow(psi1, initial_lapse_psi_exponent);
+        }
 
         /* Scalar terms */
         
@@ -98,10 +102,10 @@ void MagneticField (CCTK_ARGUMENTS)
         Zeta[ind]  = 0;
 
         Ax[ind]    = par_qm_plus * z1 * y1 / r_plus /(pow(x1 - par_b,2) + pow(y1,2)) 
-                    + par_qm_minus * z1 * y1 / r_plus / sqrt(pow(x1 + par_b,2) + pow(y1,2))/ pow(psi1, 6);
+                    + par_qm_minus * z1 * y1 / r_plus / sqrt(pow(x1 + par_b,2) + pow(y1,2))/ pow(psi1, 2)/alp[ind];
 
         Ay[ind]    = - par_qm_plus * z1 * x1 / r_plus / sqrt(pow(x1 - par_b,2) + pow(y1,2)) 
-                    - par_qm_minus * z1 * x1 / r_plus / sqrt(pow(x1 + par_b,2) + pow(y1,2))/ pow(psi1, 6);
+                    - par_qm_minus * z1 * x1 / r_plus / sqrt(pow(x1 + par_b,2) + pow(y1,2))/ pow(psi1, 2)/alp[ind];
                     
         Az[ind]    = 0;
 
@@ -110,11 +114,6 @@ void MagneticField (CCTK_ARGUMENTS)
         Ex[ind]    = 0;
         Ey[ind]    = 0;
         Ez[ind]    = 0;
-
-        // lapse
-        if ( CCTK_EQUALS(initial_lapse, "psi^n") ) {
-          alp[ind] = pow(psi1, initial_lapse_psi_exponent);
-        }
 
         if (swap_xz) {
           /* Swap the x and z components of all tensors */
