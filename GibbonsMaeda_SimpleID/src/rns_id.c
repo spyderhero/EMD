@@ -19,7 +19,7 @@ void swap (CCTK_REAL * restrict const a, CCTK_REAL * restrict const b)
 #define SWAP(a,b) (swap(&(a),&(b)))
 
 /* -------------------------------------------------------------------*/
-void GibbonsMaeda (CCTK_ARGUMENTS)
+void RNS (CCTK_ARGUMENTS)
 {
   DECLARE_CCTK_ARGUMENTS;
   DECLARE_CCTK_PARAMETERS;
