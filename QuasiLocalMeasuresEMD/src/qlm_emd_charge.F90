@@ -17,7 +17,7 @@ subroutine qlm_emd_compute_charge (CCTK_ARGUMENTS, hn)
   integer :: a, b, c, i, j, m
   CCTK_REAL :: alpha, gg(3,3), gu(3,3), d1_gg(3,3,3)
   CCTK_REAL :: cf1(3,3,3), cf2(3,3,3)
-  CCTK_REAL :: E(3), A(3), dA(3,3), cdA(3,3), B(3)
+  CCTK_REAL :: E_f(3), A_f(3), dA(3,3), cdA(3,3), B_f(3)
   CCTK_REAL :: dX_dtheta(3), dX_dphi(3), dS(3)
   CCTK_REAL :: sqrtgamma, gamma_det
 
@@ -136,14 +136,14 @@ subroutine qlm_emd_compute_charge (CCTK_ARGUMENTS, hn)
       cf2(:,3,2) = cf2(:,2,3)
 
       ! Electric field at this point
-      E(1) = qlm_emd_ex(i,j)
-      E(2) = qlm_emd_ey(i,j)
-      E(3) = qlm_emd_ez(i,j)
+      E_f(1) = qlm_emd_ex(i,j)
+      E_f(2) = qlm_emd_ey(i,j)
+      E_f(3) = qlm_emd_ez(i,j)
 
       ! Vector potential at this point
-      A(1) = qlm_emd_ax(i,j)
-      A(2) = qlm_emd_ay(i,j)
-      A(3) = qlm_emd_az(i,j)
+      A_f(1) = qlm_emd_ax(i,j)
+      A_f(2) = qlm_emd_ay(i,j)
+      A_f(3) = qlm_emd_az(i,j)
 
       dA(1,1) = qlm_emd_daxx(i,j)
       dA(1,2) = qlm_emd_daxy(i,j)
@@ -160,19 +160,19 @@ subroutine qlm_emd_compute_charge (CCTK_ARGUMENTS, hn)
       do a = 1, 3
         do b = 1, 3
           do m = 1, 3
-            cdA(a,b) = cdA(a,b) - cf2(m,a,b) * A(m)
+            cdA(a,b) = cdA(a,b) - cf2(m,a,b) * A_f(m)
         end do
         end do
       end do
 
       ! Compute magnetic field
-      B(1) = - alpha * (cdA(3,2) - cdA(2,3))
-      B(2) = - alpha * (cdA(1,3) - cdA(3,1))
-      B(3) = - alpha * (cdA(2,1) - cdA(1,2))
+      B_f(1) = - alpha * (cdA(3,2) - cdA(2,3))
+      B_f(2) = - alpha * (cdA(1,3) - cdA(3,1))
+      B_f(3) = - alpha * (cdA(2,1) - cdA(1,2))
 
       ! Flux contribution
-      charge_electric_local = charge_electric_local + (E(1)*dS(1) + E(2)*dS(2) + E(3)*dS(3))
-      charge_magnetic_local = charge_magnetic_local + (B(1)*dS(1) + B(2)*dS(2) + B(3)*dS(3))
+      charge_electric_local = charge_electric_local + (E_f(1)*dS(1) + E_f(2)*dS(2) + E_f(3)*dS(3))
+      charge_magnetic_local = charge_magnetic_local + (B_f(1)*dS(1) + B_f(2)*dS(2) + B_f(3)*dS(3))
 
     end do
   end do
