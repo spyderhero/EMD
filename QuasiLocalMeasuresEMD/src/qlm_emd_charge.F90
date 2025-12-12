@@ -183,6 +183,7 @@ subroutine qlm_emd_compute_charge (CCTK_ARGUMENTS, hn)
   qlm_emd_magnetic_charge(hn) = - charge_magnetic_local / (4.0*pi)
 
   write (msg, '("   Electric charge Qe:            ",g14.6)') qlm_emd_electric_charge(hn)
+  call CCTK_INFO (msg)
   write (msg, '("   Magnetic charge Qm:            ",g14.6)') qlm_emd_magnetic_charge(hn)
   call CCTK_INFO (msg)
 
