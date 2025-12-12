@@ -14,7 +14,7 @@ subroutine qlm_emd_compute_charge (CCTK_ARGUMENTS, hn)
   DECLARE_CCTK_FUNCTIONS
   DECLARE_CCTK_PARAMETERS
   integer :: hn
-  integer :: i, j
+  integer :: a, b, c, i, j, m
   CCTK_REAL :: alpha, gg(3,3), gu(3,3), d1_gg(3,3,3)
   CCTK_REAL :: cf1(3,3,3), cf2(3,3,3)
   CCTK_REAL :: E(3), A(3), dA(3,3), cdA(3,3), B(3)
@@ -25,7 +25,8 @@ subroutine qlm_emd_compute_charge (CCTK_ARGUMENTS, hn)
 
   character :: msg*1000
 
-  charge_local = 0.0
+  charge_electric_local = 0.0
+  charge_magnetic_local = 0.0
 
   do j = 1, qlm_emd_nphi(hn)-1
     do i = 1, qlm_emd_ntheta(hn)-1
