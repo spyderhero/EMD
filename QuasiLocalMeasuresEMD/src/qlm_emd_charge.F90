@@ -14,10 +14,9 @@ subroutine qlm_emd_compute_charge (CCTK_ARGUMENTS, hn)
   DECLARE_CCTK_FUNCTIONS
   DECLARE_CCTK_PARAMETERS
   integer :: hn
-  integer :: a, b, c, i, j, m
-  CCTK_REAL :: alpha, gg(3,3), gu(3,3), d1_gg(3,3,3)
-  CCTK_REAL :: cf1(3,3,3), cf2(3,3,3)
-  CCTK_REAL :: E_f(3), A_f(3), dA(3,3), cdA(3,3), B_f(3)
+  integer :: i, j
+  CCTK_REAL :: alpha, gg(3,3)
+  CCTK_REAL :: E_f(3), dA(3,3), B_f(3)
   CCTK_REAL :: dX_dtheta(3), dX_dphi(3), dS(3)
   CCTK_REAL :: sqrtgamma, gamma_det
 
@@ -67,83 +66,10 @@ subroutine qlm_emd_compute_charge (CCTK_ARGUMENTS, hn)
       ! Multiply surface element by sqrt(gamma)
       dS = dS * sqrtgamma
 
-      ! Compute upper metric.
-      gu(1,1) = (gg(2,2) * gg(3,3) - gg(2,3) ** 2     ) / gamma_det
-      gu(2,2) = (gg(1,1) * gg(3,3) - gg(1,3) ** 2     ) / gamma_det
-      gu(3,3) = (gg(1,1) * gg(2,2) - gg(1,2) ** 2     ) / gamma_det
-      gu(1,2) = (gg(1,3) * gg(2,3) - gg(1,2) * gg(3,3)) / gamma_det
-      gu(1,3) = (gg(1,2) * gg(2,3) - gg(1,3) * gg(2,2)) / gamma_det
-      gu(2,3) = (gg(1,3) * gg(1,2) - gg(2,3) * gg(1,1)) / gamma_det
-      gu(2,1) = gu(1,2)
-      gu(3,1) = gu(1,3)
-      gu(3,2) = gu(2,3)
-
-      d1_gg(1,1,1) = qlm_emd_dgxxx(i,j)
-      d1_gg(1,2,1) = qlm_emd_dgxyx(i,j)
-      d1_gg(1,3,1) = qlm_emd_dgxzx(i,j)
-      d1_gg(1,1,2) = qlm_emd_dgxxy(i,j)
-      d1_gg(1,2,2) = qlm_emd_dgxyy(i,j)
-      d1_gg(1,3,2) = qlm_emd_dgxzy(i,j)
-      d1_gg(1,1,3) = qlm_emd_dgxxz(i,j)
-      d1_gg(1,2,3) = qlm_emd_dgxyz(i,j)
-      d1_gg(1,3,3) = qlm_emd_dgxzz(i,j)
-
-      d1_gg(2,1,1) = d1_gg(1,2,1)
-      d1_gg(2,2,1) = qlm_emd_dgyyx(i,j)
-      d1_gg(2,3,1) = qlm_emd_dgyzx(i,j)
-      d1_gg(2,1,2) = d1_gg(1,2,2)
-      d1_gg(2,2,2) = qlm_emd_dgyyy(i,j)
-      d1_gg(2,3,2) = qlm_emd_dgyzy(i,j)
-      d1_gg(2,1,3) = d1_gg(1,2,3)
-      d1_gg(2,2,3) = qlm_emd_dgyyz(i,j)
-      d1_gg(2,3,3) = qlm_emd_dgyzz(i,j)
-
-      d1_gg(3,1,1) = d1_gg(1,3,1)
-      d1_gg(3,2,1) = d1_gg(2,3,1)
-      d1_gg(3,3,1) = qlm_emd_dgzzx(i,j)
-      d1_gg(3,1,2) = d1_gg(1,3,2)
-      d1_gg(3,2,2) = d1_gg(2,3,2)
-      d1_gg(3,3,2) = qlm_emd_dgzzy(i,j)
-      d1_gg(3,1,3) = d1_gg(1,3,3)
-      d1_gg(3,2,3) = d1_gg(2,3,3)
-      d1_gg(3,3,3) = qlm_emd_dgzzz(i,j)
-
-      ! Compute Christoffel.
-      cf1 = 0
-      do a = 1, 3
-        do b = 1, 3
-          do c = b, 3
-            cf1(a,b,c) = 0.5d0 * (d1_gg(a,b,c) + d1_gg(a,c,b) - d1_gg(b,c,a))
-          end do
-        end do
-      end do
-      cf1(:,2,1) = cf1(:,1,2)
-      cf1(:,3,1) = cf1(:,1,3)
-      cf1(:,3,2) = cf1(:,2,3)
-
-      cf2 = 0
-      do a = 1, 3
-        do b = 1, 3
-          do c = b, 3
-            do m = 1, 3
-              cf2(a,b,c) = cf2(a,b,c) + gu(a,m) * cf1(m,b,c)
-            end do
-          end do
-        end do
-      end do
-      cf2(:,2,1) = cf2(:,1,2)
-      cf2(:,3,1) = cf2(:,1,3)
-      cf2(:,3,2) = cf2(:,2,3)
-
       ! Electric field at this point
       E_f(1) = qlm_emd_ex(i,j)
       E_f(2) = qlm_emd_ey(i,j)
       E_f(3) = qlm_emd_ez(i,j)
-
-      ! Vector potential at this point
-      A_f(1) = qlm_emd_ax(i,j)
-      A_f(2) = qlm_emd_ay(i,j)
-      A_f(3) = qlm_emd_az(i,j)
 
       dA(1,1) = qlm_emd_daxx(i,j)
       dA(1,2) = qlm_emd_daxy(i,j)
@@ -155,20 +81,10 @@ subroutine qlm_emd_compute_charge (CCTK_ARGUMENTS, hn)
       dA(3,2) = qlm_emd_dazy(i,j)
       dA(3,3) = qlm_emd_dazz(i,j)
 
-      ! Compite covariant derivatives
-      cdA = dA
-      do a = 1, 3
-        do b = 1, 3
-          do m = 1, 3
-            cdA(a,b) = cdA(a,b) - cf2(m,a,b) * A_f(m)
-        end do
-        end do
-      end do
-
       ! Compute magnetic field
-      B_f(1) = - alpha * (cdA(3,2) - cdA(2,3))
-      B_f(2) = - alpha * (cdA(1,3) - cdA(3,1))
-      B_f(3) = - alpha * (cdA(2,1) - cdA(1,2))
+      B_f(1) = - alpha * (dA(3,2) - dA(2,3))
+      B_f(2) = - alpha * (dA(1,3) - dA(3,1))
+      B_f(3) = - alpha * (dA(2,1) - dA(1,2))
 
       ! Flux contribution
       charge_electric_local = charge_electric_local + (E_f(1)*dS(1) + E_f(2)*dS(2) + E_f(3)*dS(3))
