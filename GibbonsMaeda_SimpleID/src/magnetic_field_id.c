@@ -97,11 +97,11 @@ void MagneticField (CCTK_ARGUMENTS)
 
         Zeta[ind]  = 0;
 
-        Ax[ind]    = par_qm_plus * z * y / r_plus / ((x - par_b)**2 + y**2) 
-                    + par_qm_minus * z * y / r_plus / ((x + par_b)**2 + y**2);
+        Ax[ind]    = par_qm_plus * z * y / r_plus / (pow(x - par_b,2) + pow(y,2)) 
+                    + par_qm_minus * z * y / r_plus / (pow(x + par_b,2) + pow(y,2));
 
-        Ay[ind]    = par_qm_plus * z * x / r_plus / ((x - par_b)**2 + y**2) 
-                    + par_qm_minus * z * x / r_plus / ((x + par_b)**2 + y**2);
+        Ay[ind]    = par_qm_plus * z * x / r_plus / (pow(x - par_b,2) + pow(y,2)) 
+                    + par_qm_minus * z * x / r_plus / (pow(x + par_b,2) + pow(y,2));
                     
         Az[ind]    = 0;
 
