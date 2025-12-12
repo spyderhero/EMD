@@ -19,7 +19,7 @@ void swap (CCTK_REAL * restrict const a, CCTK_REAL * restrict const b)
 #define SWAP(a,b) (swap(&(a),&(b)))
 
 /* -------------------------------------------------------------------*/
-void GM_GHS (CCTK_ARGUMENTS)
+void GMGHS (CCTK_ARGUMENTS)
 {
   DECLARE_CCTK_ARGUMENTS;
   DECLARE_CCTK_PARAMETERS;

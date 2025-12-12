@@ -1,8 +1,9 @@
 # Main make.code.defn file
 
 # Source files in this directory
-SRCS = Only_Electric_Field.c     \
-       GM_GHS.c
+SRCS = rns_id.c     \
+       magnetic_field_id.c \
+       gm-ghs_id.c
 
 # Subdirectories containing source files
 SUBDIRS =
