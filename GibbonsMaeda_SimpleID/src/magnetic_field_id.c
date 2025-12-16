@@ -115,7 +115,7 @@ void MagneticField (CCTK_ARGUMENTS)
         Ey[ind]    = 0;
         Ez[ind]    = 0;
 
-        CCTK_INFO("!!! set initial data !!!")
+        CCTK_INFO("!!! set initial data !!!");
 
         if (swap_xz) {
           /* Swap the x and z components of all tensors */
