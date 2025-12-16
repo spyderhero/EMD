@@ -101,11 +101,11 @@ void MagneticField (CCTK_ARGUMENTS)
 
         Zeta[ind]  = 0;
 
-        Ax[ind]    = - (par_qm_plus * (z1 / r_plus) * (y1 / sqrt(pow(x1 - par_b,2) + pow(y1,2))) 
-                    + par_qm_minus * (z1 / r_minus) * (y1 / sqrt(pow(x1 + par_b,2) + pow(y1,2))));
+        Ax[ind]    = (par_qm_plus * (z1 / r_plus) * (y1 * sqrt(pow(x1 - par_b,2) + pow(y1,2))) 
+                    + par_qm_minus * (z1 / r_minus) * (y1 * sqrt(pow(x1 + par_b,2) + pow(y1,2))));
 
-        Ay[ind]    = (par_qm_plus * (z1 / r_plus) * (x1 / sqrt(pow(x1 - par_b,2) + pow(y1,2))) 
-                    + par_qm_minus * (z1 / r_minus) * (x1 / sqrt(pow(x1 + par_b,2) + pow(y1,2))));
+        Ay[ind]    = (par_qm_plus * (z1 / r_plus) * (x1 * sqrt(pow(x1 - par_b,2) + pow(y1,2))) 
+                    + par_qm_minus * (z1 / r_minus) * (x1 * sqrt(pow(x1 + par_b,2) + pow(y1,2))));
                     
         Az[ind]    = 0;
 
@@ -114,8 +114,6 @@ void MagneticField (CCTK_ARGUMENTS)
         Ex[ind]    = 0;
         Ey[ind]    = 0;
         Ez[ind]    = 0;
-
-        CCTK_INFO("!!! set initial data !!!");
 
         if (swap_xz) {
           /* Swap the x and z components of all tensors */
