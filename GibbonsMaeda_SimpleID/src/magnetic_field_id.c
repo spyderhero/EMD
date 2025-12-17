@@ -64,8 +64,6 @@ void MagneticField (CCTK_ARGUMENTS)
         CCTK_REAL r_minus
           = sqrt(pow(x1 + par_b, 2) + pow(y1, 2) + pow(z1, 2));
 
-        CCTK_REAL rho2 = pow(x1,2) + pow(y1,2);
-
         CCTK_REAL psi1 = sqrt( pow(1
                                    + 0.5 * par_m_plus / r_plus
                                    + 0.5 * par_m_minus/ r_minus , 2)
@@ -103,27 +101,13 @@ void MagneticField (CCTK_ARGUMENTS)
 
         Zeta[ind]  = 0;
 
-        if (rho2 < eps) {
-          Ax[ind] = 0;
-          Ay[ind] = 0;
-          Az[ind] = 0;
-        } else if (z1 >= 0) {
-          Ax[ind]    = - (par_qm_plus * (1 - z1 / r_plus) * y1 / sqrt(pow(x1 - par_b,2) + pow(y1,2))
-                      + par_qm_minus * (1 - z1 / r_minus) * y1 / sqrt(pow(x1 + par_b,2) + pow(y1,2)));
+        Ax[ind]    = (par_qm_plus * z1 * y1 / r_plus / sqrt(pow(x1 - par_b,2) + pow(y1,2))
+                    + par_qm_minus * z1 * y1 / r_minus / sqrt(pow(x1 + par_b,2) + pow(y1,2)));
 
-          Ay[ind]    =  (par_qm_plus * (1 - z1 / r_plus) * x1 / sqrt(pow(x1 - par_b,2) + pow(y1,2))
-                    + par_qm_minus * (1 - z1 / r_minus) * x1 / sqrt(pow(x1 + par_b,2) + pow(y1,2)));
-          
-          Az[ind]    = 0;
-        } else {
-          Ax[ind]    = (par_qm_plus * (1 + z1 / r_plus) * y1 / sqrt(pow(x1 - par_b,2) + pow(y1,2))
-                      + par_qm_minus * (1 + z1 / r_minus) * y1 / sqrt(pow(x1 + par_b,2) + pow(y1,2)));
-
-          Ay[ind]    = - (par_qm_plus * (1 + z1 / r_plus) * x1 / sqrt(pow(x1 - par_b,2) + pow(y1,2))
-                      + par_qm_minus * (1 + z1 / r_minus) * x1 / sqrt(pow(x1 + par_b,2) + pow(y1,2)));
-                      
-          Az[ind]    = 0;
-        }
+        Ay[ind]    = - (par_qm_plus * z1 * x1 / r_plus / sqrt(pow(x1 - par_b,2) + pow(y1,2))
+                    + par_qm_minus * z1 * x1 / r_minus / sqrt(pow(x1 + par_b,2) + pow(y1,2)));
+                    
+        Az[ind]    = 0;
 
         Aphi[ind]  = 0;
 
