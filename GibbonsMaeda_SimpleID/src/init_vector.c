@@ -11,6 +11,15 @@
 // Gauge: Lorenz, Aphi = 0
 // ============================================================
 
+/* Swap two variables */
+static inline
+void swap (CCTK_REAL * restrict const a, CCTK_REAL * restrict const b)
+{
+  CCTK_REAL const t = *a; *a=*b; *b=t;
+}
+#undef SWAP
+#define SWAP(a,b) (swap(&(a),&(b)))
+
 // ------------------------------------------------------------
 // Boundary condition: monopole-like vector potential
 // (only used on outer boundary)
@@ -107,11 +116,11 @@ void Vector_Potential_InitData(CCTK_ARGUMENTS)
       Az[idx] = ((Az[ip]+Az[im])/dx2
                 + (Az[jp]+Az[jm])/dy2
                 + (Az[kp]+Az[km])/dz2) / denom;
+
+      if (swap_xz) {
+        /* Swap the x and z components of all tensors */
+        SWAP (Ax[idx], Az[idx]);
+      } /* if swap_xz */
     }
   }
-
-  if (swap_xz) {
-    /* Swap the x and z components of all tensors */
-    SWAP (Ax[ind], Az[ind]);
-  } /* if swap_xz */
 }
