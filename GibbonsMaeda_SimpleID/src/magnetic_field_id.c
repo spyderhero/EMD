@@ -60,9 +60,9 @@ void Vector_Potential_InitData(CCTK_ARGUMENTS)
   const int kmin = 0;
   const int kmax = cctk_lsh[2];
 
-  const CCTK_REAL dx2 = CCTK_DELTA_SPACE[0]*CCTK_DELTA_SPACE[0];
-  const CCTK_REAL dy2 = CCTK_DELTA_SPACE[1]*CCTK_DELTA_SPACE[1];
-  const CCTK_REAL dz2 = CCTK_DELTA_SPACE[2]*CCTK_DELTA_SPACE[2];
+  const CCTK_REAL dx2 = CCTK_DELTA_SPACE(0)*CCTK_DELTA_SPACE(0);
+  const CCTK_REAL dy2 = CCTK_DELTA_SPACE(1)*CCTK_DELTA_SPACE(1);
+  const CCTK_REAL dz2 = CCTK_DELTA_SPACE(2)*CCTK_DELTA_SPACE(2);
 
   const CCTK_REAL denom = 2.0*(1.0/dx2 + 1.0/dy2 + 1.0/dz2);
 
