@@ -72,3 +72,8 @@ REAL initial_lapse_psi_exponent "Exponent n for psi^-n initial lapse profile"
 BOOLEAN swap_xz "Swap x and z coordinates when interpolating, so that the black holes are separated in the z direction"
 {
 } "no"
+
+INT poisson_iterations "poisson_iterations sets how many times the Laplace solver updates A_i"
+{
+  1:* :: ""
+} 1000

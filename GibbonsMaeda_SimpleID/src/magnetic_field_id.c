@@ -74,9 +74,9 @@ void Vector_Potential_InitData(CCTK_ARGUMENTS)
   for (int i = imin; i <= imax; ++i)
   {
     const int idx = CCTK_GFINDEX3D(cctkGH,i,j,k);
-    A_x[idx] = 0.0;
-    A_y[idx] = 0.0;
-    A_z[idx] = 0.0;
+    Ax[idx] = 0.0;
+    Ay[idx] = 0.0;
+    Az[idx] = 0.0;
   }
 
   // ==========================================================
@@ -89,8 +89,8 @@ void Vector_Potential_InitData(CCTK_ARGUMENTS)
     if (i==imin || i==imax || j==jmin || j==jmax || k==kmin || k==kmax)
     {
       const int idx = CCTK_GFINDEX3D(cctkGH,i,j,k);
-      monopole_bc(xcoord[idx], ycoord[idx], zcoord[idx], Qm,
-                  &A_x[idx], &A_y[idx], &A_z[idx]);
+      monopole_bc(x[idx], y[idx], z[idx], par_qm_plus + par_qm_minus,
+                  &Ax[idx], &Ay[idx], &Az[idx]);
     }
   }
 
@@ -111,17 +111,17 @@ void Vector_Potential_InitData(CCTK_ARGUMENTS)
       const int kp  = CCTK_GFINDEX3D(cctkGH,i,j,k+1);
       const int km  = CCTK_GFINDEX3D(cctkGH,i,j,k-1);
 
-      A_x[idx] = ((A_x[ip]+A_x[im])/dx2
-                + (A_x[jp]+A_x[jm])/dy2
-                + (A_x[kp]+A_x[km])/dz2) / denom;
+      Ax[idx] = ((Ax[ip]+Ax[im])/dx2
+                + (Ax[jp]+Ax[jm])/dy2
+                + (Ax[kp]+Ax[km])/dz2) / denom;
 
-      A_y[idx] = ((A_y[ip]+A_y[im])/dx2
-                + (A_y[jp]+A_y[jm])/dy2
-                + (A_y[kp]+A_y[km])/dz2) / denom;
+      Ay[idx] = ((Ay[ip]+Ay[im])/dx2
+                + (Ay[jp]+Ay[jm])/dy2
+                + (Ay[kp]+Ay[km])/dz2) / denom;
 
-      A_z[idx] = ((A_z[ip]+A_z[im])/dx2
-                + (A_z[jp]+A_z[jm])/dy2
-                + (A_z[kp]+A_z[km])/dz2) / denom;
+      Az[idx] = ((Az[ip]+Az[im])/dx2
+                + (Az[jp]+Az[jm])/dy2
+                + (Az[kp]+Az[km])/dz2) / denom;
     }
   }
 }
@@ -215,7 +215,7 @@ void MagneticField (CCTK_ARGUMENTS)
         Ey[ind]    = 0;
         Ez[ind]    = 0;
 
-        Vector_Potential_InitData(CCTK_PASS_CCTK_ARGUMENTS)
+        Vector_Potential_InitData(CCTK_ARGUMENTS);
 
         if (swap_xz) {
           /* Swap the x and z components of all tensors */
