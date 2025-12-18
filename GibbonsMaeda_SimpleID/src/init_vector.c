@@ -109,4 +109,9 @@ void Vector_Potential_InitData(CCTK_ARGUMENTS)
                 + (Az[kp]+Az[km])/dz2) / denom;
     }
   }
+
+  if (swap_xz) {
+    /* Swap the x and z components of all tensors */
+    SWAP (Ax[ind], Az[ind]);
+  } /* if swap_xz */
 }

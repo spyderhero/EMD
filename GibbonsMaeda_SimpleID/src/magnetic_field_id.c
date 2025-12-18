@@ -107,16 +107,12 @@ void MagneticField (CCTK_ARGUMENTS)
         Ey[ind]    = 0;
         Ez[ind]    = 0;
 
-        Vector_Potential_InitData(CCTK_PASS_CCTK_ARGUMENTS)
-
         if (swap_xz) {
           /* Swap the x and z components of all tensors */
           SWAP (gxx[ind], gzz[ind]);
           SWAP (gxy[ind], gyz[ind]);
           SWAP (kxx[ind], kzz[ind]);
           SWAP (kxy[ind], kyz[ind]);
-
-          SWAP (Ax[ind], Az[ind]);
           SWAP (Ex[ind], Ez[ind]);
 
         } /* if swap_xz */
