@@ -18,6 +18,114 @@ void swap (CCTK_REAL * restrict const a, CCTK_REAL * restrict const b)
 #undef SWAP
 #define SWAP(a,b) (swap(&(a),&(b)))
 
+// ============================================================
+// Minimal Einstein Toolkit initial-condition thorn
+// Maxwell vector potential from Poisson (Laplace) solver
+// Equation solved (interior):  ∇^2 A_i = 0
+// Boundary condition: magnetic monopole–like A_i
+// Gauge: Lorenz, Aphi = 0
+// ============================================================
+
+// ------------------------------------------------------------
+// Boundary condition: monopole-like vector potential
+// (only used on outer boundary)
+// ------------------------------------------------------------
+static inline void monopole_bc(
+  const CCTK_REAL x,
+  const CCTK_REAL y,
+  const CCTK_REAL z,
+  const CCTK_REAL Qm,
+  CCTK_REAL *Ax,
+  CCTK_REAL *Ay,
+  CCTK_REAL *Az)
+{
+  const CCTK_REAL r2 = x*x + y*y + z*z + 1e-14;
+  *Ax = -Qm * y / r2;
+  *Ay =  Qm * x / r2;
+  *Az =  0.0;
+}
+
+// ------------------------------------------------------------
+// Main initial-data routine
+// ------------------------------------------------------------
+void Vector_Potential_InitData(CCTK_ARGUMENTS)
+{
+  DECLARE_CCTK_ARGUMENTS;
+  DECLARE_CCTK_PARAMETERS;
+
+  const int imin = 0;
+  const int imax = cctk_lsh[0];
+  const int jmin = 0;
+  const int jmax = cctk_lsh[1];
+  const int kmin = 0;
+  const int kmax = cctk_lsh[2];
+
+  const CCTK_REAL dx2 = CCTK_DELTA_SPACE[0]*CCTK_DELTA_SPACE[0];
+  const CCTK_REAL dy2 = CCTK_DELTA_SPACE[1]*CCTK_DELTA_SPACE[1];
+  const CCTK_REAL dz2 = CCTK_DELTA_SPACE[2]*CCTK_DELTA_SPACE[2];
+
+  const CCTK_REAL denom = 2.0*(1.0/dx2 + 1.0/dy2 + 1.0/dz2);
+
+  // ==========================================================
+  // (1) Initial guess: zero everywhere
+  // ==========================================================
+  for (int k = kmin; k <= kmax; ++k)
+  for (int j = jmin; j <= jmax; ++j)
+  for (int i = imin; i <= imax; ++i)
+  {
+    const int idx = CCTK_GFINDEX3D(cctkGH,i,j,k);
+    A_x[idx] = 0.0;
+    A_y[idx] = 0.0;
+    A_z[idx] = 0.0;
+  }
+
+  // ==========================================================
+  // (2) Impose boundary condition once
+  // ==========================================================
+  for (int k = kmin; k <= kmax; ++k)
+  for (int j = jmin; j <= jmax; ++j)
+  for (int i = imin; i <= imax; ++i)
+  {
+    if (i==imin || i==imax || j==jmin || j==jmax || k==kmin || k==kmax)
+    {
+      const int idx = CCTK_GFINDEX3D(cctkGH,i,j,k);
+      monopole_bc(xcoord[idx], ycoord[idx], zcoord[idx], Qm,
+                  &A_x[idx], &A_y[idx], &A_z[idx]);
+    }
+  }
+
+  // ==========================================================
+  // (3) Jacobi iteration: solve ∇^2 A_i = 0
+  // ==========================================================
+  for (int it = 0; it < poisson_iterations; ++it)
+  {
+    for (int k = kmin+1; k <= kmax-1; ++k)
+    for (int j = jmin+1; j <= jmax-1; ++j)
+    for (int i = imin+1; i <= imax-1; ++i)
+    {
+      const int idx = CCTK_GFINDEX3D(cctkGH,i,j,k);
+      const int ip  = CCTK_GFINDEX3D(cctkGH,i+1,j,k);
+      const int im  = CCTK_GFINDEX3D(cctkGH,i-1,j,k);
+      const int jp  = CCTK_GFINDEX3D(cctkGH,i,j+1,k);
+      const int jm  = CCTK_GFINDEX3D(cctkGH,i,j-1,k);
+      const int kp  = CCTK_GFINDEX3D(cctkGH,i,j,k+1);
+      const int km  = CCTK_GFINDEX3D(cctkGH,i,j,k-1);
+
+      A_x[idx] = ((A_x[ip]+A_x[im])/dx2
+                + (A_x[jp]+A_x[jm])/dy2
+                + (A_x[kp]+A_x[km])/dz2) / denom;
+
+      A_y[idx] = ((A_y[ip]+A_y[im])/dx2
+                + (A_y[jp]+A_y[jm])/dy2
+                + (A_y[kp]+A_y[km])/dz2) / denom;
+
+      A_z[idx] = ((A_z[ip]+A_z[im])/dx2
+                + (A_z[jp]+A_z[jm])/dy2
+                + (A_z[kp]+A_z[km])/dz2) / denom;
+    }
+  }
+}
+
 /* -------------------------------------------------------------------*/
 void MagneticField (CCTK_ARGUMENTS)
 {
@@ -101,29 +209,13 @@ void MagneticField (CCTK_ARGUMENTS)
 
         Zeta[ind]  = 0;
 
-        if (z1 >= 0) {
-          Ax[ind]    = - (par_qm_plus * (1 - z1 / r_plus) * y1 / sqrt(pow(x1 - par_b,2) + pow(y1,2))
-                      + par_qm_minus * (1 - z1 / r_minus) * y1 / sqrt(pow(x1 + par_b,2) + pow(y1,2))) / pow(psi1,6);
-
-          Ay[ind]    =  (par_qm_plus * (1 - z1 / r_plus) * x1 / sqrt(pow(x1 - par_b,2) + pow(y1,2))
-                    + par_qm_minus * (1 - z1 / r_minus) * x1 / sqrt(pow(x1 + par_b,2) + pow(y1,2))) / pow(psi1,6);
-          
-          Az[ind]    = 0;
-        } else {
-          Ax[ind]    = (par_qm_plus * (1 + z1 / r_plus) * y1 / sqrt(pow(x1 - par_b,2) + pow(y1,2))
-                      + par_qm_minus * (1 + z1 / r_minus) * y1 / sqrt(pow(x1 + par_b,2) + pow(y1,2))) / pow(psi1,6);
-
-          Ay[ind]    = - (par_qm_plus * (1 + z1 / r_plus) * x1 / sqrt(pow(x1 - par_b,2) + pow(y1,2))
-                      + par_qm_minus * (1 + z1 / r_minus) * x1 / sqrt(pow(x1 + par_b,2) + pow(y1,2))) / pow(psi1,6);
-                      
-          Az[ind]    = 0;
-        }
-
         Aphi[ind]  = 0;
 
         Ex[ind]    = 0;
         Ey[ind]    = 0;
         Ez[ind]    = 0;
+
+        Vector_Potential_InitData(CCTK_PASS_CCTK_ARGUMENTS)
 
         if (swap_xz) {
           /* Swap the x and z components of all tensors */
