@@ -16,6 +16,12 @@ if (CCTK_Equals(initial_data, "Magnetic_Field"))
     LANG: C
     OPTIONS: Local
   } "simple analytic initial data when using GibbonsMaeda theory"
+
+  SCHEDULE Vector_Potential_InitData IN ADMBase_InitialData
+  {
+    LANG: C
+    OPTIONS: Local
+  } "sets the initial magnetic vector potential"
 }
 
 if (CCTK_Equals(initial_data, "GM_GHS"))
