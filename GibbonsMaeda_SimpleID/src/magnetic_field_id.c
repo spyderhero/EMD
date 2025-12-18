@@ -48,7 +48,7 @@ static inline void monopole_bc(
 // ------------------------------------------------------------
 // Main initial-data routine
 // ------------------------------------------------------------
-void Vector_Potential_InitData(CCTK_ARGUMENTS)
+void Vector_Potential_InitData()
 {
   DECLARE_CCTK_ARGUMENTS;
   DECLARE_CCTK_PARAMETERS;
