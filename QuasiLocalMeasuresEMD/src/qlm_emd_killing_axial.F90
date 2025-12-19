@@ -13,7 +13,7 @@ subroutine qlm_emd_killing_axial (CCTK_ARGUMENTS, hn)
   DECLARE_CCTK_PARAMETERS
   integer :: hn
   
-  CCTK_REAL :: xi(2), chi
+  CCTK_REAL :: xi(2), chi1
   integer   :: i, j
   
   do j = 1, qlm_emd_nphi(hn)
@@ -22,12 +22,12 @@ subroutine qlm_emd_killing_axial (CCTK_ARGUMENTS, hn)
         xi(1) = 0
         xi(2) = 1
         
-        chi = 0
+        chi1 = 0
         
         qlm_emd_xi_t(i,j,hn) = xi(1)
         qlm_emd_xi_p(i,j,hn) = xi(2)
         
-        qlm_emd_chi(i,j,hn) = chi
+        qlm_emd_chi(i,j,hn) = chi1
         
      end do
   end do

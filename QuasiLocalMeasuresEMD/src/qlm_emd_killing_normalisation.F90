@@ -23,16 +23,16 @@ contains
     CCTK_REAL, intent(out) :: factor
     integer,   intent(out) :: nsteps
     
-    CCTK_REAL :: lambda0, theta0, phi0
-    CCTK_REAL :: lambda1, theta1, phi1
+    CCTK_REAL :: lambda0, theta0, phi_0
+    CCTK_REAL :: lambda1, theta1, phi_1
     character :: msg*1000
     
     lambda0 = 0
     theta0  = theta
-    phi0    = 0
-    phi1    = 2*pi
+    phi_0    = 0
+    phi_1    = 2*pi
     call killing_geodesic &
-         (CCTK_PASS_FTOF, hn, lambda0, theta0, phi0, phi1, lambda1, theta1, &
+         (CCTK_PASS_FTOF, hn, lambda0, theta0, phi_0, phi_1, lambda1, theta1, &
          nsteps)
     
     factor = (lambda1 - lambda0) / (2*pi)
@@ -52,10 +52,10 @@ contains
   
   
   subroutine killing_geodesic &
-       (CCTK_ARGUMENTS, hn, lambda0, theta0, phi0, phi1, lambda1, theta1, nsteps)
+       (CCTK_ARGUMENTS, hn, lambda0, theta0, phi_0, phi_1, lambda1, theta1, nsteps)
     DECLARE_CCTK_ARGUMENTS
     integer,   intent(in)  :: hn
-    CCTK_REAL, intent(in)  :: lambda0, theta0, phi0, phi1
+    CCTK_REAL, intent(in)  :: lambda0, theta0, phi_0, phi_1
     CCTK_REAL, intent(out) :: lambda1, theta1
     integer,   intent(out) :: nsteps
     
@@ -77,7 +77,7 @@ contains
     nsteps = 0
     lambda = lambda0
     theta  = theta0
-    phi    = phi0
+    phi    = phi_0
     
     dtheta = killing_interp (qlm_emd_xi_t(:,:,hn), &
          org_theta, org_phi, del_theta, del_phi, theta, phi, ierr1)
@@ -144,7 +144,7 @@ contains
        theta2 = theta + dlambda * dtheta
        phi2   = phi   + dlambda * dphi
        
-       if (phi2 >= phi1) exit
+       if (phi2 >= phi_1) exit
        
        if (nsteps > 100000) then
           call CCTK_WARN (2, "Integration takes too many steps")
@@ -162,7 +162,7 @@ contains
        
     end do
     
-    dlambda = (phi1 - phi) / dphi
+    dlambda = (phi_1 - phi) / dphi
     
     nsteps = nsteps + 1
     lambda = lambda + dlambda
