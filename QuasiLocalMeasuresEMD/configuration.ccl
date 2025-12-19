@@ -1,6 +1,6 @@
 # Configuration definition for thorn QuasiLocalMeasuresEMD
 
-REQUIRES Boundary Fortran LAPACK TGRtensor
+REQUIRES Boundary Fortran LAPACK TGRtensor GibbonsMaedaEvolve
 
 OPTIONAL MPI
 {
