@@ -26,7 +26,7 @@ subroutine qlm_emd_killing_transport (CCTK_ARGUMENTS, hn)
   
   integer, parameter :: lik = lapack_integer_kind
 
-  CCTK_REAL    :: xi(2,3), chi(3)
+  CCTK_REAL    :: xi(2,3), chi1(3)
   CCTK_REAL    :: vec(3,3)
   CCTK_REAL    :: wr(3), wi(3), vl(3,3), vr(3,3)
   integer      :: i0, j0
@@ -53,7 +53,7 @@ subroutine qlm_emd_killing_transport (CCTK_ARGUMENTS, hn)
   vec = delta3
   
   if (veryverbose/=0) then
-     write (msg, '("Initial vectors (xi^t xi^p chi):")')
+     write (msg, '("Initial vectors (xi^t xi^p chi1):")')
      call CCTK_INFO (msg)
      do n=1,3
         write (msg, '(i2,3g18.8)') n, vec(:,n)
@@ -63,18 +63,18 @@ subroutine qlm_emd_killing_transport (CCTK_ARGUMENTS, hn)
   
   xi(1,:) = vec(1,:)
   xi(2,:) = vec(2,:)
-  chi(:)  = vec(3,:)
+  chi1(:)  = vec(3,:)
   
   do n=1,3
-     call transport_along_equator (CCTK_PASS_FTOF, hn, i0, xi(:,n), chi(n))
+     call transport_along_equator (CCTK_PASS_FTOF, hn, i0, xi(:,n), chi1(n))
   end do
   
   vec(1,:) = xi(1,:)
   vec(2,:) = xi(2,:)
-  vec(3,:) = chi(:)
+  vec(3,:) = chi1(:)
   
   if (veryverbose/=0) then
-     write (msg, '("Final vectors (xi^t xi^p chi):")')
+     write (msg, '("Final vectors (xi^t xi^p chi1):")')
      call CCTK_INFO (msg)
      do n=1,3
         write (msg, '(i2,3g18.8)') n, vec(:,n)
@@ -111,7 +111,7 @@ subroutine qlm_emd_killing_transport (CCTK_ARGUMENTS, hn)
   
   xi(1,:) = vr(1,:)
   xi(2,:) = vr(2,:)
-  chi(:)  = vr(3,:)
+  chi1(:)  = vr(3,:)
   
   ! TODO:
   ! This transport scheme is not ideal.
@@ -122,7 +122,7 @@ subroutine qlm_emd_killing_transport (CCTK_ARGUMENTS, hn)
   if (abs(cmplx(wr(n),wi(n),kind(wr)) - (1,0)) > 1.0d-4) then
      call CCTK_WARN (3, "Did not manage to find an eigenvector with the eigenvalue 1")
   end if
-  call transport_along_equator (CCTK_PASS_FTOF, hn, i0, xi(:,n), chi(n))
+  call transport_along_equator (CCTK_PASS_FTOF, hn, i0, xi(:,n), chi1(n))
   call transport_along_meridians (CCTK_PASS_FTOF, hn, i0)
   
   call emd_set_boundary (CCTK_PASS_FTOF, hn, qlm_emd_xi_t(:,:,hn), -1)

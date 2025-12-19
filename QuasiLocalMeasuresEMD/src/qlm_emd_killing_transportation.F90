@@ -20,18 +20,18 @@ module qlm_emd_killing_transportation
   
 contains
   
-  subroutine transport_along_equator (CCTK_ARGUMENTS, hn, i0, xi, chi)
+  subroutine transport_along_equator (CCTK_ARGUMENTS, hn, i0, xi, chi1)
     DECLARE_CCTK_ARGUMENTS
     integer,   intent(in)    :: hn
     integer,   intent(in)    :: i0
-    CCTK_REAL, intent(inout) :: xi(2), chi
+    CCTK_REAL, intent(inout) :: xi(2), chi1
     integer :: j0
     integer :: nsteps
     
     j0 = 1+qlm_emd_nghostsphi(hn)
     nsteps = qlm_emd_nphi(hn) - 2*qlm_emd_nghostsphi(hn)
     
-    call transport (CCTK_PASS_FTOF, hn, i0, j0, 0, 1, nsteps, xi, chi)
+    call transport (CCTK_PASS_FTOF, hn, i0, j0, 0, 1, nsteps, xi, chi1)
     
   end subroutine transport_along_equator
   
@@ -41,7 +41,7 @@ contains
     DECLARE_CCTK_ARGUMENTS
     integer, intent(in) :: hn
     integer, intent(in) :: i0
-    CCTK_REAL :: xi(2), chi
+    CCTK_REAL :: xi(2), chi1
     integer   :: j0
     integer   :: dir
     integer   :: nsteps
@@ -55,9 +55,9 @@ contains
           
           xi(1) = qlm_emd_xi_t(i0,j0,hn)
           xi(2) = qlm_emd_xi_p(i0,j0,hn)
-          chi = qlm_emd_chi(i0,j0,hn)
+          chi1 = qlm_emd_chi(i0,j0,hn)
           
-          call transport (CCTK_PASS_FTOF, hn, i0, j0, dir, 0, nsteps, xi, chi)
+          call transport (CCTK_PASS_FTOF, hn, i0, j0, dir, 0, nsteps, xi, chi1)
           
        end do
        
@@ -67,13 +67,13 @@ contains
   
   
   
-  subroutine transport (CCTK_ARGUMENTS, hn, i0, j0, di, dj, nsteps, xi, chi)
+  subroutine transport (CCTK_ARGUMENTS, hn, i0, j0, di, dj, nsteps, xi, chi1)
     DECLARE_CCTK_ARGUMENTS
     integer,  intent(in)    :: hn
     integer,  intent(in)    :: i0, j0
     integer,  intent(in)    :: di, dj
     integer,  intent(in)    :: nsteps
-    CCTK_REAL,intent(inout) :: xi(2), chi
+    CCTK_REAL,intent(inout) :: xi(2), chi1
     CCTK_REAL :: vv(2)
     CCTK_REAL :: xi_dot(2), chi_dot
     CCTK_REAL :: xi1(2), chi1
@@ -89,9 +89,9 @@ contains
     
     do n=1,nsteps
        
-       call transport_rhs (CCTK_PASS_FTOF, hn, i, j, xi, chi, vv, xi_dot, chi_dot)
+       call transport_rhs (CCTK_PASS_FTOF, hn, i, j, xi, chi1, vv, xi_dot, chi_dot)
        xi1 = xi + xi_dot
-       chi1 = chi + chi_dot
+       chi1 = chi1 + chi_dot
        i = i + di
        j = j + dj
        if (j <           1+qlm_emd_nghostsphi(hn)) j = j + (qlm_emd_nphi(hn)-2*qlm_emd_nghostsphi(hn))
@@ -100,11 +100,11 @@ contains
        call transport_rhs &
             (CCTK_PASS_FTOF, hn, i, j, xi1, chi1, vv, xi1_dot, chi1_dot)
        xi = xi + 0.5d0 * (xi_dot + xi1_dot)
-       chi = chi + 0.5d0 * (chi_dot + chi1_dot)
+       chi1 = chi1 + 0.5d0 * (chi_dot + chi1_dot)
        
        qlm_emd_xi_t(i,j,hn) = xi(1)
        qlm_emd_xi_p(i,j,hn) = xi(2)
-       qlm_emd_chi(i,j,hn) = chi
+       qlm_emd_chi(i,j,hn) = chi1
 
     end do
     
@@ -112,11 +112,11 @@ contains
   
   
   
-  subroutine transport_rhs (CCTK_ARGUMENTS, hn, i, j, xi, chi, vv, xi_dot, chi_dot)
+  subroutine transport_rhs (CCTK_ARGUMENTS, hn, i, j, xi, chi1, vv, xi_dot, chi_dot)
     DECLARE_CCTK_ARGUMENTS
     integer,   intent(in)  :: hn
     integer,   intent(in)  :: i, j
-    CCTK_REAL, intent(in)  :: xi(2), chi
+    CCTK_REAL, intent(in)  :: xi(2), chi1
     CCTK_REAL, intent(in)  :: vv(2)
     CCTK_REAL, intent(out) :: xi_dot(2), chi_dot
     CCTK_REAL :: qq(2,2), dqq(2,2,2), dtq, qu(2,2), gamma(2,2,2), rsc
@@ -150,15 +150,15 @@ contains
     call calc_2connections (qu, dqq, gamma)
     
     call killing_transport_rhs &
-         (xi, chi, qq, dtq, qu, gamma, rsc, vv, xi_dot, chi_dot)
+         (xi, chi1, qq, dtq, qu, gamma, rsc, vv, xi_dot, chi_dot)
     
   end subroutine transport_rhs
   
   
   
   subroutine killing_transport_rhs &
-       (xi, chi, qq, dtq, qu, gamma2, rsc2, vv, xi_dot, chi_dot)
-    CCTK_REAL, intent(in)  :: xi(2), chi
+       (xi, chi1, qq, dtq, qu, gamma2, rsc2, vv, xi_dot, chi_dot)
+    CCTK_REAL, intent(in)  :: xi(2), chi1
     CCTK_REAL, intent(in)  :: qq(2,2), dtq, qu(2,2), gamma2(2,2,2), rsc2
     CCTK_REAL, intent(in)  :: vv(2)
     CCTK_REAL, intent(out) :: xi_dot(2), chi_dot
@@ -176,12 +176,12 @@ contains
     
     ! in 2D we have:
     ! R_ijkl = 1/2 q R epsilon2_ij epsilon2_kl
-    ! L_ij = epsilon2_ij sqrt(q) chi
+    ! L_ij = epsilon2_ij sqrt(q) chi1
     
     ! then:
-    ! v^k D_k xi^i = epsilon2^i_k sqrt(q) chi v^k
-    ! v^k D_k epsilon2^i_j sqrt(q) chi = R^i_jkl v^k xi^l
-    ! v^k D_k chi = 1/2 sqrt(q) R epsilon2_kl v^k xi^l
+    ! v^k D_k xi^i = epsilon2^i_k sqrt(q) chi1 v^k
+    ! v^k D_k epsilon2^i_j sqrt(q) chi1 = R^i_jkl v^k xi^l
+    ! v^k D_k chi1 = 1/2 sqrt(q) R epsilon2_kl v^k xi^l
     
     ! define:
     ! X_dot = v^i d/dx^i X   (partial derivatives)
@@ -191,7 +191,7 @@ contains
        do k=1,2
           do l=1,2
              xi_dot(i) = xi_dot(i) &
-                  + qu(i,l) * epsilon2(l,k) * sqrt(dtq) * chi * vv(k) &
+                  + qu(i,l) * epsilon2(l,k) * sqrt(dtq) * chi1 * vv(k) &
                   - vv(k) * gamma2(i,l,k) * xi(l)
           end do
        end do

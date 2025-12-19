@@ -20,7 +20,7 @@ subroutine qlm_emd_killing_gradient (CCTK_ARGUMENTS, hn)
   CCTK_REAL, parameter :: two=2, half=1/two
   CCTK_REAL :: qq(2,2), dqq(2,2,2), dtq, qu(2,2), dqu(2,2,2)
   CCTK_REAL :: dpsi2(2), ddpsi2(2,2), ndpsi2, dndpsi2(2)
-  CCTK_REAL :: xi(2), dxi(2,2), chi
+  CCTK_REAL :: xi(2), dxi(2,2), chi1
   integer   :: i, j
   integer   :: a, b
   CCTK_REAL    :: delta_space(2)
@@ -150,16 +150,16 @@ subroutine qlm_emd_killing_gradient (CCTK_ARGUMENTS, hn)
         dxi(1,1:2) = deriv (qlm_emd_xi_t(:,:,hn), i, j, delta_space)
         dxi(2,1:2) = deriv (qlm_emd_xi_p(:,:,hn), i, j, delta_space)
         
-        ! eps_ab sqrt(q) chi = D_b xi_a
-        !        sqrt(q) chi = -1/2 eps^ab D_a xi_b
-        chi = 0
+        ! eps_ab sqrt(q) chi1 = D_b xi_a
+        !        sqrt(q) chi1 = -1/2 eps^ab D_a xi_b
+        chi1 = 0
         do a=1,2
            do b=1,2
-              chi = chi - half * sqrt(dtq) * epsilon2(a,b) * dxi(b,a)
+              chi1 = chi1 - half * sqrt(dtq) * epsilon2(a,b) * dxi(b,a)
            end do
         end do
         
-        qlm_emd_chi(i,j,hn) = chi
+        qlm_emd_chi(i,j,hn) = chi1
         
      end do
   end do
