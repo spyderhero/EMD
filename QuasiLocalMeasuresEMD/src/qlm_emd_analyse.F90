@@ -36,6 +36,7 @@ subroutine qlm_emd_analyse (CCTK_ARGUMENTS, hn)
   CCTK_REAL    :: qq(2,2), dtq
   CCTK_REAL    :: adm_energy, adm_mom(3), adm_amom(3)
   CCTK_REAL    :: w_energy, w_mom(3), w_amom(3,3)
+  CCTK_REAL    :: phi1_ave, phi2_ave
   CCTK_COMPLEX :: ev
   CCTK_REAL    :: spin
   CCTK_REAL    :: npspin
