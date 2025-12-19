@@ -111,11 +111,20 @@ void GMGHS (CCTK_ARGUMENTS)
         Aphi[ind]  = 0;
         
 
-        Ex[ind]    = exp(2*phi1[ind]) * x1 / pow(r_plus,3);
+        Ex[ind]    = (4 * exp(2 * phi1_0) * par_q_plus * (par_m_plus + 2 * r_plus - rq)
+                     * (-par_m_plus + 2 * r_plus + rq) * (x1-par_b)
+                     / (r_plus * pow( pow(par_m_plus, 2) + 2*par_m_plus*(2 *r_plus - rq)
+                     + pow(2*r_plus + rq, 2), 2))) / alp[ind] /F;
 
-        Ey[ind]    = exp(2*phi1[ind]) * y1 / pow(r_plus,3);
+        Ey[ind]    = (4 * exp(2 * phi1_0) * par_q_plus * (par_m_plus + 2 * r_plus - rq)
+                     * (-par_m_plus + 2 * r_plus + rq) * y1
+                     / (r_plus * pow( pow(par_m_plus, 2) + 2*par_m_plus*(2 *r_plus - rq)
+                     + pow(2*r_plus + rq, 2), 2))) / alp[ind] /F;
 
-        Ez[ind]    = exp(2*phi1[ind]) * z1 / pow(r_plus,3);
+        Ez[ind]    = (4 * exp(2 * phi1_0) * par_q_plus * (par_m_plus + 2 * r_plus - rq)
+                     * (-par_m_plus + 2 * r_plus + rq) * z1
+                     / (r_plus * pow( pow(par_m_plus, 2) + 2*par_m_plus*(2 *r_plus - rq)
+                     + pow(2*r_plus + rq, 2), 2))) / alp[ind] /F;
 
 
         if (swap_xz) {
