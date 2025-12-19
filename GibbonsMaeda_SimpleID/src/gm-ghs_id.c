@@ -108,25 +108,14 @@ void GMGHS (CCTK_ARGUMENTS)
                      + 2*par_m_plus*(2 *r_plus - rq) + pow(2*r_plus + rq, 2) ) );
         }
         
-        Aphi[ind]  = - (Aphi0 - 4 * exp(2*phi1_0) * par_q_plus * r_plus
-                     / ( pow(par_m_plus, 2) + 2 * par_m_plus * (2*r_plus -rq) + pow(2*r_plus + rq, 2) ))
-                     / alp[ind];
+        Aphi[ind]  = 0;
         
 
-        Ex[ind]    = (4 * exp(2 * phi1_0) * par_q_plus * (par_m_plus + 2 * r_plus - rq)
-                     * (-par_m_plus + 2 * r_plus + rq) * (x1-par_b)
-                     / (r_plus * pow( pow(par_m_plus, 2) + 2*par_m_plus*(2 *r_plus - rq)
-                     + pow(2*r_plus + rq, 2), 2))) / alp[ind] /F;
+        Ex[ind]    = exp(2*phi1[ind]) * x1 / r_plus;
 
-        Ey[ind]    = (4 * exp(2 * phi1_0) * par_q_plus * (par_m_plus + 2 * r_plus - rq)
-                     * (-par_m_plus + 2 * r_plus + rq) * y1
-                     / (r_plus * pow( pow(par_m_plus, 2) + 2*par_m_plus*(2 *r_plus - rq)
-                     + pow(2*r_plus + rq, 2), 2))) / alp[ind] /F;
+        Ey[ind]    = exp(2*phi1[ind]) * y1 / r_plus;
 
-        Ez[ind]    = (4 * exp(2 * phi1_0) * par_q_plus * (par_m_plus + 2 * r_plus - rq)
-                     * (-par_m_plus + 2 * r_plus + rq) * z1
-                     / (r_plus * pow( pow(par_m_plus, 2) + 2*par_m_plus*(2 *r_plus - rq)
-                     + pow(2*r_plus + rq, 2), 2))) / alp[ind] /F;
+        Ez[ind]    = exp(2*phi1[ind]) * z1 / r_plus;
 
 
         if (swap_xz) {
