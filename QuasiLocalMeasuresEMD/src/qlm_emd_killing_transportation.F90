@@ -5,10 +5,10 @@
 
 
 
-module qlm_emd_killing_transportation
+module qlm_killing_transportation
   use cctk
   use constants
-  use qlm_emd_variables
+  use qlm_variables
   use ricci2
   use tensor2
   implicit none
@@ -28,8 +28,8 @@ contains
     integer :: j0
     integer :: nsteps
     
-    j0 = 1+qlm_emd_nghostsphi(hn)
-    nsteps = qlm_emd_nphi(hn) - 2*qlm_emd_nghostsphi(hn)
+    j0 = 1+qlm_nghostsphi(hn)
+    nsteps = qlm_nphi(hn) - 2*qlm_nghostsphi(hn)
     
     call transport (CCTK_PASS_FTOF, hn, i0, j0, 0, 1, nsteps, xi, chi_emd)
     
@@ -46,16 +46,16 @@ contains
     integer   :: dir
     integer   :: nsteps
     
-    do j0 = 1+qlm_emd_nghostsphi(hn), qlm_emd_nphi(hn)-qlm_emd_nghostsphi(hn)
+    do j0 = 1+qlm_nghostsphi(hn), qlm_nphi(hn)-qlm_nghostsphi(hn)
        
        do dir=-1,+1,2
           
-          if (dir==-1) nsteps = i0 - (1+qlm_emd_nghoststheta(hn))
-          if (dir==+1) nsteps = (qlm_emd_ntheta(hn)-qlm_emd_nghoststheta(hn)) - i0
+          if (dir==-1) nsteps = i0 - (1+qlm_nghoststheta(hn))
+          if (dir==+1) nsteps = (qlm_ntheta(hn)-qlm_nghoststheta(hn)) - i0
           
-          xi(1) = qlm_emd_xi_t(i0,j0,hn)
-          xi(2) = qlm_emd_xi_p(i0,j0,hn)
-          chi_emd = qlm_emd_chi(i0,j0,hn)
+          xi(1) = qlm_xi_t(i0,j0,hn)
+          xi(2) = qlm_xi_p(i0,j0,hn)
+          chi_emd = qlm_chi(i0,j0,hn)
           
           call transport (CCTK_PASS_FTOF, hn, i0, j0, dir, 0, nsteps, xi, chi_emd)
           
@@ -76,35 +76,35 @@ contains
     CCTK_REAL,intent(inout) :: xi(2), chi_emd
     CCTK_REAL :: vv(2)
     CCTK_REAL :: xi_dot(2), chi_dot
-    CCTK_REAL :: xi1(2), chi_emd
-    CCTK_REAL :: xi1_dot(2), chi_emd_dot
+    CCTK_REAL :: xi1(2), chi1
+    CCTK_REAL :: xi1_dot(2), chi1_dot
     integer   :: n
     integer   :: i, j
     
     i = i0
     j = j0
     
-    vv(1) = di * qlm_emd_delta_theta(hn)
-    vv(2) = dj * qlm_emd_delta_phi(hn)
+    vv(1) = di * qlm_delta_theta(hn)
+    vv(2) = dj * qlm_delta_phi(hn)
     
     do n=1,nsteps
        
        call transport_rhs (CCTK_PASS_FTOF, hn, i, j, xi, chi_emd, vv, xi_dot, chi_dot)
        xi1 = xi + xi_dot
-       chi_emd = chi_emd + chi_dot
+       chi1 = chi_emd + chi_dot
        i = i + di
        j = j + dj
-       if (j <           1+qlm_emd_nghostsphi(hn)) j = j + (qlm_emd_nphi(hn)-2*qlm_emd_nghostsphi(hn))
-       if (j > qlm_emd_nphi(hn)-qlm_emd_nghostsphi(hn)) j = j - (qlm_emd_nphi(hn)-2*qlm_emd_nghostsphi(hn))
+       if (j <           1+qlm_nghostsphi(hn)) j = j + (qlm_nphi(hn)-2*qlm_nghostsphi(hn))
+       if (j > qlm_nphi(hn)-qlm_nghostsphi(hn)) j = j - (qlm_nphi(hn)-2*qlm_nghostsphi(hn))
        
        call transport_rhs &
-            (CCTK_PASS_FTOF, hn, i, j, xi1, chi_emd, vv, xi1_dot, chi_emd_dot)
+            (CCTK_PASS_FTOF, hn, i, j, xi1, chi1, vv, xi1_dot, chi1_dot)
        xi = xi + 0.5d0 * (xi_dot + xi1_dot)
-       chi_emd = chi_emd + 0.5d0 * (chi_dot + chi_emd_dot)
+       chi_emd = chi_emd + 0.5d0 * (chi_dot + chi1_dot)
        
-       qlm_emd_xi_t(i,j,hn) = xi(1)
-       qlm_emd_xi_p(i,j,hn) = xi(2)
-       qlm_emd_chi(i,j,hn) = chi_emd
+       qlm_xi_t(i,j,hn) = xi(1)
+       qlm_xi_p(i,j,hn) = xi(2)
+       qlm_chi(i,j,hn) = chi_emd
 
     end do
     
@@ -121,28 +121,28 @@ contains
     CCTK_REAL, intent(out) :: xi_dot(2), chi_dot
     CCTK_REAL :: qq(2,2), dqq(2,2,2), dtq, qu(2,2), gamma(2,2,2), rsc
     
-    if (i<1+qlm_emd_nghoststheta(hn) .or. i>qlm_emd_ntheta(hn)-qlm_emd_nghoststheta(hn) &
-         .or. j<1+qlm_emd_nghostsphi(hn) .or. j>qlm_emd_nphi(hn)-qlm_emd_nghostsphi(hn)) then
+    if (i<1+qlm_nghoststheta(hn) .or. i>qlm_ntheta(hn)-qlm_nghoststheta(hn) &
+         .or. j<1+qlm_nghostsphi(hn) .or. j>qlm_nphi(hn)-qlm_nghostsphi(hn)) then
        call CCTK_WARN (0, "internal error")
     end if
-    if (i-1<1 .or. i+1>qlm_emd_ntheta(hn) .or. j-1<1 .or. j+1>qlm_emd_nphi(hn)) then
+    if (i-1<1 .or. i+1>qlm_ntheta(hn) .or. j-1<1 .or. j+1>qlm_nphi(hn)) then
        call CCTK_WARN (0, "internal error")
     end if
     
-    qq(1,1) = qlm_emd_qtt(i,j,hn)
-    qq(1,2) = qlm_emd_qtp(i,j,hn)
-    qq(2,2) = qlm_emd_qpp(i,j,hn)
+    qq(1,1) = qlm_qtt(i,j,hn)
+    qq(1,2) = qlm_qtp(i,j,hn)
+    qq(2,2) = qlm_qpp(i,j,hn)
     qq(2,1) = qq(1,2)
     
-    dqq(1,1,1) = qlm_emd_dqttt(i,j)
-    dqq(1,2,1) = qlm_emd_dqtpt(i,j)
-    dqq(2,2,1) = qlm_emd_dqppt(i,j)
-    dqq(1,1,2) = qlm_emd_dqttp(i,j)
-    dqq(1,2,2) = qlm_emd_dqtpp(i,j)
-    dqq(2,2,2) = qlm_emd_dqppp(i,j)
+    dqq(1,1,1) = qlm_dqttt(i,j)
+    dqq(1,2,1) = qlm_dqtpt(i,j)
+    dqq(2,2,1) = qlm_dqppt(i,j)
+    dqq(1,1,2) = qlm_dqttp(i,j)
+    dqq(1,2,2) = qlm_dqtpp(i,j)
+    dqq(2,2,2) = qlm_dqppp(i,j)
     dqq(2,1,:) = dqq(1,2,:)
     
-    rsc = qlm_emd_rsc(i,j,hn)
+    rsc = qlm_rsc(i,j,hn)
     
     call calc_2det (qq, dtq)
     call calc_2inv (qq, dtq, qu)
@@ -248,4 +248,4 @@ contains
   end subroutine killing_equation
 #endif
   
-end module qlm_emd_killing_transportation
+end module qlm_killing_transportation
