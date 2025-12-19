@@ -27,7 +27,8 @@ module qlm_emd_variables
        qlm_emd_txx, qlm_emd_txy, qlm_emd_txz, qlm_emd_tyy, qlm_emd_tyz, qlm_emd_tzz, &
        qlm_emd_ex, qlm_emd_ey, qlm_emd_ez, qlm_emd_ax, qlm_emd_ay, qlm_emd_az, &
        qlm_emd_daxx, qlm_emd_daxy, qlm_emd_daxz, qlm_emd_dayx, qlm_emd_dayy, qlm_emd_dayz, &
-       qlm_emd_dazx, qlm_emd_dazy, qlm_emd_dazz
+       qlm_emd_dazx, qlm_emd_dazy, qlm_emd_dazz, &
+       qlm_emd_phi1, qlm_emd_phi2
   CCTK_REAL, allocatable, dimension(:,:) :: &
        qlm_emd_dqttt, qlm_emd_dqtpt, qlm_emd_dqppt, qlm_emd_dqttp, qlm_emd_dqtpp, qlm_emd_dqppp
   
@@ -163,6 +164,8 @@ contains
     allocate(qlm_emd_dazx(ntheta,nphi))
     allocate(qlm_emd_dazy(ntheta,nphi))
     allocate(qlm_emd_dazz(ntheta,nphi))
+    allocate(qlm_emd_phi1(ntheta,nphi))
+    allocate(qlm_emd_phi2(ntheta,nphi))
     
     allocate(qlm_emd_dqttt(ntheta,nphi))
     allocate(qlm_emd_dqtpt(ntheta,nphi))
@@ -288,6 +291,8 @@ contains
     qlm_emd_dazx = TAT_nan()
     qlm_emd_dazy = TAT_nan()
     qlm_emd_dazz = TAT_nan()
+    qlm_emd_phi1 = TAT_nan()
+    qlm_emd_phi2 = TAT_nan()
     
     qlm_emd_dqttt = TAT_nan()
     qlm_emd_dqtpt = TAT_nan()
@@ -418,6 +423,8 @@ contains
     deallocate(qlm_emd_dazx)
     deallocate(qlm_emd_dazy)
     deallocate(qlm_emd_dazz)
+    deallocate(qlm_emd_phi1)
+    deallocate(qlm_emd_phi2)
     
     deallocate(qlm_emd_dqttt)
     deallocate(qlm_emd_dqtpt)

@@ -464,6 +464,8 @@ subroutine qlm_emd_analyse (CCTK_ARGUMENTS, hn)
              & + w_amom(1,2) / (-16*pi) &
              &   * sqrt(dtq) * weights(i)
         
+        phi1_ave = phi1_ave + qlm_emd_phi1(i,j)
+        phi2_ave = phi2_ave + qlm_emd_phi2(i,j)
      end do
   end do
   
@@ -471,6 +473,10 @@ subroutine qlm_emd_analyse (CCTK_ARGUMENTS, hn)
   
   qlm_emd_polar_circumference_0(hn) = qlm_emd_polar_circumference_0(hn) * 2
   qlm_emd_polar_circumference_pi_2(hn) = qlm_emd_polar_circumference_pi_2(hn) * 2
+  phi1_ave = phi1_ave / (qlm_emd_nphi(hn) - 2*ql,qlm_emd_nghostsphi(hn)) &
+            & / (qlm_emd_ntheta(hn) - 2*ql,qlm_emd_nghoststheta(hn))
+  phi2_ave = phi2_ave / (qlm_emd_nphi(hn) - 2*ql,qlm_emd_nghostsphi(hn)) &
+            & / (qlm_emd_ntheta(hn) - 2*ql,qlm_emd_nghoststheta(hn))
   
   ! A = 4 pi R^2
   ! R = 2 M
@@ -478,13 +484,16 @@ subroutine qlm_emd_analyse (CCTK_ARGUMENTS, hn)
   qlm_emd_irreducible_mass(hn) = qlm_emd_radius(hn) / 2
   
   qlm_emd_spin(hn) = qlm_emd_spin(hn) / (8*pi)
-  qlm_emd_mass(hn) = 1/(2*qlm_emd_radius(hn)) * sqrt(qlm_emd_radius(hn)**4 + 4*qlm_emd_spin(hn)**2)
+  qlm_emd_mass(hn) = 1/(2*qlm_emd_radius(hn)) * sqrt((qlm_emd_radius(hn)**2 + (1 - coupling_constant**2) &
+                   & * (qlm_emd_electric_charge(hn)**2 + qlm_emd_magnetic_charge(hn)**2) & 
+                   & * EXP(2*coupling_constant*phi1_ave))**2 + 4*qlm_emd_spin(hn)**2)
   qlm_emd_cvspin(hn) = qlm_emd_cvspin(hn) / (8*pi)
   qlm_emd_npspin(hn) = qlm_emd_npspin(hn) / (-8*pi)
   qlm_emd_wsspin(hn) = qlm_emd_wsspin(hn) / (-4*pi)
   qlm_emd_coordspinx(hn) = qlm_emd_coordspinx(hn) / (8*pi)
   qlm_emd_coordspiny(hn) = qlm_emd_coordspiny(hn) / (8*pi)
   qlm_emd_coordspinz(hn) = qlm_emd_coordspinz(hn) / (8*pi)
+  
   
   ! The event horizon is at r = M + sqrt (M^2 - a^2)
   ! with x^2 + y^2 + z^2 = rho^2 = r^2 + a^2 (1 - z^2 / r^2)

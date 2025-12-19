@@ -106,13 +106,13 @@ subroutine qlm_emd_calculate (CCTK_ARGUMENTS)
            call qlm_emd_killing_test (CCTK_PASS_FTOF, hn)
            call qlm_emd_calc_coordinates (CCTK_PASS_FTOF, hn)
         end if
+        call qlm_emd_compute_charge (CCTK_PASS_FTOF, hn)
         call qlm_emd_calc_3determinant (CCTK_PASS_FTOF, hn)
         call qlm_emd_analyse (CCTK_PASS_FTOF, hn)
         if (qlm_emd_have_killing_vector(hn) /= 0) then
            call qlm_emd_multipoles (CCTK_PASS_FTOF, hn)
            call qlm_emd_multipoles_normalise (CCTK_PASS_FTOF, hn)
         end if
-        call qlm_emd_compute_charge (CCTK_PASS_FTOF, hn)
 
         if (output_vtk_every /= 0) then
            if (mod (cctk_iteration, output_vtk_every) == 0) then
