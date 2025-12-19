@@ -91,7 +91,7 @@ subroutine qlm_emd_output_vtk (CCTK_ARGUMENTS, hn, file_name)
   call writescalar_complex ('psi4', qlm_emd_psi4(:,:,hn))
   call writescalar ('xit', qlm_emd_xi_t(:,:,hn))
   call writescalar ('xip', qlm_emd_xi_p(:,:,hn))
-  call writescalar ('chi', qlm_emd_chi(:,:,hn))
+  call writescalar ('chi1', qlm_emd_chi(:,:,hn))
 
   close (unit)
 
