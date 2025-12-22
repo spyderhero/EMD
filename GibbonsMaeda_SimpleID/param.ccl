@@ -6,7 +6,8 @@ USES KEYWORD metric_type
 
 EXTENDS KEYWORD initial_data
 {
-  "GM_simpleID" :: "Initial data for GibbonsMaeda"
+  "GM_simpleID" :: "Initial data for RNS"
+  "Magnetic_Field" :: "Initial data for magnetic monopole"
   "GM_GHS" :: "GM-GHS solution Initial data"
 }
 
@@ -43,12 +44,22 @@ REAL par_m_minus "mass of the m- puncture" STEERABLE = ALWAYS
   0.0:*) :: ""
 } 0.0
 
-REAL par_q_plus "charge of the m+ puncture" STEERABLE = ALWAYS
+REAL par_q_plus "electric charge of the m+ puncture" STEERABLE = ALWAYS
 {
   (*:*) :: ""
 } 0.0
 
-REAL par_q_minus "charge of the m- puncture" STEERABLE = ALWAYS
+REAL par_q_minus "electric charge of the m- puncture" STEERABLE = ALWAYS
+{
+  (*:*) :: ""
+} 0.0
+
+REAL par_qm_plus "magnetic charge of the m+ puncture" STEERABLE = ALWAYS
+{
+  (*:*) :: ""
+} 0.0
+
+REAL par_qm_minus "magnetic charge of the m- puncture" STEERABLE = ALWAYS
 {
   (*:*) :: ""
 } 0.0
@@ -61,3 +72,8 @@ REAL initial_lapse_psi_exponent "Exponent n for psi^-n initial lapse profile"
 BOOLEAN swap_xz "Swap x and z coordinates when interpolating, so that the black holes are separated in the z direction"
 {
 } "no"
+
+INT poisson_iterations "poisson_iterations sets how many times the Laplace solver updates A_i"
+{
+  1:* :: ""
+} 1000

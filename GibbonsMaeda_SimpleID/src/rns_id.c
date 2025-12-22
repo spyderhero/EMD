@@ -19,7 +19,7 @@ void swap (CCTK_REAL * restrict const a, CCTK_REAL * restrict const b)
 #define SWAP(a,b) (swap(&(a),&(b)))
 
 /* -------------------------------------------------------------------*/
-void GibbonsMaeda (CCTK_ARGUMENTS)
+void RNS (CCTK_ARGUMENTS)
 {
   DECLARE_CCTK_ARGUMENTS;
   DECLARE_CCTK_PARAMETERS;
@@ -103,16 +103,16 @@ void GibbonsMaeda (CCTK_ARGUMENTS)
 
         Aphi[ind]  = 0;
 
-        Ex[ind]    = (  par_q_plus * (x1-par_b)/(r_plus*r_plus*r_plus)
-                      + par_q_minus* (x1+par_b)/(r_minus*r_minus*r_minus) )
+        Ex[ind]    = (  par_q_plus * (x1-par_b)/pow(r_plus,3)
+                      + par_q_minus* (x1+par_b)/pow(r_minus,3) )
                         / pow(psi1, 6) ;
 
-        Ey[ind]    = (  par_q_plus * y1/(r_plus*r_plus*r_plus)
-                      + par_q_minus* y1/(r_minus*r_minus*r_minus) )
+        Ey[ind]    = (  par_q_plus * y1/pow(r_plus,3)
+                      + par_q_minus* y1/pow(r_minus,3) )
                         / pow(psi1, 6) ;
 
-        Ez[ind]    = (  par_q_plus * z1/(r_plus*r_plus*r_plus)
-                      + par_q_minus* z1/(r_minus*r_minus*r_minus) )
+        Ez[ind]    = (  par_q_plus * z1/pow(r_plus,3)
+                      + par_q_minus* z1/pow(r_minus,3) )
                         / pow(psi1, 6) ;
 
         // lapse

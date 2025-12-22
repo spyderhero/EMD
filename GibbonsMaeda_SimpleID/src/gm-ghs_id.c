@@ -19,7 +19,7 @@ void swap (CCTK_REAL * restrict const a, CCTK_REAL * restrict const b)
 #define SWAP(a,b) (swap(&(a),&(b)))
 
 /* -------------------------------------------------------------------*/
-void GM_GHS (CCTK_ARGUMENTS)
+void GMGHS (CCTK_ARGUMENTS)
 {
   DECLARE_CCTK_ARGUMENTS;
   DECLARE_CCTK_PARAMETERS;
@@ -65,16 +65,16 @@ void GM_GHS (CCTK_ARGUMENTS)
         CCTK_REAL rq
           = pow(par_q_plus, 2) * exp(2 * phi1_0) / 2 / par_m_plus; 
 
-        CCTK_REAL F = ( pow(par_m_plus, 2) + 2 * par_m_plus 
-                         * (2 * r_plus - rq) + pow(2 * r_plus + rq, 2) )
-                         * pow( par_m_plus + 2 * r_plus - rq, 2) / (16 * pow(r_plus, 4)) ;
+        CCTK_REAL psi1 = sqrt(sqrt( pow(par_m_plus, 2) + 2 * par_m_plus 
+                         * (2 * r_plus - rq) + pow(2 * r_plus + rq, 2) ))
+                         * sqrt( par_m_plus + 2 * r_plus - rq) / (2 * r_plus) ;
 
-        gxx[ind] = F;
+        gxx[ind] = pow(psi1,4);
         gxy[ind] = 0;
         gxz[ind] = 0;
-        gyy[ind] = F;
+        gyy[ind] = pow(psi1,4);
         gyz[ind] = 0;
-        gzz[ind] = F;
+        gzz[ind] = pow(psi1,4);
 
         kxx[ind] = 0;
         kxy[ind] = 0;
@@ -108,25 +108,14 @@ void GM_GHS (CCTK_ARGUMENTS)
                      + 2*par_m_plus*(2 *r_plus - rq) + pow(2*r_plus + rq, 2) ) );
         }
         
-        Aphi[ind]  = - (Aphi0 - 4 * exp(2*phi1_0) * par_q_plus * r_plus
-                     / ( pow(par_m_plus, 2) + 2 * par_m_plus * (2*r_plus -rq) + pow(2*r_plus + rq, 2) ))
-                     / alp[ind];
+        Aphi[ind]  = 0;
         
 
-        Ex[ind]    = (4 * exp(2 * phi1_0) * par_q_plus * (par_m_plus + 2 * r_plus - rq)
-                     * (-par_m_plus + 2 * r_plus + rq) * (x1-par_b)
-                     / (r_plus * pow( pow(par_m_plus, 2) + 2*par_m_plus*(2 *r_plus - rq)
-                     + pow(2*r_plus + rq, 2), 2))) / alp[ind] /F;
+        Ex[ind]    = (x1 - par_b) / r_plus / pow(rq + sqrt(pow(r_plus,2) + pow(rq,2)), 2) / pow(psi1,6);
 
-        Ey[ind]    = (4 * exp(2 * phi1_0) * par_q_plus * (par_m_plus + 2 * r_plus - rq)
-                     * (-par_m_plus + 2 * r_plus + rq) * y1
-                     / (r_plus * pow( pow(par_m_plus, 2) + 2*par_m_plus*(2 *r_plus - rq)
-                     + pow(2*r_plus + rq, 2), 2))) / alp[ind] /F;
+        Ey[ind]    = y1 / r_plus / pow(rq + sqrt(pow(r_plus,2) + pow(rq,2)), 2) / pow(psi1,6);
 
-        Ez[ind]    = (4 * exp(2 * phi1_0) * par_q_plus * (par_m_plus + 2 * r_plus - rq)
-                     * (-par_m_plus + 2 * r_plus + rq) * z1
-                     / (r_plus * pow( pow(par_m_plus, 2) + 2*par_m_plus*(2 *r_plus - rq)
-                     + pow(2*r_plus + rq, 2), 2))) / alp[ind] /F;
+        Ez[ind]    = z1 / r_plus / pow(rq + sqrt(pow(r_plus,2) + pow(rq,2)), 2) / pow(psi1,6);
 
 
         if (swap_xz) {
