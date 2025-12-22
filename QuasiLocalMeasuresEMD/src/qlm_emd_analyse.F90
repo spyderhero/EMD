@@ -486,8 +486,9 @@ subroutine qlm_emd_analyse (CCTK_ARGUMENTS, hn)
   
   qlm_emd_spin(hn) = qlm_emd_spin(hn) / (8*pi)
   qlm_emd_mass(hn) = 1/(2*qlm_emd_radius(hn)) * sqrt((qlm_emd_radius(hn)**2 + (1 - coupling_constant**2) &
-                   & * (qlm_emd_electric_charge(hn)**2 + qlm_emd_magnetic_charge(hn)**2) & 
-                   & * EXP(2*coupling_constant*phi1_ave))**2 + 4*qlm_emd_spin(hn)**2)
+                   & * (qlm_emd_electric_charge(hn)**2 * EXP(2*coupling_constant*phi1_ave) &
+                   & + qlm_emd_magnetic_charge(hn)**2 * EXP(-2*coupling_constant*phi1_ave)))**2 &
+                   & + 4*qlm_emd_spin(hn)**2)
   qlm_emd_cvspin(hn) = qlm_emd_cvspin(hn) / (8*pi)
   qlm_emd_npspin(hn) = qlm_emd_npspin(hn) / (-8*pi)
   qlm_emd_wsspin(hn) = qlm_emd_wsspin(hn) / (-4*pi)
