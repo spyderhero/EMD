@@ -1439,7 +1439,9 @@ subroutine GibbonsMaeda_calc_rhs( CCTK_ARGUMENTS )
     do a = 1, 3
        do b = 1, 3
           rhs_lKphi1 = rhs_lKphi1                                                           &
-                     - ch**conf_fac_exponent * hu(a,b) * cd2_lphi1(a,b) * alph              & 
+                     - ch**conf_fac_exponent * hu(a,b) * cd2_lphi1(a,b) * alph              &
+                     + 0.5d0 * alph * conf_fac_exponent * ch**(conf_fac_exponent-1)         &
+                             * hu(a,b) * d1_lphi1(a) * d1_ch(b)                             &
                      + coupling_constant * alph * EXP(-2 * coupling_constant * lphi1)       &
                                               * hh(a,b) * lE(a) * lE(b) / ch                &
                      - ch**conf_fac_exponent * hu(a,b) * d1_lphi1(a) * d1_alph(b)
