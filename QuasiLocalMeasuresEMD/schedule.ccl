@@ -29,13 +29,35 @@ SCHEDULE qlm_emd_init AT initial
   LANG: Fortran
 } "Initialise quasi-local calculations"
 
+
+if (calculate_at_postinitial != 0) {
+  SCHEDULE qlm_emd_calculate AT postinitial AFTER SphericalSurface_HasBeenSet
+  {
+    OPTIONS: global
+    LANG: Fortran
+    STORAGE: qlm_emd_coordinates qlm_emd_coordinates_p
+    STORAGE: qlm_emd_newman_penrose qlm_emd_weyl_scalars
+    STORAGE: qlm_emd_ricci_scalars qlm_emd_twometric qlm_emd_killed_twometric
+    STORAGE: qlm_emd_invariant_coordinates qlm_emd_multipole_moments qlm_emd_3determinant
+    TRIGGERS: qlm_emd_state
+    TRIGGERS: qlm_emd_grid_int qlm_emd_grid_real
+    TRIGGERS: qlm_emd_shapes qlm_emd_tetrad_l qlm_emd_tetrad_n qlm_emd_tetrad_m
+    TRIGGERS: qlm_emd_coordinates
+    TRIGGERS: qlm_emd_newman_penrose qlm_emd_weyl_scalars
+    TRIGGERS: qlm_emd_ricci_scalars qlm_emd_twometric qlm_emd_killing_vector qlm_emd_killed_twometric
+    TRIGGERS: qlm_emd_invariant_coordinates qlm_emd_multipole_moments qlm_emd_3determinant
+    TRIGGERS: qlm_emd_scalars
+  } "Calculate initial quasi-local quantities"
+}
+
+
 SCHEDULE qlm_emd_calculate AT analysis AFTER (SphericalSurface_HasBeenSet SetTmunu)
 {
   OPTIONS: global
   LANG: Fortran
   STORAGE: qlm_emd_coordinates qlm_emd_coordinates_p
   STORAGE: qlm_emd_newman_penrose qlm_emd_weyl_scalars
-  STORAGE: qlm_emd_ricci_scalars qlm_emd_twometric qlm_emd_killed_twometric 
+  STORAGE: qlm_emd_ricci_scalars qlm_emd_twometric qlm_emd_killed_twometric
   STORAGE: qlm_emd_invariant_coordinates qlm_emd_multipole_moments qlm_emd_3determinant
   TRIGGERS: qlm_emd_state
   TRIGGERS: qlm_emd_grid_int qlm_emd_grid_real

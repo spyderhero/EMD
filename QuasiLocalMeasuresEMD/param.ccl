@@ -90,6 +90,9 @@ BOOLEAN calc_charge "calculation electric and magnetic charge" STEERABLE=always
 {
 } "yes"
 
+BOOLEAN calculate_at_postinitial "Calculate QLM once at CCTK_POSTINITIAL"
+{
+} "no"
 
 SHARES: ADMBase
 

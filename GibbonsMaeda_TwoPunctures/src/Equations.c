@@ -167,7 +167,7 @@ GibbonsMaeda_Calc_E(CCTK_REAL x1, CCTK_REAL y1, CCTK_REAL z1,
 
   Ei[2]    = Er_plus * z1/r_plus + Er_minus* z1/r_minus;
                 
-  *E2 = pow(Er_plus + Er_minus, 2);
+  *E2 = Ei[0]*Ei[0] + Ei[1]*Ei[1] + Ei[2]*Ei[2];
 }
 
 /*-----------------------------------------------------------*/
@@ -209,7 +209,7 @@ GibbonsMaeda_NonLinEquations (CCTK_REAL rho_adm,
 
   values[0] =
     U.d11[0] + U.d22[0] + U.d33[0] + 0.125 * GibbonsMaeda_BY_KKofxyz (x, y, z) / psi7 +
-    2.0 * Pi / psi2/psi * rho_adm + 0.25 * E2 / psi2/psi / exp(4 * coupling_constant * phi1_0)
+    2.0 * Pi / psi2/psi * rho_adm + 0.25 * E2 / psi2/psi / exp(2 * coupling_constant * phi1_0)
     - 0.25 * E2 / psi_ana2/psi_ana / exp(2 * coupling_constant * phi1_0);
 
 }

@@ -37,6 +37,8 @@ subroutine qlm_emd_analyse (CCTK_ARGUMENTS, hn)
   CCTK_REAL    :: adm_energy, adm_mom(3), adm_amom(3)
   CCTK_REAL    :: w_energy, w_mom(3), w_amom(3,3)
   CCTK_REAL    :: phi1_ave, phi2_ave
+  CCTK_REAL    :: phi1_area_integral, phi1_square_area_integral
+  CCTK_REAL    :: dA_weight
   CCTK_COMPLEX :: ev
   CCTK_REAL    :: spin
   CCTK_REAL    :: npspin
@@ -105,12 +107,33 @@ subroutine qlm_emd_analyse (CCTK_ARGUMENTS, hn)
   qlm_emd_w_angular_momentum_y(hn) = 0
   qlm_emd_w_angular_momentum_z(hn) = 0
 
+  ! Scalar averages
+  phi1_ave = 0.0d0
+  phi2_ave = 0.0d0
+  phi1_area_integral = 0.0d0
+  phi1_square_area_integral = 0.0d0
+
+  qlm_emd_phi1_simple_average(hn) = 0.0d0
+  qlm_emd_phi2_simple_average(hn) = 0.0d0
+  qlm_emd_phi1_area_average(hn) = 0.0d0
+  qlm_emd_phi1_rms_area_average(hn) = 0.0d0
+  qlm_emd_hn(hn) = dble(hn)
+  qlm_emd_surface_index_value(hn) = dble(surface_index(hn))
+
+  if (veryverbose /= 0) then
+      write (msg, '("DEBUG qlm_emd_analyse init: hn=",i4, &
+         & " phi1_ave=",g14.6," phi2_ave=",g14.6, &
+         & " phi1_area_integral=",g14.6," phi1_square_area_integral=",g14.6)') &
+         hn, phi1_ave, phi2_ave, phi1_area_integral, phi1_square_area_integral
+      call CCTK_INFO(msg)
+  end if
+
   ! Compute weights for spherical integration (see Driscoll and Healy).
   ! These are the correct weights in a Gauss-Legendre-Senc.
   ! Also compare qlm_emd_area with AHFinderDirect's area, they are in much
   ! better agreement than with the previous method using
   ! delta_theta*delta_phi.
-  
+
   ntheta_inner = qlm_emd_ntheta(hn) - 2*qlm_emd_nghoststheta(hn)
   nphi_inner   = qlm_emd_nphi(hn) - 2*qlm_emd_nghostsphi(hn)
   
@@ -252,8 +275,12 @@ subroutine qlm_emd_analyse (CCTK_ARGUMENTS, hn)
                 + sqrt(qq(1,1)) * qlm_emd_delta_theta(hn)
         end if
         
-        qlm_emd_area(hn) = qlm_emd_area(hn) &
-             + sqrt(dtq) * weights(i)
+        dA_weight = sqrt(dtq) * weights(i)
+
+        qlm_emd_area(hn) = qlm_emd_area(hn) + dA_weight
+
+        phi1_area_integral = phi1_area_integral + qlm_emd_phi1(i,j) * dA_weight
+        phi1_square_area_integral = phi1_square_area_integral + qlm_emd_phi1(i,j)**2 * dA_weight
         
         ! s^i: outward spacelike normal
         ! K_ij: extrinsic curvature
@@ -479,6 +506,17 @@ subroutine qlm_emd_analyse (CCTK_ARGUMENTS, hn)
   phi2_ave = phi2_ave / (qlm_emd_nphi(hn) - 2*qlm_emd_nghostsphi(hn)) &
             & / (qlm_emd_ntheta(hn) - 2*qlm_emd_nghoststheta(hn))
   
+  qlm_emd_phi1_simple_average(hn) = phi1_ave
+  qlm_emd_phi2_simple_average(hn) = phi2_ave
+
+  if (qlm_emd_area(hn) > 0.0d0) then
+      qlm_emd_phi1_area_average(hn) = phi1_area_integral / qlm_emd_area(hn)
+      qlm_emd_phi1_rms_area_average(hn) = sqrt(phi1_square_area_integral / qlm_emd_area(hn))
+  else
+      qlm_emd_phi1_area_average(hn) = 0.0d0
+      qlm_emd_phi1_rms_area_average(hn) = 0.0d0
+  end if
+
   ! A = 4 pi R^2
   ! R = 2 M
   qlm_emd_radius(hn) = sqrt(qlm_emd_area(hn) / (4*pi))
@@ -515,18 +553,23 @@ subroutine qlm_emd_analyse (CCTK_ARGUMENTS, hn)
      call CCTK_INFO (msg)
      write (msg, '("   Areal radius R = sqrt(A/4pi): ",g16.6)') qlm_emd_radius(hn)
      call CCTK_INFO (msg)
-     
      write (msg, '("Coordinate-dependent quantities for surface ",i4,":")') hn-1
      call CCTK_INFO (msg)
-     write (msg, '("   Equatorial circumference:        ",g16.6)') &
-          qlm_emd_equatorial_circumference(hn)
+     write (msg, '("   Equatorial circumference:        ",g16.6)') qlm_emd_equatorial_circumference(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Polar circumference at phi=0:    ",g16.6)') &
-          qlm_emd_polar_circumference_0(hn)
+     write (msg, '("   Polar circumference at phi=0:    ",g16.6)') qlm_emd_polar_circumference_0(hn)
      call CCTK_INFO (msg)
-     write (msg, '("   Polar circumference at phi=pi/2: ",g16.6)') &
-          qlm_emd_polar_circumference_pi_2(hn)
+     write (msg, '("   Polar circumference at phi=pi/2: ",g16.6)') qlm_emd_polar_circumference_pi_2(hn)
      call CCTK_INFO (msg)
+     write (msg, '("   Simple average <phi1>_grid:             ",g14.6)') qlm_emd_phi1_simple_average(hn)
+     call CCTK_INFO (msg)
+     write (msg, '("   Simple average <phi2>_grid:             ",g14.6)') qlm_emd_phi2_simple_average(hn)
+      call CCTK_INFO (msg)
+     write (msg, '("   Area average <phi1>_H:         ",g14.6)') qlm_emd_phi1_area_average(hn)
+      call CCTK_INFO(msg)
+     write (msg, '("   Area average sqrt(<phi1^2>_H):              ",g14.6)') qlm_emd_phi1_rms_area_average(hn)
+      call CCTK_INFO(msg)
+      
      if (qlm_emd_spin_guess(hn) >= 0) then
         write (msg, '("   Spin guess J from distortion:    ",g16.6)') &
              qlm_emd_spin_guess(hn)

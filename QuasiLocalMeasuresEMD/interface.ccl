@@ -184,6 +184,13 @@ REAL qlm_emd_scalars[num_surfaces] TYPE=scalar
   qlm_emd_w_momentum_x qlm_emd_w_momentum_y qlm_emd_w_momentum_z
   qlm_emd_w_angular_momentum_x qlm_emd_w_angular_momentum_y qlm_emd_w_angular_momentum_z
   qlm_emd_electric_charge, qlm_emd_magnetic_charge
+  qlm_emd_electric_dilatonic_charge
+  qlm_emd_hn
+  qlm_emd_surface_index_value
+  qlm_emd_phi1_area_average
+  qlm_emd_phi1_rms_area_average
+  qlm_emd_phi1_simple_average
+  qlm_emd_phi2_simple_average
 } "Scalar quantities on the surface"
 
 REAL qlm_emd_scalars_p[num_surfaces] TYPE=scalar

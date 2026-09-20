@@ -346,7 +346,8 @@ subroutine GibbonsMaeda_calc_Tmunu( CCTK_ARGUMENTS )
                   srcjdi_F(a) = srcjdi_F(a) + lE(b) * ( d1_lA(b,a) - d1_lA(a,b) )
               end do
            end do
-           srcjdi = ( srcjdi_p + EXP(-2 * coupling_constant * lphi1) * srcjdi_F ) / pi4
+           srcjdi_F = EXP(-2 * coupling_constant * lphi1) * srcjdi_F
+           srcjdi = ( srcjdi_p + srcjdi_F ) / pi4
 
 
            ! srcSij = S_{a b}
