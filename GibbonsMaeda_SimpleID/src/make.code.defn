@@ -1,0 +1,10 @@
+# Main make.code.defn file
+
+# Source files in this directory
+SRCS = rns_id.c     \
+       magnetic_field_id.c \
+       init_vector.c \
+       gm-ghs_id.c
+
+# Subdirectories containing source files
+SUBDIRS =

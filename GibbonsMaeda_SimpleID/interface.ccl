@@ -1,0 +1,5 @@
+# Interface definition
+
+IMPLEMENTS: GibbonsMaeda_simpleID
+
+INHERITS: ADMBase grid ProcaBase ScalarBase

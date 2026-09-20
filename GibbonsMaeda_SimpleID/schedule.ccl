@@ -1,0 +1,34 @@
+# Schedule definitions
+
+if (CCTK_Equals(initial_data, "GM_simpleID"))
+{
+  SCHEDULE RNS IN ADMBase_InitialData
+  {
+    LANG: C
+    OPTIONS: Local
+  } "simple analytic initial data when using RNS"
+}
+
+if (CCTK_Equals(initial_data, "Magnetic_Field"))
+{
+  SCHEDULE MagneticField IN ADMBase_InitialData
+  {
+    LANG: C
+    OPTIONS: Local
+  } "simple analytic initial data when using GibbonsMaeda theory"
+
+  SCHEDULE Vector_Potential_InitData IN ADMBase_InitialData
+  {
+    LANG: C
+    OPTIONS: Local
+  } "sets the initial magnetic vector potential"
+}
+
+if (CCTK_Equals(initial_data, "GM_GHS"))
+{
+  SCHEDULE GMGHS IN ADMBase_InitialData
+  {
+    LANG: C
+    OPTIONS: Local
+  } "GM-GHS solution initial data"
+}
